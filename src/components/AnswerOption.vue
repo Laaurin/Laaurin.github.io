@@ -1,5 +1,5 @@
 <template>
-  <label style="padding: 10px">
+  <label class="test">
     <input
       class="radio-input"
       type="radio"
@@ -66,10 +66,6 @@ export default {
 </script>
 
 <style scoped>
-.radio-inputs > * {
-  margin: 6px;
-}
-
 .radio-input:focus + .radio-tile {
   border-color: #616e7f;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
@@ -80,13 +76,18 @@ export default {
   opacity: 1;
 }
 
+.test {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .radio-tile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  min-height: 80px;
+  width: 380px;
+  min-height: 100px;
   border-radius: 0.5rem;
   border: 2px solid #b5bfd9;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -109,7 +110,7 @@ export default {
   color: #707070;
   transition: 0.375s ease;
   text-align: center;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .radio-input {

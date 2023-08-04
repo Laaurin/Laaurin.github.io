@@ -3,28 +3,63 @@
     <h2>Upload new question</h2>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
-        <label for="question">question:</label>
-        <input type="text" id="question" v-model="question" required />
+        <div class="question-input-wrapper">
+          <input
+            type="text"
+            id="question"
+            v-model="question"
+            placeholder="Enter your question here"
+            required
+          />
+        </div>
       </div>
       <div class="mb-3">
-        <label for="answer1">option 1:</label>
-        <input type="text" id="answer1" v-model="answers[0].text" required />
-        <input type="radio" v-model="correctAnswerIndex" :value="0" required />
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer1">Option 1:</label>
+          <input type="text" id="answer1" v-model="answers[0].text" required />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="0"
+            required
+          />
+        </div>
       </div>
       <div class="mb-3">
-        <label for="answer2">option 2:</label>
-        <input type="text" id="answer2" v-model="answers[1].text" required />
-        <input type="radio" v-model="correctAnswerIndex" :value="1" required />
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer2">Option 2:</label>
+          <input type="text" id="answer2" v-model="answers[1].text" required />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="1"
+            required
+          />
+        </div>
       </div>
       <div class="mb-3">
-        <label for="answer3">option 3:</label>
-        <input type="text" id="answer3" v-model="answers[2].text" required />
-        <input type="radio" v-model="correctAnswerIndex" :value="2" required />
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer3">Option 3:</label>
+          <input type="text" id="answer3" v-model="answers[2].text" required />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="2"
+            required
+          />
+        </div>
       </div>
       <div class="mb-3">
-        <label for="answer4">option 4:</label>
-        <input type="text" id="answer4" v-model="answers[3].text" required />
-        <input type="radio" v-model="correctAnswerIndex" :value="3" required />
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer4">Option 4:</label>
+          <input type="text" id="answer4" v-model="answers[3].text" required />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="3"
+            required
+          />
+        </div>
       </div>
       <button class="my-global-button" type="submit">add question</button>
     </form>
@@ -81,7 +116,7 @@ export default {
 <style scoped>
 .container {
   max-width: 500px;
-  margin: auto;
+  margin: 5rem auto auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
@@ -89,5 +124,33 @@ export default {
 
 h2 {
   text-align: center;
+}
+
+.answer-label {
+  font-size: 18px;
+}
+
+.question-input-wrapper {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"] {
+  flex: 1;
+  font-size: 16px;
+  padding: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.option-input-wrapper {
+  display: flex;
+  grid-template-columns: auto 1fr; /* Label und Eingabe in einer Zeile mit Grid-Layout */
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

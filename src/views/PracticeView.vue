@@ -7,7 +7,6 @@
     <button
       class="my-global-button"
       style="margin-top: 20px"
-      v-if="showNextButton"
       @click="nextQuestion"
     >
       {{ submitted ? "next" : "skip" }}
@@ -38,7 +37,7 @@ export default {
             },
             {
               isCorrect: false,
-              text: "Equatoriana Geoscience pl",
+              text: "Equatoriana Geoscience plc",
             },
             {
               isCorrect: true,
@@ -77,10 +76,9 @@ export default {
   },
   computed: {
     currentQuestion() {
-      return this.questions[this.currentQuestionIndex] || {};
-    },
-    showNextButton() {
-      return this.currentQuestionIndex < this.questions.length - 1;
+      return (
+        this.questions[this.currentQuestionIndex % this.questions.length] || {}
+      );
     },
   },
   methods: {
@@ -98,7 +96,7 @@ export default {
   },
   created() {
     console.log("created!");
-    //this.loadQuestions();
+    this.loadQuestions();
   },
 };
 </script>

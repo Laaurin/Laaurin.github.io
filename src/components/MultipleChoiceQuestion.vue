@@ -4,7 +4,7 @@
     style="margin-top: 10px"
   >
     <question-text :question="data.questionText"></question-text>
-    <div class="row row-cols-2">
+    <div class="row row-cols-2" style="margin-top: 20px">
       <div
         :class="{
           'col-6': true,
@@ -21,7 +21,6 @@
           :index="index"
           :submitted="submitted"
           :selected-answer-index="selectedAnswerIndex"
-          :key="index"
           @selected="selectAnswer(index)"
         ></answer-option>
       </div>
