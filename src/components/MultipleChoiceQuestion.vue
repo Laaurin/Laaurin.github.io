@@ -26,7 +26,13 @@
         ></answer-option>
       </div>
     </div>
-    <button @click="submit" :disabled="enableSubmitButton">Submit</button>
+    <button
+      class="my-global-button"
+      @click="submit"
+      :disabled="enableSubmitButton"
+    >
+      Submit
+    </button>
   </div>
 </template>
 
@@ -76,44 +82,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.correct {
-  background-color: green;
-}
-
-.incorrect {
-  background-color: red;
-}
-
-.actuallyCorrect {
-  border-color: green;
-}
-
-button {
-  font-size: 17px;
-  padding: 0.5em 2em;
-  border: transparent;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-  background: #616e7f;
-  color: white;
-  border-radius: 4px;
-}
-
-button:hover {
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 144, 255, 1) 0%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
-
-button:active {
-  transform: translate(0em, 0.2em);
-}
-
-button:disabled {
-  background: #707070;
-  opacity: 50%;
-}
-</style>
+<style scoped></style>

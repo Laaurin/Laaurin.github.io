@@ -4,7 +4,12 @@
       :question="currentQuestion"
       @submitted="submitted = true"
     ></MultipleChoiceQuestion>
-    <button v-if="showNextButton" @click="nextQuestion">
+    <button
+      class="my-global-button"
+      style="margin-top: 20px"
+      v-if="showNextButton"
+      @click="nextQuestion"
+    >
       {{ submitted ? "next" : "skip" }}
     </button>
   </div>
@@ -25,43 +30,45 @@ export default {
           answerOptions: [
             {
               isCorrect: false,
-              text: "erste",
+              text: "Drone Eye plc",
             },
             {
               isCorrect: false,
-              text: "zweite",
+              text: "Drone Eye ltd",
             },
             {
               isCorrect: false,
-              text: "dritte",
+              text: "Equatoriana Geoscience pl",
             },
             {
               isCorrect: true,
-              text: "richtig",
+              text: "Equatoriana Geoscience ltd",
             },
           ],
-          questionText: "testfrage",
+          questionText:
+            "What is the Name of the Respondent of the Proceedings?",
         },
         {
           answerOptions: [
             {
               isCorrect: false,
-              text: "hier nicht",
+              text: "Claimant Exhibit C5, p. 16",
+            },
+            {
+              isCorrect: false,
+              text: "Claimant Exhibit C7, p. 18, para. 11",
             },
             {
               isCorrect: true,
-              text: "richitg hahah",
+              text: "Respondent Exhibit R2, p. 33",
             },
             {
               isCorrect: false,
-              text: "davor",
-            },
-            {
-              isCorrect: false,
-              text: "richtig?",
+              text: "Respondent Exhibit R4, p. 35?",
             },
           ],
-          questionText: "nächste testfrage",
+          questionText:
+            "Where in the Case-File can we find information, that the public prosecutor in Equatoriana can proof that Mr. Field accepted two undue payments?",
         },
       ],
       currentQuestionIndex: 0,
@@ -95,6 +102,5 @@ export default {
   },
 };
 </script>
-
 
 <style scoped></style>

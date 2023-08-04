@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>Add new question</h2>
+    <h2>Upload new question</h2>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="question">question:</label>
@@ -26,7 +26,7 @@
         <input type="text" id="answer4" v-model="answers[3].text" required />
         <input type="radio" v-model="correctAnswerIndex" :value="3" required />
       </div>
-      <button type="submit">add question</button>
+      <button class="my-global-button" type="submit">add question</button>
     </form>
   </div>
 </template>
@@ -84,7 +84,7 @@ export default {
   margin: auto;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 0.5rem;
 }
 
 h2 {
