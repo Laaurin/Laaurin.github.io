@@ -1,0 +1,20 @@
+[
+  {
+    "questionText": "Welchen Beruf wird der Döner später mal ausüben und warum ist es Metzger?",
+    "answerOptions": ["1242", "124", "144", "164"],
+    "correctAnswerIndex": 2
+  },
+  {
+    "questionText": "What is the Name of the Respondent of the Proceedings?",
+    "answerOptions": ["Drone Eye plc", "Drone Eye ltd", "Equatoriana Geoscience plc", "Equatoriana Geoscience ltd"],
+    "correctAnswerIndex": 3
+  },
+  {
+    "questionText": "Which of the following is none of the Sellers obligations under Art. 2 of the Purchase and Supply Agreement, concluded by the parties?",
+    "answerOptions": ["to supply to the BUYER 6 of its newest model of Kestrel Eye 2010 UAS, out of which 4 are equipped with state-of-the-art geological surveillance feature ",
+      "to conduct at least 4 test flights with the specific Kestrel Eye 2010 UAS until 04 January 2022",
+      "to deliver the first 3 fully equipped latest Kestrel Eye 2010 UAS until 15 January 2022",
+      "to provide the basic maintenance services specified in Annex B for each UAS for a flat fee for four years following the delivery of the respective UAS"],
+    "correctAnswerIndex": 1
+  }
+]
