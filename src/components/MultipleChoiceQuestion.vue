@@ -4,17 +4,16 @@
     style="margin-top: 10px"
   >
     <question-text :question="data.questionText"></question-text>
-    <div class="row row-cols-2" style="margin-top: 20px">
+    <div class="row row-cols-md-2" style="margin-top: 20px">
       <div
-        :class="{
-          'col-6': true,
-          'd-flex': true,
-          'justify-content-end': index % 2 === 0,
-          'justify-content-start': index % 2 !== 0,
-        }"
-        ref="options"
         v-for="(answer, index) in data.answerOptions"
         :key="index"
+        :class="{
+          'd-flex': true,
+          'justify-content-lg-end': index % 2 === 0,
+          'justify-content-lg-start': index % 2 !== 0,
+          'justify-content-sm-center': true,
+        }"
       >
         <answer-option
           :answer-option="answer"
@@ -32,6 +31,7 @@
     >
       Submit
     </button>
+    <button @click="console.log(isLargeScreen)">debug</button>
   </div>
 </template>
 
@@ -51,6 +51,7 @@ export default {
       data: this.question,
       selectedAnswerIndex: NaN,
       submitted: false,
+      isLargeScreen: window.innerWidth >= 992,
     };
   },
   methods: {

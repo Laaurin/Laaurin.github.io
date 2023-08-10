@@ -1,20 +1,30 @@
 <template>
+  <h1 style="margin-top: 5rem" class="landing-title">Welcome to Vis Quiz</h1>
   <div class="landing-page">
-    <h1 style="margin-top: 5rem" class="landing-title">Welcome to Vis Quiz</h1>
-    <div class="landing-buttons">
-      <router-link to="/editor" class="landing-button">
-        Upload Question
-      </router-link>
-      <router-link to="/practice" class="landing-button">
-        Practice
-      </router-link>
+    <div v-if="!this.$root.loggedIn">
+      <main>
+        <login-form></login-form>
+      </main>
+    </div>
+    <div v-else>
+      <div class="landing-buttons">
+        <router-link to="/editor" class="landing-button">
+          Upload Question
+        </router-link>
+        <router-link to="/practice" class="landing-button">
+          Practice
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import LoginForm from "@/components/LoginForm.vue";
+
 export default {
   name: "LandingPage",
+  components: { LoginForm },
 };
 </script>
 

@@ -5,6 +5,7 @@
       type="radio"
       name="engine"
       @change="selectAnswer"
+      v-model="selectedOption"
     />
     <span :class="radioTileClasses">
       <span class="radio-label">{{ answerOption.text }}</span>
@@ -25,13 +26,11 @@ export default {
   data() {
     return {
       selectedOption: false,
-      text: this.answerOption,
-      submittedd: this.submitted,
     };
   },
   methods: {
     selectAnswer() {
-      if (this.submittedd) {
+      if (this.submitted) {
         return;
       }
       this.$emit("selected", this.index);
@@ -41,13 +40,13 @@ export default {
     radioTileClasses() {
       return {
         "radio-tile": true,
-        selected: !this.submittedd && this.index === this.selectedAnswerIndex,
+        selected: !this.submitted && this.index === this.selectedAnswerIndex,
         correct:
-          this.submittedd &&
+          this.submitted &&
           //this.index === this.selectedAnswerIndex &&
           this.answerOption.isCorrect,
         incorrect:
-          this.submittedd &&
+          this.submitted &&
           this.index === this.selectedAnswerIndex &&
           !this.answerOption.isCorrect,
         //"not-selected":
@@ -58,8 +57,8 @@ export default {
     },
   },
   watch: {
-    submitted() {
-      this.submittedd = this.submitted;
+    answerOption() {
+      this.selectedOption = false;
     },
   },
 };

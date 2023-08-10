@@ -95,8 +95,10 @@ export default {
     },
   },
   created() {
+    this.$root.myTest = "hahahhahahah";
     console.log("created!");
-    this.loadQuestions();
+    console.log(this.$root.myTest);
+    //this.loadQuestions();
   },
 };
 </script>

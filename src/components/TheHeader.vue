@@ -11,6 +11,10 @@
           <router-link to="/practice" class="nav-item nav-link"
             >Practice</router-link
           >
+          <router-link to="/profile" class="nav-item nav-link"
+            >Profile</router-link
+          >
+          <button v-if="this.$root.loggedIn" @click="logOut">sign out</button>
         </div>
       </div>
     </div>
@@ -20,6 +24,12 @@
 <script>
 export default {
   name: "TheHeader",
+  emits: ["sign-out"],
+  methods: {
+    logOut() {
+      this.$emit("signOut");
+    },
+  },
 };
 </script>
 
