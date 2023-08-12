@@ -61,8 +61,10 @@ export default {
           // Beispielhaft Label für den Nutzer speichern
           const labelDocRef = doc(userLabelsCollectionRef);
           const labelData = {
-            labelName: "My Label",
+            labelName: "facts",
           };
+          await setDoc(labelDocRef, labelData);
+          labelData.labelName = "law";
           await setDoc(labelDocRef, labelData);
 
           console.log(

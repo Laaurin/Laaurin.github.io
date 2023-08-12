@@ -31,7 +31,6 @@
     >
       Submit
     </button>
-    <button @click="console.log(isLargeScreen)">debug</button>
   </div>
 </template>
 

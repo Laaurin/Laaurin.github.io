@@ -1,8 +1,5 @@
 <template>
-  <profile-questions
-    :questions="questions"
-    :labels="labels"
-  ></profile-questions>
+  <profile-questions></profile-questions>
 </template>
 
 <script>
@@ -13,58 +10,7 @@ import ProfileQuestions from "@/components/ProfileQuestions.vue";
 export default {
   components: { ProfileQuestions },
   data() {
-    return {
-      labels: ["facts", "law"],
-      questions: [
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Drone Eye plc",
-            },
-            {
-              isCorrect: false,
-              text: "Drone Eye ltd",
-            },
-            {
-              isCorrect: false,
-              text: "Equatoriana Geoscience plc",
-            },
-            {
-              isCorrect: true,
-              text: "Equatoriana Geoscience ltd",
-            },
-          ],
-          questionText:
-            "What is the Name of the Respondent of the Proceedings?",
-          questionLabels: ["law"],
-        },
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C5, p. 16",
-            },
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C7, p. 18, para. 11",
-            },
-            {
-              isCorrect: true,
-              text: "Respondent Exhibit R2, p. 33",
-            },
-            {
-              isCorrect: false,
-              text: "Respondent Exhibit R4, p. 35?",
-            },
-          ],
-          questionText:
-            "Where in the Case-File can we find information, that the public prosecutor in Equatoriana can proof that Mr. Field accepted two undue payments?",
-          questionLabels: ["facts"],
-        },
-      ],
-      availableLabels: [],
-    };
+    return {};
   },
   provide() {
     return {
@@ -130,10 +76,6 @@ export default {
         console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
       }
     },
-  },
-  async created() {
-    await this.fetchUserData();
-    console.log(this.questions);
   },
 };
 </script>

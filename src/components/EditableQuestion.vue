@@ -11,40 +11,33 @@
           </div>
         </div>
         <div class="row align-items-center">
-          <div v-if="!editLabel" class="col">
+          <div class="col">
             <div class="d-flex flex-wrap">
-              <div v-for="label in question.questionLabels" :key="label">
+              <div v-for="label in question.questionLabels" :key="label.label">
                 <question-label
-                  :label-text="label"
+                  :label-text="label.label"
                   :active="true"
                 ></question-label>
               </div>
             </div>
           </div>
-          <div v-else class="col">
-            <div class="d-flex flex-wrap">
-              <div v-for="label in availableLabels" :key="label">
-                <question-label
-                  :label-text="label"
-                  :active="isActive(label)"
-                ></question-label>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <button class="add-label" @click="editQuestion">
-              <span v-if="editLabel">save</span>
-              <span v-else><i class="bi bi-pencil-square"></i></span>
-            </button>
-          </div>
         </div>
       </div>
     </div>
-    <div class="col-6">
-      <button>Edit</button>
-      <button>Delete</button>
-      <button>Labels</button>
+    <div class="col">
+      <button
+        class="my-global-button"
+        style="margin: 5px"
+        @click="editQuestion"
+      >
+        <span v-if="editLabel">save</span>
+        <span v-else><i class="bi bi-pencil-square"></i> Edit</span>
+      </button>
+      <button class="my-global-button" style="margin: 5px">
+        <i class="bi bi-trash"></i> Delete
+      </button>
     </div>
+    <hr />
   </div>
 </template>
 
@@ -65,13 +58,9 @@ export default {
     };
   },
   methods: {
-    isActive(label) {
-      console.log(label, this.question.questionLabels.includes(label));
-      return this.question.questionLabels.includes(label);
-    },
     editQuestion() {
       this.$emit("edit", this.question);
-    }
+    },
   },
 };
 </script>

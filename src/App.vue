@@ -1,35 +1,73 @@
 <template>
-  <the-header @sign-out="signOut"></the-header>
+  <the-header @sign-out="signOutUser"></the-header>
   <router-view></router-view>
 </template>
 
 <script>
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { provide, ref, onMounted } from "vue";
+import db, { auth } from "@/firebase/init.js";
+import { collection, getDocs } from "firebase/firestore";
 import TheHeader from "@/components/TheHeader.vue";
 
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/firebase/init.js";
 export default {
   components: { TheHeader },
-  data() {
-    return {
-      loggedIn: false,
-    };
-  },
-  methods: {
-    signOut() {
+  setup() {
+    const loggedIn = ref(false);
+    const userQuestions = ref([]);
+    const userLabels = ref([]);
+    const signOutUser = () => {
       signOut(auth);
-    },
-  },
-  created() {
-    // Überwachen Sie den Authentifizierungsstatus des Benutzers
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.loggedIn = true;
-      } else {
-        this.loggedIn = false;
-        this.$router.push("/");
+    };
+
+    const fetchUserData = async (user) => {
+      try {
+        // Labels abrufen
+        const labelsCollectionRef = collection(db, `users/${user.uid}/labels`);
+        const labelsQuerySnapshot = await getDocs(labelsCollectionRef);
+        userLabels.value = labelsQuerySnapshot.docs.map((doc) => doc.data());
+
+        // Fragen abrufen
+        const questionsCollectionRef = collection(
+          db,
+          `users/${user.uid}/questions`
+        );
+        const questionsQuerySnapshot = await getDocs(questionsCollectionRef);
+        userQuestions.value = questionsQuerySnapshot.docs.map((doc) => {
+          const questionData = doc.data();
+          return {
+            id: doc.id,
+            questionText: questionData.questionText,
+            answerOptions: questionData.answerOptions,
+            questionLabels: questionData.questionLabels || [],
+          };
+        });
+      } catch (error) {
+        console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
       }
+    };
+
+    onMounted(() => {
+      onAuthStateChanged(auth, async (user) => {
+        console.log("called called called");
+        if (user) {
+          loggedIn.value = true;
+          await fetchUserData(user);
+        } else {
+          loggedIn.value = false;
+          // Navigieren Sie den Benutzer zur Startseite, wenn nicht angemeldet
+          // this.$router.push("/");
+        }
+      });
     });
+
+    provide("userQuestions", userQuestions);
+    provide("userLabels", userLabels);
+
+    return {
+      loggedIn,
+      signOutUser,
+    };
   },
 };
 </script>

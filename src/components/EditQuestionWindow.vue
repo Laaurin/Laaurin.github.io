@@ -60,53 +60,100 @@
           />
         </div>
       </div>
-      <label
-        v-for="(label, index) in availableLabels"
-        :key="index"
-        class="label-wrapper"
-      >
-        <label-item
-          :label-name="label.labelName"
-          :selected-labels="availableLabels"
-          @toggle-label="toggleLabel"
-        ></label-item>
-      </label>
-      <button @click="saveChanges">Save</button>
-      <button @click="cancelEditing">Cancel</button>
+      <div class="label-list">
+        <div
+          v-for="(label, index) in userLabels"
+          :key="index"
+          class="label-wrapper"
+        >
+          <QuestionLabel
+            :label-text="label.labelName"
+            :clickable="true"
+            :active="isActive(label.labelName)"
+            @toggle-label="toggleLabel"
+          ></QuestionLabel>
+        </div>
+        <new-label @new-label="addLabel"></new-label>
+      </div>
+      <button class="my-global-button" @click="saveChanges">Save</button>
+      <button class="my-global-button" @click="cancelEditing">Cancel</button>
     </div>
   </div>
 </template>
 
 <script>
+import { inject } from "vue";
+import QuestionLabel from "@/components/QuestionLabel.vue";
+import NewLabel from "@/components/NewLabel.vue";
+
 export default {
-  inject: ["availableLabels"],
-  emits: ["cancel"],
+  components: { QuestionLabel, NewLabel },
+  emits: ["close", "save"],
   props: {
     question: Object,
+  },
+  setup() {
+    const userLabels = inject("userLabels");
+    return {
+      userLabels,
+    };
   },
   data() {
     return {
       questionText: "",
       answers: [{ text: "" }, { text: "" }, { text: "" }, { text: "" }],
+      questionLabels: [],
       correctAnswerIndex: null,
       updatedQuestion: null,
     };
   },
   methods: {
+    addLabel(label) {
+      this.userLabels.push({
+        labelName: label,
+      });
+    },
     cancelEditing() {
-      this.$emit("cancel");
+      this.$emit("close");
     },
     saveChanges() {
-      // Hier können Sie die Änderungen speichern
-      // Zum Beispiel: this.editedQuestionText speichern
-      this.editedQuestionText = "";
+      let question = this.createPrivateQuestion();
+      console.log(question);
+      this.$emit("save", question);
+    },
+    toggleLabel(labelName) {
+      this.questionLabels.push({ labelName: labelName });
+      console.log(this.questionLabels);
+    },
+    isActive(labelName) {
+      return this.question.questionLabels.some(
+        (label) => label.label === labelName
+      );
+    },
+    createPrivateQuestion() {
+      return {
+        questionText: this.questionText,
+        questionLabels: this.questionLabels.map((label) => {
+          return {
+            labelName: label.labelName,
+          };
+        }),
+        answerOptions: this.answers.map((answer, index) => {
+          return {
+            text: answer.text,
+            isCorrect: index === this.correctAnswerIndex,
+          };
+        }),
+      };
     },
   },
   created() {
-    console.log("hier: ", this.availableLabels);
     this.questionText = this.question.questionText;
     this.answers = this.question.answerOptions.map((option) => ({
       text: option.text,
+    }));
+    this.questionLabels = this.question.questionLabels.map((label) => ({
+      labelName: label.label,
     }));
     this.correctAnswerIndex = this.question.answerOptions.findIndex(
       (option) => option.isCorrect
@@ -123,12 +170,14 @@ export default {
   left: 0;
   bottom: 0;
   z-index: 99;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .pop-up-inner {
+  background-color: white;
+  border-radius: 1rem;
   padding: 32px;
 }
 

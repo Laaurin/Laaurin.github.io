@@ -7,6 +7,7 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: { requiresAuth: false },
   },
   {
     path: "/editor",
@@ -24,6 +25,7 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: () => import("../views/SignupView.vue"),
+    meta: { requiresAuth: false },
   },
   {
     path: "/profile",
