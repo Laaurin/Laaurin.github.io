@@ -1,11 +1,17 @@
 <template>
   <div>
-    <button class="my-global-button set-selection-button" @click="selectPublicQuestions">
+    <button
+      class="my-global-button set-selection-button"
+      @click="selectPublicQuestions"
+    >
       <i class="bi bi-people-fill"> public questions </i>
     </button>
   </div>
   <div>
-    <button class="my-global-button set-selection-button" @click="selectPrivateQuestions">
+    <button
+      class="my-global-button set-selection-button"
+      @click="selectPrivateQuestions"
+    >
       <i class="bi bi-person-fill"> team questions </i>
     </button>
   </div>

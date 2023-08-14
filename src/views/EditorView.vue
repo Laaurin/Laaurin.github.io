@@ -66,19 +66,20 @@
         <input type="checkbox" v-model="privateQuestion" />
         <div v-if="privateQuestion">
           <div class="label-list">
-            <label
-              v-for="labelObject in userLabels"
-              :key="labelObject.label"
+            <div
               class="label-wrapper"
+              v-for="(labelObject, index) in userLabels"
+              :key="index"
             >
-              <question-label
+              <QuestionLabel
                 :label-object="labelObject"
                 :clickable="true"
                 @toggle-label="toggleLabel"
-              >
-              </question-label>
-            </label>
-            <new-label @new-label="addLabel"></new-label>
+              ></QuestionLabel>
+            </div>
+            <div class="label-wrapper">
+              <new-label @new-label="addLabel"></new-label>
+            </div>
           </div>
         </div>
       </div>
@@ -238,5 +239,16 @@ input[type="text"] {
   align-items: center;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.label-list {
+  display: flex;
+  flex-wrap: wrap; /* Labels in mehreren Zeilen anzeigen */
+  align-items: center; /* Vertikal ausrichten */
+  margin-top: 10px; /* Abstand oben */
+}
+
+.label-wrapper {
+  margin-right: 10px; /* Abstand zwischen den Labels */
 }
 </style>

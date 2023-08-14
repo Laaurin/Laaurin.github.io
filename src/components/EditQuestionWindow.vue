@@ -194,7 +194,6 @@ export default {
   background-color: white;
   border-radius: 1rem;
   padding: 32px;
-  max-width: 50%;
 }
 
 .answer-label {
