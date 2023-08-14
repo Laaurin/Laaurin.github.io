@@ -54,6 +54,9 @@ export default {
 
 <style scoped>
 .sign-out-button {
+  border: none;
+  background-color: transparent;
+  outline: none;
   float: end;
 }
 </style>

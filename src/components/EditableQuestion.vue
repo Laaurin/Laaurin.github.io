@@ -13,9 +13,12 @@
         <div class="row align-items-center">
           <div class="col">
             <div class="d-flex flex-wrap">
-              <div v-for="label in question.questionLabels" :key="label.label">
+              <div
+                v-for="labelObject in question.questionLabels"
+                :key="labelObject.id"
+              >
                 <question-label
-                  :label-text="label.label"
+                  :label-object="labelObject"
                   :active="true"
                 ></question-label>
               </div>
@@ -33,8 +36,12 @@
         <span v-if="editLabel">save</span>
         <span v-else><i class="bi bi-pencil-square"></i> Edit</span>
       </button>
-      <button class="my-global-button" style="margin: 5px">
-        <i class="bi bi-trash"></i> Delete
+      <button
+        class="my-global-button"
+        style="margin: 5px"
+        @click="toggleDelete"
+      >
+        <i v-if="!isDeleting" class="bi bi-trash"></i> {{ deleteButtonText }}
       </button>
     </div>
     <hr />
@@ -43,23 +50,47 @@
 
 <script>
 import QuestionLabel from "@/components/QuestionLabel.vue";
+import { inject } from "vue";
 
 export default {
   components: { QuestionLabel },
   emits: ["edit"],
   props: {
     question: Object,
-    availableLabels: Object,
+  },
+  setup() {
+    const userLabels = inject("userLabels");
+    return {
+      userLabels: userLabels,
+    };
   },
   data() {
     return {
       extended: false,
       editLabel: false,
+      isDeleting: false,
     };
+  },
+  computed: {
+    deleteButtonText() {
+      return this.isDeleting ? "Confirm " : "Delete";
+    },
   },
   methods: {
     editQuestion() {
       this.$emit("edit", this.question);
+    },
+    toggleDelete() {
+      if (this.isDeleting) {
+        this.delete(); // Hier die eigentliche Löschfunktion aufrufen
+      } else {
+        this.isDeleting = true;
+      }
+    },
+    delete() {
+      // Hier kannst du deine Löschlogik einfügen
+      // Nach dem Löschen den Zustand zurücksetzen
+      this.isDeleting = false;
     },
   },
 };

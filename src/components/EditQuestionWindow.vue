@@ -62,18 +62,20 @@
       </div>
       <div class="label-list">
         <div
-          v-for="(label, index) in userLabels"
-          :key="index"
           class="label-wrapper"
+          v-for="(labelObject, index) in userLabels"
+          :key="index"
         >
           <QuestionLabel
-            :label-text="label.labelName"
+            :label-object="labelObject"
             :clickable="true"
-            :active="isActive(label.labelName)"
+            :active="isActive(labelObject)"
             @toggle-label="toggleLabel"
           ></QuestionLabel>
         </div>
-        <new-label @new-label="addLabel"></new-label>
+        <div class="label-wrapper">
+          <new-label @new-label="addLabel"></new-label>
+        </div>
       </div>
       <button class="my-global-button" @click="saveChanges">Save</button>
       <button class="my-global-button" @click="cancelEditing">Cancel</button>
@@ -108,34 +110,46 @@ export default {
     };
   },
   methods: {
-    addLabel(label) {
-      this.userLabels.push({
-        labelName: label,
-      });
+    addLabel(labelObject) {
+      this.userLabels.push(labelObject);
     },
     cancelEditing() {
       this.$emit("close");
     },
     saveChanges() {
       let question = this.createPrivateQuestion();
-      console.log(question);
       this.$emit("save", question);
     },
-    toggleLabel(labelName) {
-      this.questionLabels.push({ labelName: labelName });
-      console.log(this.questionLabels);
+    toggleLabel(newLabelObject) {
+      // Überprüfen, ob das Label bereits in der Liste vorhanden ist
+      const labelExists = this.questionLabels.some(
+        (labelObject) => labelObject.label === newLabelObject.label
+      );
+
+      // Wenn das Label bereits existiert, entferne es aus der Liste
+      if (labelExists) {
+        this.questionLabels = this.questionLabels.filter(
+          (labelObject) => labelObject.label !== newLabelObject.label
+        );
+      } else {
+        // Ansonsten füge das Label zur Liste hinzu
+        this.questionLabels.push(newLabelObject);
+      }
+      console.log("after toggle: ", this.questionLabels);
     },
-    isActive(labelName) {
-      return this.question.questionLabels.some(
-        (label) => label.label === labelName
+
+    isActive(otherLabelObject) {
+      return this.questionLabels.some(
+        (labelObject) => labelObject.label === otherLabelObject.label
       );
     },
+
     createPrivateQuestion() {
       return {
         questionText: this.questionText,
-        questionLabels: this.questionLabels.map((label) => {
+        questionLabels: this.questionLabels.map((labelObject) => {
           return {
-            labelName: label.labelName,
+            label: labelObject.label,
           };
         }),
         answerOptions: this.answers.map((answer, index) => {
@@ -152,12 +166,13 @@ export default {
     this.answers = this.question.answerOptions.map((option) => ({
       text: option.text,
     }));
-    this.questionLabels = this.question.questionLabels.map((label) => ({
-      labelName: label.label,
+    this.questionLabels = this.question.questionLabels.map((labelObject) => ({
+      label: labelObject.label,
     }));
     this.correctAnswerIndex = this.question.answerOptions.findIndex(
       (option) => option.isCorrect
     );
+    console.log("created questionLabels: ", this.questionLabels);
   },
 };
 </script>
@@ -179,6 +194,7 @@ export default {
   background-color: white;
   border-radius: 1rem;
   padding: 32px;
+  max-width: 50%;
 }
 
 .answer-label {
@@ -207,5 +223,16 @@ input[type="text"] {
   align-items: center;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.label-list {
+  display: flex;
+  flex-wrap: wrap; /* Labels in mehreren Zeilen anzeigen */
+  align-items: center; /* Vertikal ausrichten */
+  margin-top: 10px; /* Abstand oben */
+}
+
+.label-wrapper {
+  margin-right: 10px; /* Abstand zwischen den Labels */
 }
 </style>

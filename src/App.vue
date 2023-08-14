@@ -9,6 +9,7 @@ import { provide, ref, onMounted } from "vue";
 import db, { auth } from "@/firebase/init.js";
 import { collection, getDocs } from "firebase/firestore";
 import TheHeader from "@/components/TheHeader.vue";
+import router from "@/router/router";
 
 export default {
   components: { TheHeader },
@@ -16,8 +17,15 @@ export default {
     const loggedIn = ref(false);
     const userQuestions = ref([]);
     const userLabels = ref([]);
+    const publicQuestions = ref([]);
+
+    provide("userQuestions", userQuestions);
+    provide("userLabels", userLabels);
+    provide("publicQuestions", publicQuestions);
+
     const signOutUser = () => {
       signOut(auth);
+      router.push("/");
     };
 
     const fetchUserData = async (user) => {
@@ -45,6 +53,7 @@ export default {
       } catch (error) {
         console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
       }
+      console.log("labels in app.vue ", userLabels.value);
     };
 
     onMounted(() => {
@@ -56,13 +65,9 @@ export default {
         } else {
           loggedIn.value = false;
           // Navigieren Sie den Benutzer zur Startseite, wenn nicht angemeldet
-          // this.$router.push("/");
         }
       });
     });
-
-    provide("userQuestions", userQuestions);
-    provide("userLabels", userLabels);
 
     return {
       loggedIn,

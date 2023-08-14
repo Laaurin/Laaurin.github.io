@@ -5,8 +5,12 @@
       <label for="filter">Filter by Label:</label>
       <select id="filter" v-model="selectedLabel">
         <option value="">All Labels</option>
-        <option v-for="label in labels" :key="label" :value="label.labelName">
-          {{ label.labelName }}
+        <option
+          v-for="labelObject in userLabels"
+          :key="labelObject.id"
+          :value="labelObject.label"
+        >
+          {{ labelObject.label }}
         </option>
       </select>
     </div>
@@ -14,7 +18,6 @@
       <div v-for="(question, index) in filteredQuestions" :key="index">
         <editable-question
           :question="question"
-          :available-labels="labels"
           @edit="edit"
         ></editable-question>
       </div>
@@ -40,11 +43,11 @@ export default {
     EditableQuestion,
   },
   setup() {
-    const questions = inject("userQuestions");
-    const labels = inject("userLabels");
+    const userQuestions = inject("userQuestions");
+    const userLabels = inject("userLabels");
     return {
-      questions,
-      labels,
+      userQuestions,
+      userLabels: userLabels,
     };
   },
   data() {
@@ -57,24 +60,24 @@ export default {
   computed: {
     filteredQuestions() {
       if (!this.selectedLabel) {
-        return this.questions; // Kein Filter ausgewählt, zeige alle Fragen
+        return this.userQuestions;
       }
-      const a = this.questions.filter((question) =>
+      return this.userQuestions.filter((question) =>
         question.questionLabels.some(
-          (label) => label.label === this.selectedLabel
+          (labelObject) => labelObject.label === this.selectedLabel
         )
       );
-      console.log(a);
-      return a;
     },
   },
   methods: {
-    updateQuestion(updatedQuestion) {
+    updateQuestion(questionData) {
       this.editQuestion = !this.editQuestion;
-      this.questionInEdit = updatedQuestion;
+      this.questionInEdit.questionText = questionData.questionText;
+      this.questionInEdit.questionLabels = questionData.questionLabels;
+      this.questionInEdit.answerOptions = questionData.answerOptions;
     },
+
     edit(question) {
-      console.log("editing: ", question);
       this.questionInEdit = question;
       this.editQuestion = true;
     },

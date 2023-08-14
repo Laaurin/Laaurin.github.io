@@ -67,18 +67,18 @@
         <div v-if="privateQuestion">
           <div class="label-list">
             <label
-              v-for="(label, index) in availableLabels"
-              :key="index"
+              v-for="labelObject in userLabels"
+              :key="labelObject.label"
               class="label-wrapper"
             >
               <question-label
-                :label-text="label.labelName"
+                :label-object="labelObject"
                 :clickable="true"
                 @toggle-label="toggleLabel"
               >
               </question-label>
             </label>
-            <new-label></new-label>
+            <new-label @new-label="addLabel"></new-label>
           </div>
         </div>
       </div>
@@ -97,11 +97,14 @@ import NewLabel from "@/components/NewLabel.vue";
 export default {
   components: { NewLabel, QuestionLabel },
   setup() {
-    const availableLabels = inject("userLabels");
+    const userLabels = inject("userLabels");
 
     return {
-      availableLabels,
+      userLabels,
     };
+  },
+  created() {
+    console.log(this.userLabels[0].label);
   },
   data() {
     return {
@@ -113,6 +116,9 @@ export default {
     };
   },
   methods: {
+    addLabel(labelObject) {
+      this.userLabels.push(labelObject);
+    },
     async submitForm() {
       // Validieren, ob eine richtige Antwort ausgewählt wurde
       if (this.correctAnswerIndex === null) {
@@ -120,12 +126,15 @@ export default {
         return;
       }
 
+      const dataObj = this.createQuestion();
+      console.log(dataObj);
+
       if (this.privateQuestion) {
-        const dataObj = this.createPrivateQuestion();
         await this.uploadPrivateQuestion(dataObj);
       } else {
-        console.log("erstmal abwarten");
+        await this.uploadPublicQuestion(dataObj);
       }
+
       // Optional: Zurücksetzen der Formularfelder nach dem Hinzufügen der Frage
       this.question = "";
       this.answers.forEach((answer) => (answer.text = ""));
@@ -134,9 +143,7 @@ export default {
       this.selectedLabels = [];
     },
 
-    async createQuestion() {
-      const colRef = collection(db, "questions");
-
+    createQuestion() {
       const dataObj = {
         questionText: this.question,
         answerOptions: this.answers.map((answer, index) => {
@@ -147,28 +154,16 @@ export default {
         }),
       };
 
-      await addDoc(colRef, dataObj);
-
-      this.question = "";
-      this.answers.forEach((answer) => (answer.text = ""));
-      this.correctAnswerIndex = null;
-    },
-
-    createPrivateQuestion() {
-      return {
-        questionText: this.question,
-        questionLabels: this.selectedLabels.map((label) => {
+      if (this.privateQuestion) {
+        // Füge die Labels zur Frage hinzu
+        dataObj.questionLabels = this.selectedLabels.map((labelObject) => {
           return {
-            label: label,
+            label: labelObject.label,
           };
-        }),
-        answerOptions: this.answers.map((answer, index) => {
-          return {
-            text: answer.text,
-            isCorrect: index === this.correctAnswerIndex,
-          };
-        }),
-      };
+        });
+      }
+
+      return dataObj;
     },
 
     async uploadPrivateQuestion(dataObj) {
@@ -180,18 +175,15 @@ export default {
       console.log("Private question created:", userDocRef.id);
     },
 
-    createPublicQuestion() {
-      const dataObj = {
-        questionText: this.question,
-        questionLabels: {},
-        answerOptions: this.answers.map((answer, index) => {
-          return {
-            text: answer.text,
-            isCorrect: index === this.correctAnswerIndex,
-          };
-        }),
-      };
-      return dataObj;
+    async uploadPublicQuestion(dataObj) {
+      try {
+        const colRef = collection(db, "unreviewedQuestions");
+        const docRef = await addDoc(colRef, dataObj);
+
+        console.log("Public question uploaded:", docRef.id);
+      } catch (error) {
+        console.error("Error uploading public question:", error);
+      }
     },
 
     toggleLabel(labelName) {
@@ -202,7 +194,6 @@ export default {
       } else {
         this.selectedLabels.push(labelName);
       }
-      console.log(this.selectedLabels);
     },
   },
 };

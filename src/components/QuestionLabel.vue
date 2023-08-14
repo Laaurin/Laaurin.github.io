@@ -4,15 +4,18 @@
     :class="{ active: selected, clickable: clickable }"
     @click="clickable ? toggleLabel() : null"
   >
-    <div class="labelText">{{ labelText }}</div>
+    <div class="labelText">{{ labelObject.label }}</div>
+    <div v-if="selected && clickable" class="removeIcon" @click="removeLabel">
+      <i class="bi bi-x"></i>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  emits: ["toggle-label"],
+  emits: ["toggle-label", "remove-label"],
   props: {
-    labelText: String,
+    labelObject: Object,
     active: Boolean,
     clickable: {
       type: Boolean,
@@ -27,7 +30,11 @@ export default {
   methods: {
     toggleLabel() {
       this.selected = !this.selected;
-      this.$emit("toggle-label", this.labelText);
+      this.$emit("toggle-label", this.labelObject);
+    },
+    removeLabel(event) {
+      event.stopPropagation(); // Stop the click event from reaching the parent div
+      this.$emit("remove-label", this.labelObject);
     },
   },
   created() {
@@ -39,15 +46,15 @@ export default {
 
 <style scoped>
 .labelCard {
+  position: relative; /* Needed for positioning the remove icon */
   border-radius: 1rem;
   background-color: lightgray;
   width: auto;
   max-width: max-content;
   margin: 2px;
-}
-
-.clickable:hover {
-  background-color: lightgreen;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Align text and icon horizontally */
 }
 
 .active {
@@ -57,10 +64,21 @@ export default {
 
 .labelText {
   font-size: 16px;
-  margin: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.clickable {
+.removeIcon {
+  position: absolute;
+  top: -5px;
+  right: -7px;
+  font-size: 12px;
   cursor: pointer;
+  opacity: 0; /* Initially hide the icon */
+  transition: opacity 0.3s ease-in-out; /* Add a transition effect */
+}
+
+.labelCard:hover .removeIcon {
+  opacity: 1; /* Show the icon on hover */
 }
 </style>

@@ -4,7 +4,7 @@
     <input
       v-if="editing"
       type="text"
-      v-model="newLabel"
+      v-model="label"
       @keydown.enter="saveNewLabel"
       @keydown.esc="cancelEditing"
       @blur="cancelEditing"
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       editing: false,
-      newLabel: "",
+      label: "",
     };
   },
   methods: {
@@ -30,15 +30,15 @@ export default {
       });
     },
     saveNewLabel() {
-      if (this.newLabel.trim() !== "") {
-        this.$emit("new-label", this.newLabel);
+      if (this.label.trim() !== "" && this.label.trim().length < 15) {
+        this.$emit("new-label", { label: this.label });
         this.editing = false;
-        this.newLabel = "";
+        this.label = "";
       }
     },
     cancelEditing() {
       this.editing = false;
-      this.newLabel = "";
+      this.label = "";
     },
   },
 };
