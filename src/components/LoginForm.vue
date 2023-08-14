@@ -36,9 +36,6 @@
             </form>
           </div>
         </div>
-        <p class="mt-3">
-          Don't have an account? <router-link to="/signup">Sign Up</router-link>
-        </p>
       </div>
     </div>
   </div>
