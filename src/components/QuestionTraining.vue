@@ -1,17 +1,26 @@
 <template>
-  <question-selection @questions-selected="passQuestions"></question-selection>
-  <question-training
-    v-if="startTraining"
-    :question-set="questions"
-  ></question-training>
+  <div style="margin-top: 5rem">
+    <MultipleChoiceQuestion
+      :question="currentQuestion"
+      @submitted="submitted = true"
+    ></MultipleChoiceQuestion>
+    <button
+      class="my-global-button"
+      style="margin-top: 20px"
+      @click="nextQuestion"
+    >
+      {{ submitted ? "next" : "skip" }}
+    </button>
+  </div>
 </template>
 
 <script>
-import QuestionSelection from "@/components/QuestionSelection.vue";
-import QuestionTraining from "@/components/QuestionTraining.vue";
+import MultipleChoiceQuestion from "@/components/MultipleChoiceQuestion.vue";
+
 export default {
   name: "PracticeView",
-  components: { QuestionSelection, QuestionTraining },
+  components: { MultipleChoiceQuestion },
+  props: ["questionSet"],
   data() {
     return {
       questions: [
@@ -60,13 +69,31 @@ export default {
             "Where in the Case-File can we find information, that the public prosecutor in Equatoriana can proof that Mr. Field accepted two undue payments?",
         },
       ],
-      startTraining: false,
+      currentQuestionIndex: 0,
+      submitted: false,
     };
   },
+  created() {
+    //this.questions = this.shuffleArray(this.questionSet);
+  },
+  computed: {
+    currentQuestion() {
+      return (
+        this.questions[this.currentQuestionIndex % this.questions.length] || {}
+      );
+    },
+  },
   methods: {
-    passQuestions(newQuestions) {
-      this.questions = newQuestions;
-      this.startTraining = true;
+    nextQuestion() {
+      this.currentQuestionIndex++;
+    },
+
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     },
   },
 };

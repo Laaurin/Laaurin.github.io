@@ -1,13 +1,12 @@
 <template>
-  <div class="container">
-    <h2>Upload new question</h2>
-    <form @submit.prevent="submitForm">
+  <div class="pop-up-window">
+    <div class="pop-up-inner">
       <div class="mb-3">
         <div class="question-input-wrapper">
           <input
             type="text"
             id="question"
-            v-model="question"
+            v-model="questionText"
             placeholder="Enter your question here"
             required
           />
@@ -61,92 +60,98 @@
           />
         </div>
       </div>
-      <div>
-        <label>private Question</label>
-        <input type="checkbox" v-model="privateQuestion" />
-        <div v-if="privateQuestion">
-          <div class="label-list">
-            <div
-              class="label-wrapper"
-              v-for="(labelObject, index) in userLabels"
-              :key="index"
-            >
-              <QuestionLabel
-                :label-object="labelObject"
-                :clickable="true"
-                @toggle-label="toggleLabel"
-              ></QuestionLabel>
-            </div>
-            <div class="label-wrapper">
-              <new-label @new-label="addLabel"></new-label>
-            </div>
-          </div>
+      <div class="label-list">
+        <div
+          class="label-wrapper"
+          v-for="(labelObject, index) in userLabels"
+          :key="index"
+        >
+          <QuestionLabel
+            :label-object="labelObject"
+            :clickable="true"
+            :active="isActive(labelObject)"
+            @toggle-label="toggleLabel"
+          ></QuestionLabel>
+        </div>
+        <div class="label-wrapper">
+          <new-label @new-label="addLabel"></new-label>
         </div>
       </div>
-      <button class="my-global-button" type="submit">add question</button>
-    </form>
+      <button class="my-global-button" @click="saveChanges">Save</button>
+      <button class="my-global-button" @click="cancelEditing">Cancel</button>
+    </div>
   </div>
 </template>
 
 <script>
-import db, { auth } from "@/firebase/init.js";
 import { inject } from "vue";
-import { addDoc, collection } from "firebase/firestore";
 import QuestionLabel from "@/components/QuestionLabel.vue";
 import NewLabel from "@/components/NewLabel.vue";
 
 export default {
-  components: { NewLabel, QuestionLabel },
+  components: { QuestionLabel, NewLabel },
+  emits: ["close", "save"],
+  props: {
+    question: Object,
+  },
   setup() {
     const userLabels = inject("userLabels");
-
     return {
       userLabels,
     };
   },
-  created() {
-    console.log(this.userLabels[0].label);
-  },
   data() {
     return {
-      question: "",
+      questionText: "",
       answers: [{ text: "" }, { text: "" }, { text: "" }, { text: "" }],
+      questionLabels: [],
       correctAnswerIndex: null,
-      privateQuestion: false,
-      selectedLabels: [],
+      updatedQuestion: null,
     };
   },
   methods: {
     addLabel(labelObject) {
       this.userLabels.push(labelObject);
     },
-    async submitForm() {
-      // Validieren, ob eine richtige Antwort ausgewählt wurde
-      if (this.correctAnswerIndex === null) {
-        alert("Bitte wählen Sie eine richtige Antwort aus.");
-        return;
-      }
+    cancelEditing() {
+      this.$emit("close");
+    },
+    saveChanges() {
+      let question = this.createPrivateQuestion();
+      this.$emit("save", question);
+    },
+    toggleLabel(newLabelObject) {
+      // Überprüfen, ob das Label bereits in der Liste vorhanden ist
+      const labelExists = this.questionLabels.some(
+        (labelObject) => labelObject.label === newLabelObject.label
+      );
 
-      const dataObj = this.createQuestion();
-      console.log(dataObj);
-
-      if (this.privateQuestion) {
-        await this.uploadPrivateQuestion(dataObj);
+      // Wenn das Label bereits existiert, entferne es aus der Liste
+      if (labelExists) {
+        this.questionLabels = this.questionLabels.filter(
+          (labelObject) => labelObject.label !== newLabelObject.label
+        );
       } else {
-        await this.uploadPublicQuestion(dataObj);
+        // Ansonsten füge das Label zur Liste hinzu
+        this.questionLabels.push(newLabelObject);
       }
-
-      // Optional: Zurücksetzen der Formularfelder nach dem Hinzufügen der Frage
-      this.question = "";
-      this.answers.forEach((answer) => (answer.text = ""));
-      this.correctAnswerIndex = null;
-      this.privateQuestion = false;
-      this.selectedLabels = [];
+      console.log("after toggle: ", this.questionLabels);
     },
 
-    createQuestion() {
-      const dataObj = {
-        questionText: this.question,
+    isActive(otherLabelObject) {
+      return this.questionLabels.some(
+        (labelObject) => labelObject.label === otherLabelObject.label
+      );
+    },
+
+    createPrivateQuestion() {
+      return {
+        questionText: this.questionText,
+        questionLabels: this.questionLabels.map((labelObject) => {
+          return {
+            label: labelObject.label,
+          };
+        }),
         answerOptions: this.answers.map((answer, index) => {
           return {
             text: answer.text,
@@ -154,63 +159,41 @@ export default {
           };
         }),
       };
-
-      if (this.privateQuestion) {
-        // Füge die Labels zur Frage hinzu
-        dataObj.questionLabels = this.selectedLabels.map((labelObject) => {
-          return {
-            label: labelObject.label,
-          };
-        });
-      }
-
-      return dataObj;
     },
-
-    async uploadPrivateQuestion(dataObj) {
-      const userCollectionRef = collection(
-        db,
-        `users/${auth.currentUser.uid}/questions`
-      );
-      const userDocRef = await addDoc(userCollectionRef, dataObj);
-      console.log("Private question created:", userDocRef.id);
-    },
-
-    async uploadPublicQuestion(dataObj) {
-      try {
-        const colRef = collection(db, "unreviewedQuestions");
-        const docRef = await addDoc(colRef, dataObj);
-
-        console.log("Public question uploaded:", docRef.id);
-      } catch (error) {
-        console.error("Error uploading public question:", error);
-      }
-    },
-
-    toggleLabel(labelName) {
-      if (this.selectedLabels.includes(labelName)) {
-        this.selectedLabels = this.selectedLabels.filter(
-          (label) => label !== labelName
-        );
-      } else {
-        this.selectedLabels.push(labelName);
-      }
-    },
+  },
+  created() {
+    this.questionText = this.question.questionText;
+    this.answers = this.question.answerOptions.map((option) => ({
+      text: option.text,
+    }));
+    this.questionLabels = this.question.questionLabels.map((labelObject) => ({
+      label: labelObject.label,
+    }));
+    this.correctAnswerIndex = this.question.answerOptions.findIndex(
+      (option) => option.isCorrect
+    );
+    console.log("created questionLabels: ", this.questionLabels);
   },
 };
 </script>
 
 <style scoped>
-.container {
-  max-width: 500px;
-  margin: 5rem auto auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
+.pop-up-window {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-h2 {
-  text-align: center;
+.pop-up-inner {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 32px;
 }
 
 .answer-label {

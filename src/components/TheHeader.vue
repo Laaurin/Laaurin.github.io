@@ -2,6 +2,17 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Willem C. Vis Moot - Training</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <router-link to="/" class="nav-item nav-link">Home</router-link>
@@ -11,6 +22,18 @@
           <router-link to="/practice" class="nav-item nav-link"
             >Practice</router-link
           >
+          <router-link to="/profile" class="nav-item nav-link"
+            >Profile</router-link
+          >
+        </div>
+        <div class="navbar-nav justify-content-end">
+          <button
+            class="sign-out-button"
+            v-if="this.$root.loggedIn"
+            @click="logOut"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
     </div>
@@ -20,7 +43,20 @@
 <script>
 export default {
   name: "TheHeader",
+  emits: ["sign-out"],
+  methods: {
+    logOut() {
+      this.$emit("sign-out");
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.sign-out-button {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  float: end;
+}
+</style>
