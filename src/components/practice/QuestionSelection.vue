@@ -12,7 +12,14 @@
       class="my-global-button set-selection-button"
       @click="selectPrivateQuestions"
     >
-      <i class="bi bi-person-fill"> team questions </i>
+      <div class="container text-center">
+        <div class="row justify-content-start">
+          <div class="col-3">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div class="col-4">Team Questions</div>
+        </div>
+      </div>
     </button>
   </div>
   <div v-for="labelObject in userLabels" :key="labelObject.label">
@@ -20,7 +27,16 @@
       class="my-global-button set-selection-button"
       @click="selectQuestionsByLabel"
     >
-      <i class="bi bi-tag-fill"> {{ labelObject.label }} </i>
+      <div class="container text-center">
+        <div class="row justify-content-start">
+          <div class="col-3">
+            <i class="bi bi-tag-fill"></i>
+          </div>
+          <div class="col-4">
+            {{ labelObject.label }}
+          </div>
+        </div>
+      </div>
     </button>
   </div>
 </template>
@@ -82,5 +98,16 @@ export default {
 <style scoped>
 .set-selection-button {
   min-width: 250px;
+}
+.button-content {
+  display: flex;
+}
+
+.button-icon {
+  align-items: start;
+}
+
+.button-text {
+  align-items: center;
 }
 </style>

@@ -105,6 +105,7 @@ export default {
       questionText: "",
       answers: [{ text: "" }, { text: "" }, { text: "" }, { text: "" }],
       questionLabels: [],
+      addedLabels: [],
       correctAnswerIndex: null,
       updatedQuestion: null,
     };
@@ -112,13 +113,14 @@ export default {
   methods: {
     addLabel(labelObject) {
       this.userLabels.push(labelObject);
+      this.addedLabels.push(labelObject);
     },
     cancelEditing() {
       this.$emit("close");
     },
     saveChanges() {
       let question = this.createPrivateQuestion();
-      this.$emit("save", question);
+      this.$emit("save", question, this.addedLabels);
     },
     toggleLabel(newLabelObject) {
       // Überprüfen, ob das Label bereits in der Liste vorhanden ist

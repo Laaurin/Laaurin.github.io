@@ -33,15 +33,16 @@
         style="margin: 5px"
         @click="editQuestion"
       >
-        <span v-if="editLabel">save</span>
-        <span v-else><i class="bi bi-pencil-square"></i> Edit</span>
+        <i class="bi bi-pencil-square"></i>
+        <span class="d-none d-md-inline">Edit</span>
       </button>
       <button
         class="my-global-button"
         style="margin: 5px"
         @click="toggleDelete"
       >
-        <i v-if="!isDeleting" class="bi bi-trash"></i> {{ deleteButtonText }}
+        <i v-if="!isDeleting" class="bi bi-trash"></i>
+        <span class="d-none d-md-inline">{{ deleteButtonText }}</span>
       </button>
     </div>
     <hr />
@@ -54,7 +55,7 @@ import { inject } from "vue";
 
 export default {
   components: { QuestionLabel },
-  emits: ["edit"],
+  emits: ["edit", "delete"],
   props: {
     question: Object,
   },
@@ -67,7 +68,6 @@ export default {
   data() {
     return {
       extended: false,
-      editLabel: false,
       isDeleting: false,
     };
   },
@@ -88,8 +88,7 @@ export default {
       }
     },
     delete() {
-      // Hier kannst du deine Löschlogik einfügen
-      // Nach dem Löschen den Zustand zurücksetzen
+      this.$emit("delete", this.question);
       this.isDeleting = false;
     },
   },
