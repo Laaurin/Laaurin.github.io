@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import AnswerOption from "@/components/AnswerOption.vue";
-import QuestionText from "@/components/QuestionText.vue";
+import AnswerOption from "@/components/Question/AnswerOption.vue";
+import QuestionText from "@/components/Question/QuestionText.vue";
 
 export default {
   name: "MultipleChoiceQuestion",

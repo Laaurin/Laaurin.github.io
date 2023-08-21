@@ -25,7 +25,7 @@
   <div v-for="labelObject in userLabels" :key="labelObject.label">
     <button
       class="my-global-button set-selection-button"
-      @click="selectQuestionsByLabel"
+      @click="selectQuestionsByLabel(labelObject.label)"
     >
       <div class="container text-center">
         <div class="row justify-content-start">
@@ -76,12 +76,15 @@ export default {
       this.questions = this.userQuestions;
       this.submit();
     },
-    selectQuestionsByLabel() {
-      this.questions = this.userQuestions;
+    selectQuestionsByLabel(label) {
+      this.questions = this.userQuestions.filter(
+        (question) => question.label === label
+      );
       this.submit();
       console.log("funktioniert noch nicht");
     },
     submit() {
+      console.log("questions:" + this.questions);
       this.$emit("questionsSelected", this.questions);
     },
     async loadPublicQuestions() {

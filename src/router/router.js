@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { auth } from "@/firebase/init";
+import store from "@/store/store";
+import { getUserState } from "../firebase/init";
 
 const routes = [
   {
@@ -40,10 +42,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const isAuthenticated = auth.currentUser;
-  if (requiresAuth && !isAuthenticated) {
+  const isAuth = await getUserState();
+  console.log(isAuthenticated);
+  console.log(store.state.isLoggedIn);
+  console.log("ne" + isAuth);
+  if (requiresAuth && !isAuth) {
     next("/");
   } else {
     next();

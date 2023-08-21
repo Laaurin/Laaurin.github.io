@@ -41,7 +41,11 @@
         style="margin: 5px"
         @click="toggleDelete"
       >
-        <i v-if="!isDeleting" class="bi bi-trash"></i>
+        <i
+          :class="{ 'delete-icon': isDeleting, default: !isDeleting }"
+          @animationend="resetDeleteButton"
+          class="bi bi-trash"
+        ></i>
         <span class="d-none d-md-inline">{{ deleteButtonText }}</span>
       </button>
     </div>
@@ -50,7 +54,7 @@
 </template>
 
 <script>
-import QuestionLabel from "@/components/QuestionLabel.vue";
+import QuestionLabel from "@/components/Label/QuestionLabel.vue";
 import { inject } from "vue";
 
 export default {
@@ -85,6 +89,9 @@ export default {
         this.delete(); // Hier die eigentliche Löschfunktion aufrufen
       } else {
         this.isDeleting = true;
+        setTimeout(() => {
+          this.isDeleting = false;
+        }, 3000);
       }
     },
     delete() {
@@ -96,23 +103,22 @@ export default {
 </script>
 
 <style scoped>
-.add-label {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 1rem;
-  font-size: 14px;
-  text-align: center;
-  cursor: pointer;
-  margin-left: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s; /* Füge eine Übergangseffekt hinzu */
+.default-icon {
+  color: white;
+}
+.delete-icon {
+  animation: colorChange 3s linear;
+  animation-fill-mode: forwards;
 }
 
-.add-label:hover {
-  color: #007bff;
-  background-color: #fff;
+@keyframes colorChange {
+  0% {
+    transform: translateY(0);
+    color: red;
+  }
+  100% {
+    transform: translateY(100%);
+    color: white;
+  }
 }
 </style>

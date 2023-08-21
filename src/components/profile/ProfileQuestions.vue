@@ -34,7 +34,7 @@
 
 <script>
 import EditableQuestion from "@/components/profile/EditableQuestion.vue";
-import EditQuestionWindow from "@/components/EditQuestionWindow.vue";
+import EditQuestionWindow from "@/components/profile/EditQuestionWindow.vue";
 import { inject } from "vue";
 import db, { auth } from "@/firebase/init";
 import { doc, setDoc, deleteDoc, collection } from "firebase/firestore";

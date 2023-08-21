@@ -85,8 +85,9 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 380px;
+  min-width: 380px;
   min-height: 100px;
+  width: 380px;
   border-radius: 0.5rem;
   border: 2px solid #b5bfd9;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);

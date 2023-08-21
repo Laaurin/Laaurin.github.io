@@ -85,8 +85,8 @@
 
 <script>
 import { inject } from "vue";
-import QuestionLabel from "@/components/QuestionLabel.vue";
-import NewLabel from "@/components/NewLabel.vue";
+import QuestionLabel from "@/components/Label/QuestionLabel.vue";
+import NewLabel from "@/components/Label/NewLabel.vue";
 
 export default {
   components: { QuestionLabel, NewLabel },

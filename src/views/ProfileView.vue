@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ProfileQuestions from "@/components/ProfileQuestions.vue";
+import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 
 export default {
   components: { ProfileQuestions },

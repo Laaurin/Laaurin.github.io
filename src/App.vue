@@ -10,6 +10,7 @@ import db, { auth } from "@/firebase/init.js";
 import { collection, getDocs } from "firebase/firestore";
 import TheHeader from "@/components/TheHeader.vue";
 import router from "@/router/router";
+import store from "@/store/store";
 
 export default {
   components: { TheHeader },
@@ -61,6 +62,8 @@ export default {
         console.log("called called called");
         if (user) {
           loggedIn.value = true;
+          store.commit("setLoggedIn", true);
+          console.log("jetzt erst");
           await fetchUserData(user);
         } else {
           loggedIn.value = false;

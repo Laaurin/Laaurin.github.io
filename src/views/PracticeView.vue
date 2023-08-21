@@ -1,19 +1,31 @@
 <template>
-  <question-selection @questions-selected="passQuestions"></question-selection>
+  <button
+    v-if="!showOptions"
+    @click="showOptions = !showOptions"
+    class="my-global-button"
+  >
+    show options
+  </button>
+  <question-selection
+    v-if="showOptions"
+    @questions-selected="passQuestions"
+  ></question-selection>
   <question-training
     v-if="startTraining"
     :question-set="questions"
   ></question-training>
+  <button @click="console.log(questions)">debug</button>
 </template>
 
 <script>
-import QuestionSelection from "@/components/QuestionSelection.vue";
-import QuestionTraining from "@/components/QuestionTraining.vue";
+import QuestionSelection from "@/components/practice/QuestionSelection.vue";
+import QuestionTraining from "@/components/practice/QuestionTraining.vue";
 export default {
   name: "PracticeView",
   components: { QuestionSelection, QuestionTraining },
   data() {
     return {
+      showOptions: true,
       questions: [
         {
           answerOptions: [
@@ -67,6 +79,13 @@ export default {
     passQuestions(newQuestions) {
       this.questions = newQuestions;
       this.startTraining = true;
+      this.showOptions = false;
+    },
+  },
+  computed: {},
+  watch: {
+    questions() {
+      console.log("ja es ändert sich" + this.questions);
     },
   },
 };

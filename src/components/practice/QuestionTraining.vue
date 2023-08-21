@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import MultipleChoiceQuestion from "@/components/MultipleChoiceQuestion.vue";
+import MultipleChoiceQuestion from "@/components/Question/MultipleChoiceQuestion.vue";
 
 export default {
   name: "PracticeView",
@@ -23,63 +23,20 @@ export default {
   props: ["questionSet"],
   data() {
     return {
-      questions: [
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Drone Eye plc",
-            },
-            {
-              isCorrect: false,
-              text: "Drone Eye ltd",
-            },
-            {
-              isCorrect: false,
-              text: "Equatoriana Geoscience plc",
-            },
-            {
-              isCorrect: true,
-              text: "Equatoriana Geoscience ltd",
-            },
-          ],
-          questionText:
-            "What is the Name of the Respondent of the Proceedings?",
-        },
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C5, p. 16",
-            },
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C7, p. 18, para. 11",
-            },
-            {
-              isCorrect: true,
-              text: "Respondent Exhibit R2, p. 33",
-            },
-            {
-              isCorrect: false,
-              text: "Respondent Exhibit R4, p. 35?",
-            },
-          ],
-          questionText:
-            "Where in the Case-File can we find information, that the public prosecutor in Equatoriana can proof that Mr. Field accepted two undue payments?",
-        },
-      ],
+      questions: [],
       currentQuestionIndex: 0,
       submitted: false,
     };
   },
   created() {
+    console.log(this.questionSet);
     //this.questions = this.shuffleArray(this.questionSet);
   },
   computed: {
     currentQuestion() {
       return (
-        this.questions[this.currentQuestionIndex % this.questions.length] || {}
+        this.questionSet[this.currentQuestionIndex % this.questionSet.length] ||
+        {}
       );
     },
   },

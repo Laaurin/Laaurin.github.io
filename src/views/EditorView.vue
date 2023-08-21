@@ -91,9 +91,9 @@
 <script>
 import db, { auth } from "@/firebase/init.js";
 import { inject } from "vue";
-import { addDoc, collection } from "firebase/firestore";
-import QuestionLabel from "@/components/QuestionLabel.vue";
-import NewLabel from "@/components/NewLabel.vue";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import QuestionLabel from "@/components/Label/QuestionLabel.vue";
+import NewLabel from "@/components/Label/NewLabel.vue";
 
 export default {
   components: { NewLabel, QuestionLabel },
@@ -114,11 +114,13 @@ export default {
       correctAnswerIndex: null,
       privateQuestion: false,
       selectedLabels: [],
+      newLabels: [],
     };
   },
   methods: {
     addLabel(labelObject) {
       this.userLabels.push(labelObject);
+      this.newLabels.push(labelObject);
     },
     async submitForm() {
       // Validieren, ob eine richtige Antwort ausgewählt wurde
@@ -142,6 +144,7 @@ export default {
       this.correctAnswerIndex = null;
       this.privateQuestion = false;
       this.selectedLabels = [];
+      this.newLabels = [];
     },
 
     createQuestion() {
@@ -173,6 +176,9 @@ export default {
         `users/${auth.currentUser.uid}/questions`
       );
       const userDocRef = await addDoc(userCollectionRef, dataObj);
+      for (const newLabel of this.newLabels) {
+        await this.addNewLabelToUserLabels(newLabel);
+      }
       console.log("Private question created:", userDocRef.id);
     },
 
@@ -184,6 +190,23 @@ export default {
         console.log("Public question uploaded:", docRef.id);
       } catch (error) {
         console.error("Error uploading public question:", error);
+      }
+    },
+
+    async addNewLabelToUserLabels(newLabel) {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userLabelsCollectionRef = collection(
+            db,
+            `users/${user.uid}/labels`
+          );
+
+          const labelDocRef = doc(userLabelsCollectionRef);
+          await setDoc(labelDocRef, newLabel);
+        }
+      } catch (error) {
+        console.error("Error adding new label to user's labels:", error);
       }
     },
 
