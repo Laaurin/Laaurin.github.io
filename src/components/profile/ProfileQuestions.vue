@@ -1,7 +1,6 @@
 <template>
   <div class="profile-questions">
     <div class="filter-bar">
-      <i class="bi bi-filter"></i>
       <label for="filter">Filter by Label:</label>
       <select id="filter" v-model="selectedLabel">
         <option value="">All Labels</option>

@@ -1,6 +1,7 @@
 <template>
   <div style="margin-top: 5rem">
     <MultipleChoiceQuestion
+      :key="currentQuestionIndex"
       :question="currentQuestion"
       @submitted="submitted = true"
     ></MultipleChoiceQuestion>
@@ -42,7 +43,10 @@ export default {
   },
   methods: {
     nextQuestion() {
-      this.currentQuestionIndex++;
+      if (this.questionSet.length > 1) {
+        this.currentQuestionIndex++;
+      }
+      this.submitted = false;
     },
 
     shuffleArray(array) {

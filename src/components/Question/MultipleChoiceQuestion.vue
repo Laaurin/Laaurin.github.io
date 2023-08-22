@@ -50,7 +50,6 @@ export default {
       data: this.question,
       selectedAnswerIndex: NaN,
       submitted: false,
-      isLargeScreen: window.innerWidth >= 992,
     };
   },
   methods: {

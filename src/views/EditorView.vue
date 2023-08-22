@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>Upload new question</h2>
+    <h2>Upload new Question</h2>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
         <div class="question-input-wrapper">
@@ -62,8 +62,12 @@
         </div>
       </div>
       <div>
+        <input
+          type="checkbox"
+          v-model="privateQuestion"
+          style="margin-right: 10px"
+        />
         <label>private Question</label>
-        <input type="checkbox" v-model="privateQuestion" />
         <div v-if="privateQuestion">
           <div class="label-list">
             <div
@@ -83,7 +87,7 @@
           </div>
         </div>
       </div>
-      <button class="my-global-button" type="submit">add question</button>
+      <button class="my-global-button" type="submit">add Question</button>
     </form>
   </div>
 </template>
@@ -105,7 +109,7 @@ export default {
     };
   },
   created() {
-    console.log(this.userLabels[0].label);
+    console.log(this.userLabels);
   },
   data() {
     return {

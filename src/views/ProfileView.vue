@@ -1,12 +1,15 @@
 <template>
+  <options-button></options-button>
+  <i class="bi bi-filter"></i>
   <profile-questions></profile-questions>
 </template>
 
 <script>
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
+import OptionsButton from "@/components/UI/OptionsButton.vue";
 
 export default {
-  components: { ProfileQuestions },
+  components: { ProfileQuestions, OptionsButton },
   data() {
     return {};
   },
