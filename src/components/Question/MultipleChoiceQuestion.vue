@@ -3,36 +3,40 @@
     class="container d-flex flex-column align-items-center justify-content-center"
     style="margin-top: 10px"
   >
-    <question-text :question="data.questionText"></question-text>
-    <div class="row row-cols-2">
+    <div class="row" style="width: 100%">
+      <div class="col" style="width: 100%">
+        <question-text :question="data.questionText"></question-text>
+      </div>
+    </div>
+    <div class="row">
       <div
-        :class="{
-          'col-6': true,
-          'd-flex': true,
-          'justify-content-end': index % 2 === 0,
-          'justify-content-start': index % 2 !== 0,
-        }"
-        ref="options"
-        v-for="(answer, index) in data.answerOptions"
+        class="col-md-6"
+        style="padding: 12px"
+        v-for="(answerOption, index) in data.answerOptions"
         :key="index"
       >
         <answer-option
-          :answer-option="answer"
+          :answer-option="answerOption"
           :index="index"
           :submitted="submitted"
           :selected-answer-index="selectedAnswerIndex"
-          :key="index"
           @selected="selectAnswer(index)"
         ></answer-option>
       </div>
     </div>
-    <button @click="submit" :disabled="enableSubmitButton">Submit</button>
+    <button
+      class="my-global-button"
+      @click="submit"
+      :disabled="enableSubmitButton"
+    >
+      Submit
+    </button>
   </div>
 </template>
 
 <script>
-import AnswerOption from "@/components/AnswerOption.vue";
-import QuestionText from "@/components/QuestionText.vue";
+import AnswerOption from "@/components/Question/AnswerOption.vue";
+import QuestionText from "@/components/Question/QuestionText.vue";
 
 export default {
   name: "MultipleChoiceQuestion",
@@ -77,43 +81,19 @@ export default {
 </script>
 
 <style scoped>
-.correct {
-  background-color: green;
-}
-
-.incorrect {
+.red {
   background-color: red;
 }
 
-.actuallyCorrect {
-  border-color: green;
+.blue {
+  background-color: blue;
 }
 
-button {
-  font-size: 17px;
-  padding: 0.5em 2em;
-  border: transparent;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-  background: #616e7f;
-  color: white;
-  border-radius: 4px;
+.green {
+  background-color: green;
 }
 
-button:hover {
-  background: rgb(2, 0, 36);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 144, 255, 1) 0%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
-
-button:active {
-  transform: translate(0em, 0.2em);
-}
-
-button:disabled {
-  background: #707070;
-  opacity: 50%;
+.yellow {
+  background-color: yellow;
 }
 </style>

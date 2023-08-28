@@ -1,14 +1,19 @@
 <template>
-  <label style="padding: 10px">
+  <label class="test">
     <input
       class="radio-input"
       type="radio"
       name="engine"
       @change="selectAnswer"
+      v-model="selectedOption"
     />
-    <span :class="radioTileClasses">
-      <span class="radio-label">{{ answerOption.text }}</span>
-    </span>
+    <div :class="radioTileClasses" class="radio-tile" ref="radioTile">
+      <span
+        class="radio-label"
+        :class="{ 'cutoff-text': index !== selectedAnswerIndex }"
+        >{{ answerOption.text }}</span
+      >
+    </div>
   </label>
 </template>
 
@@ -25,29 +30,35 @@ export default {
   data() {
     return {
       selectedOption: false,
-      text: this.answerOption,
-      submittedd: this.submitted,
     };
   },
   methods: {
     selectAnswer() {
-      if (this.submittedd) {
+      console.log("select");
+      if (this.submitted) {
         return;
       }
       this.$emit("selected", this.index);
     },
   },
   computed: {
+    isTextTooLarge() {
+      const radioTileWidth = this.$refs.radioTile.clientWidth;
+      const radioLabelWidth =
+        this.$refs.radioTile.querySelector(".radio-label").clientWidth;
+
+      return radioLabelWidth > radioTileWidth;
+    },
     radioTileClasses() {
       return {
         "radio-tile": true,
-        selected: !this.submittedd && this.index === this.selectedAnswerIndex,
+        selected: !this.submitted && this.index === this.selectedAnswerIndex,
         correct:
-          this.submittedd &&
+          this.submitted &&
           //this.index === this.selectedAnswerIndex &&
           this.answerOption.isCorrect,
         incorrect:
-          this.submittedd &&
+          this.submitted &&
           this.index === this.selectedAnswerIndex &&
           !this.answerOption.isCorrect,
         //"not-selected":
@@ -58,16 +69,20 @@ export default {
     },
   },
   watch: {
-    submitted() {
-      this.submittedd = this.submitted;
+    answerOption() {
+      this.selectedOption = false;
     },
   },
 };
 </script>
 
 <style scoped>
-.radio-inputs > * {
-  margin: 6px;
+.cutoff-text {
+  --max-lines: 3;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines);
 }
 
 .radio-input:focus + .radio-tile {
@@ -80,13 +95,19 @@ export default {
   opacity: 1;
 }
 
+.test {
+  width: 100%;
+  height: 100%;
+}
+
 .radio-tile {
+  min-height: 100px;
+  min-width: 300px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  min-height: 80px;
   border-radius: 0.5rem;
   border: 2px solid #b5bfd9;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -109,7 +130,7 @@ export default {
   color: #707070;
   transition: 0.375s ease;
   text-align: center;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .radio-input {

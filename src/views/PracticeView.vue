@@ -1,98 +1,42 @@
 <template>
-  <div style="margin-top: 5rem">
-    <MultipleChoiceQuestion
-      :question="currentQuestion"
-      @submitted="submitted = true"
-    ></MultipleChoiceQuestion>
-    <button v-if="showNextButton" @click="nextQuestion">
-      {{ submitted ? "next" : "skip" }}
-    </button>
-  </div>
+  <button
+    v-if="!showOptions"
+    @click="showOptions = !showOptions"
+    class="my-global-button"
+  >
+    show options
+  </button>
+  <question-selection
+    v-if="showOptions"
+    @questions-selected="passQuestions"
+  ></question-selection>
+  <question-training
+    v-if="startTraining"
+    :question-set="questions"
+  ></question-training>
 </template>
 
 <script>
-import MultipleChoiceQuestion from "@/components/MultipleChoiceQuestion.vue";
-import db from "@/firebase/init.js";
-import { query, getDocs, collection } from "firebase/firestore";
-
+import QuestionSelection from "@/components/practice/QuestionSelection.vue";
+import QuestionTraining from "@/components/practice/QuestionTraining.vue";
 export default {
   name: "PracticeView",
-  components: { MultipleChoiceQuestion },
+  components: { QuestionSelection, QuestionTraining },
   data() {
     return {
-      questions: [
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "erste",
-            },
-            {
-              isCorrect: false,
-              text: "zweite",
-            },
-            {
-              isCorrect: false,
-              text: "dritte",
-            },
-            {
-              isCorrect: true,
-              text: "richtig",
-            },
-          ],
-          questionText: "testfrage",
-        },
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "hier nicht",
-            },
-            {
-              isCorrect: true,
-              text: "richitg hahah",
-            },
-            {
-              isCorrect: false,
-              text: "davor",
-            },
-            {
-              isCorrect: false,
-              text: "richtig?",
-            },
-          ],
-          questionText: "nächste testfrage",
-        },
-      ],
-      currentQuestionIndex: 0,
-      submitted: false,
+      showOptions: true,
+      questions: [],
+      startTraining: false,
     };
   },
-  computed: {
-    currentQuestion() {
-      return this.questions[this.currentQuestionIndex] || {};
-    },
-    showNextButton() {
-      return this.currentQuestionIndex < this.questions.length - 1;
-    },
-  },
   methods: {
-    nextQuestion() {
-      this.currentQuestionIndex++;
-    },
-
-    async loadQuestions() {
-      const querySnap = await getDocs(query(collection(db, "questions")));
-
-      querySnap.forEach((doc) => {
-        this.questions.push(doc.data());
-      });
+    passQuestions(newQuestions) {
+      this.questions = newQuestions;
+      this.startTraining = true;
+      this.showOptions = false;
     },
   },
-  created() {
-    console.log("created!");
-    //this.loadQuestions();
-  },
+  computed: {},
 };
 </script>
 
