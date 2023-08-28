@@ -1,19 +1,55 @@
 <template>
-  <h1 style="margin-top: 5rem" class="landing-title">Welcome to Vis Quiz</h1>
-  <div class="landing-page">
-    <div v-if="!this.$root.loggedIn">
-      <main>
+  <div class="container">
+    <h1>Welcome To Vis Quiz</h1>
+    <div class="row">
+      <div
+        class="col-md-6 d-none d-md-inline"
+        style="aspect-ratio: 1; max-width: 450px; margin: 0 auto"
+      >
+        <introduction-carousel></introduction-carousel>
+      </div>
+      <div v-if="this.$root.loggedIn" class="col-md-6 landing-button-group">
+        <div class="row" style="height: 70%">
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="max-height: 100%"
+          >
+            <div class="hochkant">
+              <button
+                class="full-size landing-button"
+                @click="this.$router.push('/upload')"
+              >
+                Upload Question
+              </button>
+            </div>
+            <div class="hochkant">
+              <button
+                class="full-size landing-button"
+                @click="this.$router.push('/practice')"
+              >
+                Practice
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="height: 30%">
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="max-height: 100%"
+          >
+            <div class="vertical">
+              <button
+                class="full-size landing-button"
+                @click="this.$router.push('/profile')"
+              >
+                Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="col-md-6">
         <login-form></login-form>
-      </main>
-    </div>
-    <div v-else>
-      <div class="landing-buttons">
-        <router-link to="/editor" class="landing-button">
-          Upload Question
-        </router-link>
-        <router-link to="/practice" class="landing-button">
-          Practice
-        </router-link>
       </div>
     </div>
   </div>
@@ -21,50 +57,56 @@
 
 <script>
 import LoginForm from "@/components/LoginForm.vue";
+import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
+//import SponsorBar from "@/components/UI/SponsorBar.vue";
 
 export default {
+  data() {
+    return {
+      carouselSlides: [
+        {
+          image: "../../assets/logos/cms.png",
+          caption: "Welcome to our App!",
+          description: "Explore our amazing features.",
+        },
+      ],
+      sponsors: [{ logo: "./logos/cms.png", name: "heheh" }],
+    };
+  },
   name: "LandingPage",
-  components: { LoginForm },
+  components: { IntroductionCarousel, LoginForm },
 };
 </script>
 
 <style scoped>
-.landing-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-}
-
 .landing-title {
   font-size: 36px;
   margin-bottom: 30px;
 }
 
-.landing-buttons {
-  display: flex;
+.hochkant {
+  padding: 5px;
+  height: 100%;
+  aspect-ratio: 2/3;
+}
+
+.vertical {
+  padding: 5px;
+  height: 100%;
+  aspect-ratio: 28/9;
+}
+
+.full-size {
   width: 100%;
-  justify-content: center;
-  margin-top: 20px; /* Füge einen oberen Abstand hinzu */
+  height: 100%;
 }
 
 .landing-button {
-  flex: 1; /* Ändere die Flex-Grow-Eigenschaft, um die Buttons gleich groß zu machen */
-  max-width: 500px; /* Setze eine maximale Breite für die Buttons */
-  height: 300px;
-  font-size: 24px;
-  padding: 15px 30px;
-  margin: 0 10px;
+  font-size: 17px;
   border: none;
   border-radius: 4px;
   background-color: #616e7f;
   color: white;
-  cursor: pointer;
-  text-decoration: none;
-  display: flex; /* Zentriere den Text horizontal */
-  align-items: center; /* Zentriere den Text vertikal */
-  justify-content: center; /* Zentriere den Text horizontal */
 }
 
 .landing-button:hover {
@@ -73,5 +115,9 @@ export default {
 
 .landing-button:focus {
   outline: none;
+}
+
+.landing-button-group {
+  max-width: 100%;
 }
 </style>

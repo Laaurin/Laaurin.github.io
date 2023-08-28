@@ -1,42 +1,32 @@
 <template>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="mb-4">Login</h2>
-            <form @submit.prevent="login">
-              <div class="form-group">
-                <label for="email" class="form-label label-sm">
-                  Email address
-                </label>
-                <input
-                  type="email"
-                  class="form-control form-control-sm"
-                  id="email"
-                  v-model="email"
-                  placeholder="Enter email"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="password" class="form-label label-sm"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  class="form-control form-control-sm"
-                  id="password"
-                  v-model="password"
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
-              <button type="submit" class="my-global-button">Login</button>
-            </form>
-          </div>
+  <div class="card" style="height: 100%">
+    <div class="card-body">
+      <h2 class="mb-4">Login</h2>
+      <form @submit.prevent="login">
+        <div class="form-group">
+          <label for="email" class="form-label label-sm"> Email address </label>
+          <input
+            type="email"
+            class="form-control form-control-sm"
+            id="email"
+            v-model="email"
+            placeholder="Enter email"
+            required
+          />
         </div>
-      </div>
+        <div class="form-group">
+          <label for="password" class="form-label label-sm">Password</label>
+          <input
+            type="password"
+            class="form-control form-control-sm"
+            id="password"
+            v-model="password"
+            placeholder="Enter password"
+            required
+          />
+        </div>
+        <button type="submit" class="my-global-button">Login</button>
+      </form>
     </div>
   </div>
 </template>
@@ -66,14 +56,15 @@ export default {
 </script>
 
 <style>
-/* Du kannst hier zusätzliche benutzerdefinierte Stile hinzufügen, wenn nötig */
 .card {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  height: 100%;
 }
 
 .label-sm {
   font-size: 12px;
-  text-align: left; /* Setze den Text linksbündig */
+  text-align: left;
 }
 </style>

@@ -7,9 +7,13 @@
       @change="selectAnswer"
       v-model="selectedOption"
     />
-    <span :class="radioTileClasses">
-      <span class="radio-label">{{ answerOption.text }}</span>
-    </span>
+    <div :class="radioTileClasses" class="radio-tile" ref="radioTile">
+      <span
+        class="radio-label"
+        :class="{ 'cutoff-text': index !== selectedAnswerIndex }"
+        >{{ answerOption.text }}</span
+      >
+    </div>
   </label>
 </template>
 
@@ -30,6 +34,7 @@ export default {
   },
   methods: {
     selectAnswer() {
+      console.log("select");
       if (this.submitted) {
         return;
       }
@@ -37,6 +42,13 @@ export default {
     },
   },
   computed: {
+    isTextTooLarge() {
+      const radioTileWidth = this.$refs.radioTile.clientWidth;
+      const radioLabelWidth =
+        this.$refs.radioTile.querySelector(".radio-label").clientWidth;
+
+      return radioLabelWidth > radioTileWidth;
+    },
     radioTileClasses() {
       return {
         "radio-tile": true,
@@ -65,6 +77,14 @@ export default {
 </script>
 
 <style scoped>
+.cutoff-text {
+  --max-lines: 3;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines);
+}
+
 .radio-input:focus + .radio-tile {
   border-color: #616e7f;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
@@ -76,18 +96,18 @@ export default {
 }
 
 .test {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 .radio-tile {
+  min-height: 100px;
+  min-width: 300px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 380px;
-  min-height: 100px;
-  width: 380px;
   border-radius: 0.5rem;
   border: 2px solid #b5bfd9;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);

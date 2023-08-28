@@ -1,13 +1,20 @@
 <template>
-$END$
+  <div class="sponsor">
+    <img :src="logoUrl" :alt="name" />
+  </div>
 </template>
 
 <script>
 export default {
-name: "SponsorProfile"
-}
+  props: {
+    name: String,
+    logoUrl: String,
+  },
+};
 </script>
 
 <style scoped>
-
+.sponsor {
+  /* Füge hier deine gewünschten Stile für Sponsoren hinzu */
+}
 </style>

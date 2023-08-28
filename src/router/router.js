@@ -10,9 +10,9 @@ const routes = [
     meta: { requiresAuth: false, title: "Vis Quiz | Start" },
   },
   {
-    path: "/editor",
-    name: "editor",
-    component: () => import("../views/EditorView.vue"),
+    path: "/upload",
+    name: "upload",
+    component: () => import("../views/UploadView.vue"),
     meta: { requiresAuth: true, title: "Vis Quiz | Upload" },
   },
   {
@@ -38,6 +38,12 @@ const routes = [
     name: "impressum",
     component: () => import("../views/ImpressumView.vue"),
     meta: { requiresAuth: false, title: "Vis Quiz | Impressum" },
+  },
+  {
+    path: "/sponsors",
+    name: "sponsors",
+    component: () => import("../views/SponsorView.vue"),
+    meta: { requiresAuth: false, title: "Vis Quiz | Sponsors" },
   },
 ];
 

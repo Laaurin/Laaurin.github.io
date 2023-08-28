@@ -1,7 +1,7 @@
 <template>
-  <the-header @sign-out="signOutUser"></the-header>
+  <the-header @sign-out="signOutUser" class="sticky-top"></the-header>
+  <base-top></base-top>
   <router-view></router-view>
-  <the-footer></the-footer>
 </template>
 
 <script>
@@ -12,10 +12,11 @@ import { collection, getDocs } from "firebase/firestore";
 import TheHeader from "@/components/UI/TheHeader.vue";
 import router from "@/router/router";
 import store from "@/store/store";
-import TheFooter from "@/components/UI/TheFooter.vue";
+import BaseTop from "@/components/UI/BaseTop.vue";
+//import TheFooter from "@/components/UI/TheFooter.vue";
 
 export default {
-  components: { TheFooter, TheHeader },
+  components: { BaseTop, TheHeader },
   setup() {
     const loggedIn = ref(false);
     const userQuestions = ref([]);

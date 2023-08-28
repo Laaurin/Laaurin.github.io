@@ -71,6 +71,7 @@
             :clickable="true"
             :active="isActive(labelObject)"
             @toggle-label="toggleLabel"
+            @remove-label="removeLabel"
           ></QuestionLabel>
         </div>
         <div class="label-wrapper">
@@ -138,6 +139,10 @@ export default {
         this.questionLabels.push(newLabelObject);
       }
       console.log("after toggle: ", this.questionLabels);
+    },
+
+    removeLabel() {
+      console.log("delete label");
     },
 
     isActive(otherLabelObject) {

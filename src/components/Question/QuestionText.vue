@@ -1,56 +1,94 @@
 <template>
-  <div class="info">
-    <div class="info__title">{{ question }}</div>
+  <div class="question-wrapper">
+    <div
+      class="info__title"
+      ref="questionText"
+      :class="fontSizeClass"
+      @mouseenter="checkFontSize"
+    >
+      {{ question }}
+    </div>
   </div>
+  <hr />
 </template>
 
 <script>
 export default {
-  name: "QuestionText",
-  props: ["question"],
+  props: {
+    question: String,
+  },
+  data() {
+    return {
+      fontSizeClass: "font-size-max",
+    };
+  },
+  methods: {
+    checkFontSize() {
+      const element = this.$refs.questionText;
+      if (element) {
+        const availableWidth = element.offsetWidth;
+        const textLength = this.question.length;
+
+        if (availableWidth < 200 && textLength > 30) {
+          this.fontSizeClass = "font-size-scroll";
+        } else if (availableWidth < 150) {
+          this.fontSizeClass = "font-size-min";
+        } else if (availableWidth < 250 && textLength > 40) {
+          this.fontSizeClass = "font-size-medium";
+        } else {
+          this.fontSizeClass = "font-size-max";
+        }
+        console.log(this.fontSizeClass);
+      }
+    },
+  },
+  mounted() {
+    this.checkFontSize();
+  },
 };
 </script>
 
 <style scoped>
-.info {
+.question-wrapper {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  width: 320px;
-  padding: 12px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
+  width: 100%;
+  min-height: 100px;
+  max-height: min-content;
   background: #616e7f;
   border-radius: 8px;
   box-shadow: 0px 0px 5px -3px #111;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
-.info__icon {
-  width: 20px;
-  height: 20px;
-  transform: translateY(-2px);
-  margin-right: 8px;
-}
-
-.info__icon path {
-  fill: #fff;
+.question-wrapper p {
+  font-size: clamp(14px, 2.5vw, 17px);
 }
 
 .info__title {
-  font-weight: 500;
-  font-size: 17px;
-  color: #fff;
+  color: #f0f0f0;
+  text-align: center;
+  font-size: 16px;
 }
 
-.info__close {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  margin-left: auto;
+.font-size-max {
+  font-size: 18px;
 }
 
-.info__close path {
-  fill: #fff;
+.font-size-medium {
+  font-size: 16px;
+}
+
+.font-size-min {
+  font-size: 14px;
+}
+
+.font-size-scroll {
+  font-size: 14px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>

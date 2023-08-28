@@ -4,7 +4,14 @@
       class="my-global-button set-selection-button"
       @click="selectPublicQuestions"
     >
-      <i class="bi bi-people-fill"> public questions </i>
+      <div class="container text-center">
+        <div class="row justify-content-start">
+          <div class="col-2">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div class="col d-flex align-items-start">Public Questions</div>
+        </div>
+      </div>
     </button>
   </div>
   <div>
@@ -14,10 +21,10 @@
     >
       <div class="container text-center">
         <div class="row justify-content-start">
-          <div class="col-3">
+          <div class="col-2">
             <i class="bi bi-person-fill"></i>
           </div>
-          <div class="col-4">Team Questions</div>
+          <div class="col d-flex align-items-start">Team Questions</div>
         </div>
       </div>
     </button>
@@ -29,10 +36,10 @@
     >
       <div class="container text-center">
         <div class="row justify-content-start">
-          <div class="col-3">
+          <div class="col-2">
             <i class="bi bi-tag-fill"></i>
           </div>
-          <div class="col-4">
+          <div class="col d-flex align-items-start">
             {{ label }}
           </div>
         </div>
@@ -123,7 +130,7 @@ export default {
 
 <style scoped>
 .set-selection-button {
-  min-width: 250px;
+  min-width: 300px;
 }
 .button-content {
   display: flex;

@@ -1,17 +1,27 @@
 <template>
-  <options-button></options-button>
-  <i class="bi bi-filter"></i>
-  <profile-questions></profile-questions>
+  <div class="container">
+    <profile-questions></profile-questions>
+  </div>
 </template>
 
 <script>
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
-import OptionsButton from "@/components/UI/OptionsButton.vue";
+import { inject } from "vue";
 
 export default {
-  components: { ProfileQuestions, OptionsButton },
+  components: { ProfileQuestions },
+  setup() {
+    const userQuestions = inject("userQuestions");
+    const userLabels = inject("userLabels");
+    return {
+      userQuestions,
+      userLabels: userLabels,
+    };
+  },
   data() {
-    return {};
+    return {
+      selectedLabel: "",
+    };
   },
   methods: {
     editQuestion() {

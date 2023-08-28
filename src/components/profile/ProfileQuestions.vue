@@ -2,9 +2,10 @@
   <div class="profile-questions">
     <div class="filter-bar">
       <label for="filter">Filter by Label:</label>
-      <select id="filter" v-model="selectedLabel">
-        <option value="">All Labels</option>
+      <select class="dropdown" id="filter" v-model="selectedLabel">
+        <option value="" class="dropdown-item">All Labels</option>
         <option
+          class="dropdown-item"
           v-for="labelObject in userLabels"
           :key="labelObject.id"
           :value="labelObject.label"

@@ -16,7 +16,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <router-link to="/" class="nav-item nav-link">Home</router-link>
-          <router-link to="/editor" class="nav-item nav-link"
+          <router-link to="/upload" class="nav-item nav-link"
             >Upload Question</router-link
           >
           <router-link to="/practice" class="nav-item nav-link"
