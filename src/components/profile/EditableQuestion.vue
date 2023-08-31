@@ -54,8 +54,9 @@
 </template>
 
 <script>
-import QuestionLabel from "@/components/Label/QuestionLabel.vue";
-import { inject } from "vue";
+import QuestionLabel from "@/components/label/QuestionLabel.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   components: { QuestionLabel },
@@ -64,9 +65,10 @@ export default {
     question: Object,
   },
   setup() {
-    const userLabels = inject("userLabels");
+    const store = useStore();
+    const teamLabels = computed(() => store.getters.getTeamLabels);
     return {
-      userLabels: userLabels,
+      teamLabels,
     };
   },
   data() {

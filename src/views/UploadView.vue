@@ -7,7 +7,7 @@
           <input
             type="text"
             id="question"
-            v-model="question"
+            v-model="questionText"
             placeholder="Enter your question here"
             required
           />
@@ -16,7 +16,12 @@
       <div class="mb-3">
         <div class="option-input-wrapper">
           <label class="answer-label" for="answer1">Option 1:</label>
-          <input type="text" id="answer1" v-model="answers[0].text" required />
+          <input
+            type="text"
+            id="answer1"
+            v-model="answerOptions[0].text"
+            required
+          />
           <input
             type="radio"
             v-model="correctAnswerIndex"
@@ -28,7 +33,12 @@
       <div class="mb-3">
         <div class="option-input-wrapper">
           <label class="answer-label" for="answer2">Option 2:</label>
-          <input type="text" id="answer2" v-model="answers[1].text" required />
+          <input
+            type="text"
+            id="answer2"
+            v-model="answerOptions[1].text"
+            required
+          />
           <input
             type="radio"
             v-model="correctAnswerIndex"
@@ -40,7 +50,12 @@
       <div class="mb-3">
         <div class="option-input-wrapper">
           <label class="answer-label" for="answer3">Option 3:</label>
-          <input type="text" id="answer3" v-model="answers[2].text" required />
+          <input
+            type="text"
+            id="answer3"
+            v-model="answerOptions[2].text"
+            required
+          />
           <input
             type="radio"
             v-model="correctAnswerIndex"
@@ -52,7 +67,12 @@
       <div class="mb-3">
         <div class="option-input-wrapper">
           <label class="answer-label" for="answer4">Option 4:</label>
-          <input type="text" id="answer4" v-model="answers[3].text" required />
+          <input
+            type="text"
+            id="answer4"
+            v-model="answerOptions[3].text"
+            required
+          />
           <input
             type="radio"
             v-model="correctAnswerIndex"
@@ -64,15 +84,15 @@
       <div>
         <input
           type="checkbox"
-          v-model="privateQuestion"
+          v-model="isPrivateQuestion"
           style="margin-right: 10px"
         />
         <label>private Question</label>
-        <div v-if="privateQuestion">
+        <div v-if="isPrivateQuestion">
           <div class="label-list">
             <div
               class="label-wrapper"
-              v-for="(labelObject, index) in userLabels"
+              v-for="(labelObject, index) in displayLabels"
               :key="index"
             >
               <QuestionLabel
@@ -93,39 +113,49 @@
 </template>
 
 <script>
-import db, { auth } from "@/firebase/init.js";
-import { inject } from "vue";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import QuestionLabel from "@/components/Label/QuestionLabel.vue";
-import NewLabel from "@/components/Label/NewLabel.vue";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
+import QuestionLabel from "@/components/label/QuestionLabel.vue";
+import NewLabel from "@/components/label/NewLabel.vue";
 
 export default {
   components: { NewLabel, QuestionLabel },
   setup() {
-    const userLabels = inject("userLabels");
-
+    const questionText = ref("");
+    const answerOptions = ref([
+      { text: "" },
+      { text: "" },
+      { text: "" },
+      { text: "" },
+    ]);
+    const correctAnswerIndex = ref(null);
+    const isPrivateQuestion = ref(false);
+    const questionLabels = ref([]);
+    const addedLabels = ref([]);
+    const store = useStore();
+    const isLoggedIn = computed(() => store.getters.isLoggedIn);
+    const teamLabels = computed(() => store.getters.getTeamLabels);
+    const displayLabels = computed(() =>
+      teamLabels.value.concat(addedLabels.value)
+    );
     return {
-      userLabels,
-    };
-  },
-  created() {
-    console.log(this.userLabels);
-  },
-  data() {
-    return {
-      question: "",
-      answers: [{ text: "" }, { text: "" }, { text: "" }, { text: "" }],
-      correctAnswerIndex: null,
-      privateQuestion: false,
-      selectedLabels: [],
-      newLabels: [],
+      isLoggedIn,
+      teamLabels,
+      questionText,
+      answerOptions,
+      questionLabels,
+      correctAnswerIndex,
+      isPrivateQuestion,
+      addedLabels,
+      displayLabels,
     };
   },
   methods: {
     addLabel(labelObject) {
-      this.userLabels.push(labelObject);
-      this.newLabels.push(labelObject);
+      //this.teamLabels.push(labelObject);
+      this.addedLabels.push(labelObject);
     },
+
     async submitForm() {
       // Validieren, ob eine richtige Antwort ausgewählt wurde
       if (this.correctAnswerIndex === null) {
@@ -133,28 +163,30 @@ export default {
         return;
       }
 
-      const dataObj = this.createQuestion();
-      console.log(dataObj);
-
-      if (this.privateQuestion) {
-        await this.uploadPrivateQuestion(dataObj);
+      if (this.isPrivateQuestion) {
+        await this.saveNewLabelsToTeam();
+        const dataObj = this.createQuestion();
+        console.log(dataObj);
+        await this.$store.dispatch("uploadPrivateQuestion", dataObj);
       } else {
-        await this.uploadPublicQuestion(dataObj);
+        const dataObj = this.createQuestion();
+        console.log(dataObj);
+        await this.$store.dispatch("uploadPublicQuestion", dataObj);
       }
 
       // Optional: Zurücksetzen der Formularfelder nach dem Hinzufügen der Frage
-      this.question = "";
-      this.answers.forEach((answer) => (answer.text = ""));
+      this.questionText = "";
+      this.answerOptions.forEach((answer) => (answer.text = ""));
       this.correctAnswerIndex = null;
-      this.privateQuestion = false;
-      this.selectedLabels = [];
-      this.newLabels = [];
+      this.isPrivateQuestion = false;
+      this.questionLabels = [];
+      this.addedLabels = [];
     },
 
     createQuestion() {
       const dataObj = {
-        questionText: this.question,
-        answerOptions: this.answers.map((answer, index) => {
+        questionText: this.questionText,
+        answerOptions: this.answerOptions.map((answer, index) => {
           return {
             text: answer.text,
             isCorrect: index === this.correctAnswerIndex,
@@ -162,11 +194,12 @@ export default {
         }),
       };
 
-      if (this.privateQuestion) {
+      if (this.isPrivateQuestion) {
         // Füge die Labels zur Frage hinzu
-        dataObj.questionLabels = this.selectedLabels.map((labelObject) => {
+        dataObj.questionLabels = this.questionLabels.map((labelObject) => {
           return {
             label: labelObject.label,
+            id: labelObject.id,
           };
         });
       }
@@ -174,53 +207,31 @@ export default {
       return dataObj;
     },
 
-    async uploadPrivateQuestion(dataObj) {
-      const userCollectionRef = collection(
-        db,
-        `users/${auth.currentUser.uid}/questions`
-      );
-      const userDocRef = await addDoc(userCollectionRef, dataObj);
-      for (const newLabel of this.newLabels) {
-        await this.addNewLabelToUserLabels(newLabel);
-      }
-      console.log("Private question created:", userDocRef.id);
-    },
+    async saveNewLabelsToTeam() {
+      console.log("adding labels...");
+      for (const labelObject of this.addedLabels) {
+        const id = await this.$store.dispatch(
+          "addNewLabelToTeamLabels",
+          labelObject.label
+        );
+        const index = this.questionLabels.findIndex(
+          (label) => label.label === labelObject.label
+        );
 
-    async uploadPublicQuestion(dataObj) {
-      try {
-        const colRef = collection(db, "unreviewedQuestions");
-        const docRef = await addDoc(colRef, dataObj);
-
-        console.log("Public question uploaded:", docRef.id);
-      } catch (error) {
-        console.error("Error uploading public question:", error);
-      }
-    },
-
-    async addNewLabelToUserLabels(newLabel) {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          const userLabelsCollectionRef = collection(
-            db,
-            `users/${user.uid}/labels`
-          );
-
-          const labelDocRef = doc(userLabelsCollectionRef);
-          await setDoc(labelDocRef, newLabel);
+        if (index !== -1) {
+          // Aktualisiere die ID des Labels
+          this.questionLabels[index].id = id;
         }
-      } catch (error) {
-        console.error("Error adding new label to user's labels:", error);
       }
     },
 
     toggleLabel(labelName) {
-      if (this.selectedLabels.includes(labelName)) {
-        this.selectedLabels = this.selectedLabels.filter(
+      if (this.questionLabels.includes(labelName)) {
+        this.questionLabels = this.questionLabels.filter(
           (label) => label !== labelName
         );
       } else {
-        this.selectedLabels.push(labelName);
+        this.questionLabels.push(labelName);
       }
     },
   },
@@ -262,7 +273,7 @@ input[type="text"] {
 
 .option-input-wrapper {
   display: flex;
-  grid-template-columns: auto 1fr; /* Label und Eingabe in einer Zeile mit Grid-Layout */
+  grid-template-columns: auto 1fr; /* data und Eingabe in einer Zeile mit Grid-Layout */
   align-items: center;
   margin-left: 10px;
   margin-right: 10px;

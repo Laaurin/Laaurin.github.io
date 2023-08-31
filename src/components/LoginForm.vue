@@ -32,23 +32,20 @@
 </template>
 
 <script>
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/init";
-
 export default {
   data() {
     return {
       email: "",
       password: "",
+      isLoading: false,
+      error: null,
     };
   },
   methods: {
-    login() {
-      // Hier kannst du die Login-Logik implementieren
-      signInWithEmailAndPassword(auth, this.email, this.password).then(() => {
-        this.$root.loggedIn = true;
-        console.log("Email:", this.email);
-        console.log("Password:", this.password);
+    async login() {
+      await this.$store.dispatch("login", {
+        email: this.email,
+        password: this.password,
       });
     },
   },

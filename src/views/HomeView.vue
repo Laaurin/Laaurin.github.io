@@ -8,7 +8,7 @@
       >
         <introduction-carousel></introduction-carousel>
       </div>
-      <div v-if="this.$root.loggedIn" class="col-md-6 landing-button-group">
+      <div v-if="isLoggedIn" class="col-md-6 landing-button-group">
         <div class="row" style="height: 70%">
           <div
             class="d-flex justify-content-center align-items-center"
@@ -72,6 +72,11 @@ export default {
       ],
       sponsors: [{ logo: "./logos/cms.png", name: "heheh" }],
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    },
   },
   name: "LandingPage",
   components: { IntroductionCarousel, LoginForm },

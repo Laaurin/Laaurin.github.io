@@ -6,7 +6,7 @@
         <option value="" class="dropdown-item">All Labels</option>
         <option
           class="dropdown-item"
-          v-for="labelObject in userLabels"
+          v-for="labelObject in teamLabels"
           :key="labelObject.id"
           :value="labelObject.label"
         >
@@ -19,7 +19,7 @@
         <editable-question
           :question="question"
           @edit="edit"
-          @delete="deleteQuestion"
+          @delete="deleteQuestion(question.id)"
         ></editable-question>
       </div>
     </div>
@@ -28,16 +28,14 @@
     :question="questionInEdit"
     v-if="editQuestion"
     @close="editQuestion = false"
-    @save="updateQuestion"
   ></edit-question-window>
 </template>
 
 <script>
 import EditableQuestion from "@/components/profile/EditableQuestion.vue";
 import EditQuestionWindow from "@/components/profile/EditQuestionWindow.vue";
-import { inject } from "vue";
-import db, { auth } from "@/firebase/init";
-import { doc, setDoc, deleteDoc, collection } from "firebase/firestore";
+import { computed, ref } from "vue";
+import { mapActions, useStore } from "vuex";
 
 export default {
   name: "ProfileQuestions",
@@ -46,93 +44,35 @@ export default {
     EditableQuestion,
   },
   setup() {
-    const userQuestions = inject("userQuestions");
-    const userLabels = inject("userLabels");
-    return {
-      userQuestions,
-      userLabels: userLabels,
-    };
-  },
-  data() {
-    return {
-      selectedLabel: "",
-      editQuestion: false,
-      questionInEdit: null,
-    };
-  },
-  computed: {
-    filteredQuestions() {
-      if (!this.selectedLabel) {
-        return this.userQuestions;
+    const store = useStore();
+
+    const selectedLabel = ref("");
+    const editQuestion = ref(false);
+    const questionInEdit = ref(null);
+
+    const teamQuestions = computed(() => store.getters.getTeamQuestions);
+    const teamLabels = computed(() => store.getters.getTeamLabels);
+    const filteredQuestions = computed(() => {
+      if (!selectedLabel.value) {
+        return teamQuestions.value;
       }
-      return this.userQuestions.filter((question) =>
+      return teamQuestions.value.filter((question) =>
         question.questionLabels.some(
-          (labelObject) => labelObject.label === this.selectedLabel
+          (labelObject) => labelObject.label === selectedLabel.value
         )
       );
-    },
+    });
+    return {
+      teamQuestions,
+      teamLabels,
+      filteredQuestions,
+      editQuestion,
+      questionInEdit,
+      selectedLabel,
+    };
   },
   methods: {
-    async updateQuestion(questionData, addedLabels) {
-      this.editQuestion = false; // Schließe das Bearbeitungsfenster
-
-      // Aktualisiere die Frage im userQuestions-Array
-      const index = this.userQuestions.findIndex(
-        (question) => question.id === this.questionInEdit.id
-      );
-      if (index !== -1) {
-        this.userQuestions[index] = questionData;
-      }
-
-      const user = auth.currentUser;
-      if (user) {
-        const questionRef = doc(
-          db,
-          "users",
-          user.uid,
-          "questions",
-          this.questionInEdit.id
-        );
-        await setDoc(questionRef, questionData);
-        for (const newLabel of addedLabels) {
-          await this.addNewLabelToUserLabels(newLabel);
-        }
-      }
-    },
-
-    async deleteQuestion(questionData) {
-      this.userQuestions = this.userQuestions.filter(
-        (question) => question.id !== questionData.id
-      );
-      const user = auth.currentUser;
-      if (user) {
-        const questionRef = doc(
-          db,
-          "users",
-          user.uid,
-          "questions",
-          questionData.id
-        );
-        await deleteDoc(questionRef);
-      }
-    },
-
-    async addNewLabelToUserLabels(newLabel) {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          const userLabelsCollectionRef = collection(
-            db,
-            `users/${user.uid}/labels`
-          );
-
-          const labelDocRef = doc(userLabelsCollectionRef);
-          await setDoc(labelDocRef, newLabel);
-        }
-      } catch (error) {
-        console.error("Error adding new label to user's labels:", error);
-      }
-    },
+    ...mapActions(["deleteQuestion"]),
 
     edit(question) {
       this.questionInEdit = question;

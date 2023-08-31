@@ -27,13 +27,10 @@
           >
         </div>
         <div class="navbar-nav justify-content-end">
-          <button
-            class="sign-out-button"
-            v-if="this.$root.loggedIn"
-            @click="logOut"
-          >
+          <button class="sign-out-button" v-if="isLoggedIn" @click="logout">
             Sign Out
           </button>
+          <button @click="debug">debug</button>
         </div>
       </div>
     </div>
@@ -41,12 +38,23 @@
 </template>
 
 <script>
+import { mapActions, useStore } from "vuex";
+import { computed } from "vue";
+
 export default {
+  setup() {
+    const store = useStore();
+    const isLoggedIn = computed(() => store.getters.isAuthenticated);
+    return {
+      isLoggedIn,
+    };
+  },
   name: "TheHeader",
-  emits: ["sign-out"],
   methods: {
-    logOut() {
-      this.$emit("sign-out");
+    ...mapActions(["logout"]),
+    debug() {
+      console.log(this.isLoggedIn);
+      console.log(this.$store.getters.token);
     },
   },
 };

@@ -19,14 +19,18 @@
 <script>
 import QuestionSelection from "@/components/practice/QuestionSelection.vue";
 import QuestionTraining from "@/components/practice/QuestionTraining.vue";
+import { ref } from "vue";
 export default {
   name: "PracticeView",
   components: { QuestionSelection, QuestionTraining },
-  data() {
+  setup() {
+    const questions = ref([]);
+    const showOptions = ref(true);
+    const startTraining = ref(false);
     return {
-      showOptions: true,
-      questions: [],
-      startTraining: false,
+      questions,
+      showOptions,
+      startTraining,
     };
   },
   methods: {

@@ -63,7 +63,7 @@
       <div class="label-list">
         <div
           class="label-wrapper"
-          v-for="(labelObject, index) in userLabels"
+          v-for="(labelObject, index) in teamLabels"
           :key="index"
         >
           <QuestionLabel
@@ -71,7 +71,7 @@
             :clickable="true"
             :active="isActive(labelObject)"
             @toggle-label="toggleLabel"
-            @remove-label="removeLabel"
+            @remove-label="deleteLabel"
           ></QuestionLabel>
         </div>
         <div class="label-wrapper">
@@ -85,20 +85,24 @@
 </template>
 
 <script>
-import { inject } from "vue";
-import QuestionLabel from "@/components/Label/QuestionLabel.vue";
-import NewLabel from "@/components/Label/NewLabel.vue";
+import { computed, ref } from "vue";
+import QuestionLabel from "@/components/label/QuestionLabel.vue";
+import NewLabel from "@/components/label/NewLabel.vue";
+import { mapActions, useStore } from "vuex";
 
 export default {
   components: { QuestionLabel, NewLabel },
-  emits: ["close", "save"],
+  emits: ["close"],
   props: {
     question: Object,
   },
   setup() {
-    const userLabels = inject("userLabels");
+    const store = useStore();
+    const teamLabels = computed(() => store.getters.getTeamLabels);
+    const addedLabels = ref([]);
     return {
-      userLabels,
+      teamLabels,
+      addedLabels,
     };
   },
   data() {
@@ -106,43 +110,62 @@ export default {
       questionText: "",
       answers: [{ text: "" }, { text: "" }, { text: "" }, { text: "" }],
       questionLabels: [],
-      addedLabels: [],
+      questionId: "",
       correctAnswerIndex: null,
       updatedQuestion: null,
     };
   },
   methods: {
-    addLabel(labelObject) {
-      this.userLabels.push(labelObject);
-      this.addedLabels.push(labelObject);
+    ...mapActions(["updateTeamQuestion", "addNewLabelToTeamLabels"]),
+
+    saveChanges() {
+      const question = this.createPrivateQuestion();
+      this.updateQuestion(question);
+      if (this.addedLabels.length > 0) {
+        console.log("updating labels");
+        this.updateTeamLabels();
+      }
+      this.$emit("close");
     },
+
     cancelEditing() {
       this.$emit("close");
     },
-    saveChanges() {
-      let question = this.createPrivateQuestion();
-      this.$emit("save", question, this.addedLabels);
-    },
-    toggleLabel(newLabelObject) {
-      // Überprüfen, ob das Label bereits in der Liste vorhanden ist
-      const labelExists = this.questionLabels.some(
-        (labelObject) => labelObject.label === newLabelObject.label
-      );
 
-      // Wenn das Label bereits existiert, entferne es aus der Liste
+    updateQuestion(questionObject) {
+      this.editQuestion = false; //schließt das Pop-up
+      this.updateTeamQuestion(questionObject);
+    },
+
+    updateTeamLabels() {
+      for (const newLabel of this.addedLabels) {
+        this.addNewLabelToTeamLabels(newLabel.label);
+      }
+    },
+
+    addLabel(labelObject) {
+      console.log(labelObject);
+      this.addedLabels.push(labelObject);
+      this.teamLabels.push(labelObject);
+      console.log(this.teamLabels);
+    },
+
+    toggleLabel(otherLabelObject) {
+      const labelExists = this.questionLabels.some(
+        (label) => label.id === otherLabelObject.id
+      );
       if (labelExists) {
         this.questionLabels = this.questionLabels.filter(
-          (labelObject) => labelObject.label !== newLabelObject.label
+          (labelObject) => labelObject.id !== otherLabelObject.id
         );
       } else {
-        // Ansonsten füge das Label zur Liste hinzu
-        this.questionLabels.push(newLabelObject);
+        this.questionLabels.push(otherLabelObject);
       }
-      console.log("after toggle: ", this.questionLabels);
+      console.log(this.questionLabels);
     },
 
-    removeLabel() {
-      console.log("delete label");
+    deleteLabel() {
+      console.log("delete data");
     },
 
     isActive(otherLabelObject) {
@@ -153,10 +176,12 @@ export default {
 
     createPrivateQuestion() {
       return {
+        id: this.questionId,
         questionText: this.questionText,
         questionLabels: this.questionLabels.map((labelObject) => {
           return {
             label: labelObject.label,
+            id: labelObject.id,
           };
         }),
         answerOptions: this.answers.map((answer, index) => {
@@ -168,18 +193,21 @@ export default {
       };
     },
   },
+
   created() {
+    console.log("created questionLabels: ", this.teamLabels);
     this.questionText = this.question.questionText;
+    this.questionId = this.question.id;
     this.answers = this.question.answerOptions.map((option) => ({
       text: option.text,
     }));
     this.questionLabels = this.question.questionLabels.map((labelObject) => ({
       label: labelObject.label,
+      id: labelObject.id,
     }));
     this.correctAnswerIndex = this.question.answerOptions.findIndex(
       (option) => option.isCorrect
     );
-    console.log("created questionLabels: ", this.questionLabels);
   },
 };
 </script>
@@ -225,7 +253,7 @@ input[type="text"] {
 
 .option-input-wrapper {
   display: flex;
-  grid-template-columns: auto 1fr; /* Label und Eingabe in einer Zeile mit Grid-Layout */
+  grid-template-columns: auto 1fr; /* data und Eingabe in einer Zeile mit Grid-Layout */
   align-items: center;
   margin-left: 10px;
   margin-right: 10px;

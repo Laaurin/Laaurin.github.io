@@ -31,7 +31,10 @@ export default {
     },
     saveNewLabel() {
       if (this.label.trim() !== "" && this.label.trim().length < 15) {
-        this.$emit("new-label", { label: this.label });
+        this.$emit("new-label", {
+          label: this.label,
+          id: new Date().getTime().toString(),
+        });
         this.editing = false;
         this.label = "";
       }
@@ -54,8 +57,8 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  height: 24px; /* Festgelegte Höhe für das Label */
-  padding: 0 10px; /* Innenabstand für das Label */
+  height: 24px; /* Festgelegte Höhe für das data */
+  padding: 0 10px; /* Innenabstand für das data */
 }
 
 .new-label {

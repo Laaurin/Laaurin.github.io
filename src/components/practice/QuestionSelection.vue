@@ -29,7 +29,7 @@
       </div>
     </button>
   </div>
-  <div v-for="label in userLabelsInUse" :key="label">
+  <div v-for="label in teamLabelsInUse" :key="label">
     <button
       class="my-global-button set-selection-button"
       @click="selectQuestionsByLabel(label)"
@@ -51,25 +51,25 @@
 <script>
 import { collection, getDocs, query } from "firebase/firestore";
 import db from "@/firebase/init";
-import { inject } from "vue";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
   emits: ["questionsSelected"],
   name: "QuestionSelection",
   setup() {
-    const publicQuestions = inject("publicQuestions");
-    const userQuestions = inject("userQuestions");
-    const userLabels = inject("userLabels");
+    const store = useStore();
+    const questions = ref([]);
+    const teamLabelsInUse = ref([]);
+    const publicQuestions = computed(() => store.getters.getPublicQuestions);
+    const teamQuestions = computed(() => store.getters.getTeamQuestions);
+    const teamLabels = computed(() => store.getters.getTeamLabels);
     return {
-      publicQuestions: publicQuestions,
-      userQuestions: userQuestions,
-      userLabels: userLabels,
-    };
-  },
-  data() {
-    return {
-      questions: [],
-      userLabelsInUse: [],
+      publicQuestions,
+      teamLabels,
+      teamQuestions,
+      questions,
+      teamLabelsInUse,
     };
   },
   methods: {
@@ -90,13 +90,13 @@ export default {
     },
 
     selectPrivateQuestions() {
-      this.questions = this.userQuestions;
+      this.questions = this.teamQuestions;
       this.submit();
     },
 
     selectQuestionsByLabel(label) {
-      console.log("selecting label: ", label);
-      this.questions = this.userQuestions.filter((question) =>
+      console.log("selecting data: ", label);
+      this.questions = this.teamQuestions.filter((question) =>
         question.questionLabels.some(
           (questionLabel) => questionLabel.label === label
         )
@@ -123,7 +123,7 @@ export default {
     },
   },
   created() {
-    this.userLabelsInUse = this.getLabelsInUse(this.userQuestions);
+    this.teamLabelsInUse = this.getLabelsInUse(this.teamQuestions);
   },
 };
 </script>

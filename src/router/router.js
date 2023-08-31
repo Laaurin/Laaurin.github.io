@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import { getUserState } from "../firebase/init";
+//import { getUserState } from "../firebase/init";
+import store from "@/store/store";
 
 const routes = [
   {
@@ -58,9 +59,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   document.title = to.meta?.title ?? "Vis Quiz";
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const isAuth = await getUserState();
-  if (requiresAuth && !isAuth) {
+  //const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  //const isAuth = await getUserState();
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
     next("/");
   } else {
     next();

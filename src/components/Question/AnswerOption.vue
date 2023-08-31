@@ -45,7 +45,7 @@ export default {
     isTextTooLarge() {
       const radioTileWidth = this.$refs.radioTile.clientWidth;
       const radioLabelWidth =
-        this.$refs.radioTile.querySelector(".radio-label").clientWidth;
+        this.$refs.radioTile.querySelector(".radio-data").clientWidth;
 
       return radioLabelWidth > radioTileWidth;
     },

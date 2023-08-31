@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { computed, onMounted, onUnmounted, ref } from "vue";
+import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -46,3 +47,6 @@ const db = getFirestore();
 export default db;
 
 export const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+// eslint-disable-next-line no-unused-vars
+const analytics = getAnalytics(app);

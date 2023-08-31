@@ -1,81 +1,37 @@
 <template>
-  <the-header @sign-out="signOutUser" class="sticky-top"></the-header>
+  <the-header class="sticky-top"></the-header>
   <base-top></base-top>
   <router-view></router-view>
 </template>
 
 <script>
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { provide, ref, onMounted } from "vue";
-import db, { auth } from "@/firebase/init.js";
-import { collection, getDocs } from "firebase/firestore";
-import TheHeader from "@/components/UI/TheHeader.vue";
-import router from "@/router/router";
-import store from "@/store/store";
+import { onAuthStateChanged } from "firebase/auth";
+import { onMounted } from "vue";
+import { useStore } from "vuex";
 import BaseTop from "@/components/UI/BaseTop.vue";
+import TheHeader from "@/components/UI/TheHeader.vue";
+import { auth } from "@/firebase/init";
+import { useRouter } from "vue-router";
 //import TheFooter from "@/components/UI/TheFooter.vue";
 
 export default {
-  components: { BaseTop, TheHeader },
+  components: { TheHeader, BaseTop },
   setup() {
-    const loggedIn = ref(false);
-    const userQuestions = ref([]);
-    const userLabels = ref([]);
-    const publicQuestions = ref([]);
-
-    provide("userQuestions", userQuestions);
-    provide("userLabels", userLabels);
-    provide("publicQuestions", publicQuestions);
-
-    const signOutUser = () => {
-      signOut(auth);
-      router.push("/");
-    };
-
-    const fetchUserData = async (user) => {
-      try {
-        // Labels abrufen
-        const labelsCollectionRef = collection(db, `users/${user.uid}/labels`);
-        const labelsQuerySnapshot = await getDocs(labelsCollectionRef);
-        userLabels.value = labelsQuerySnapshot.docs.map((doc) => doc.data());
-
-        // Fragen abrufen
-        const questionsCollectionRef = collection(
-          db,
-          `users/${user.uid}/questions`
-        );
-        const questionsQuerySnapshot = await getDocs(questionsCollectionRef);
-        userQuestions.value = questionsQuerySnapshot.docs.map((doc) => {
-          const questionData = doc.data();
-          return {
-            id: doc.id,
-            questionText: questionData.questionText,
-            answerOptions: questionData.answerOptions,
-            questionLabels: questionData.questionLabels || [],
-          };
-        });
-      } catch (error) {
-        console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
-      }
-    };
-
+    const store = useStore();
+    const router = useRouter();
+    store.dispatch("tryLogin");
     onMounted(() => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          loggedIn.value = true;
           store.commit("setLoggedIn", true);
-          await fetchUserData(user);
+          await store.dispatch("fetchUserData", user);
         } else {
-          loggedIn.value = false;
+          store.commit("setLoggedIn", false);
+          await router.push("/");
           // Navigieren Sie den Benutzer zur Startseite, wenn nicht angemeldet
         }
       });
     });
-
-    return {
-      loggedIn,
-      signOutUser,
-    };
   },
 };
 </script>

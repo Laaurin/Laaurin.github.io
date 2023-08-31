@@ -58,7 +58,7 @@ export default {
             `users/${credential.user.uid}/labels`
           );
 
-          // Beispielhaft Label für den Nutzer speichern
+          // Beispielhaft data für den Nutzer speichern
           const labelDocRef = doc(userLabelsCollectionRef);
           const labelData = {
             label: "facts",
