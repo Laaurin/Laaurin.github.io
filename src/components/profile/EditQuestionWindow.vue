@@ -63,7 +63,7 @@
       <div class="label-list">
         <div
           class="label-wrapper"
-          v-for="(labelObject, index) in teamLabels"
+          v-for="(labelObject, index) in teamLabels.concat(addedLabels)"
           :key="index"
         >
           <QuestionLabel
@@ -71,7 +71,6 @@
             :clickable="true"
             :active="isActive(labelObject)"
             @toggle-label="toggleLabel"
-            @remove-label="deleteLabel"
           ></QuestionLabel>
         </div>
         <div class="label-wrapper">
@@ -96,13 +95,19 @@ export default {
   props: {
     question: Object,
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const teamLabels = computed(() => store.getters.getTeamLabels);
     const addedLabels = ref([]);
+    const displayedLabels = computed(() =>
+      teamLabels.value.concat(addedLabels.value)
+    );
+    const myQuestion = ref({ ...props.question });
     return {
       teamLabels,
       addedLabels,
+      displayedLabels,
+      myQuestion,
     };
   },
   data() {
@@ -118,13 +123,11 @@ export default {
   methods: {
     ...mapActions(["updateTeamQuestion", "addNewLabelToTeamLabels"]),
 
-    saveChanges() {
-      const question = this.createPrivateQuestion();
-      this.updateQuestion(question);
-      if (this.addedLabels.length > 0) {
-        console.log("updating labels");
-        this.updateTeamLabels();
-      }
+    async saveChanges() {
+      await this.updateTeamLabels();
+      const questionObject = this.createPrivateQuestion();
+      console.log(questionObject);
+      await this.updateTeamQuestion(questionObject);
       this.$emit("close");
     },
 
@@ -132,22 +135,17 @@ export default {
       this.$emit("close");
     },
 
-    updateQuestion(questionObject) {
-      this.editQuestion = false; //schließt das Pop-up
-      this.updateTeamQuestion(questionObject);
-    },
-
-    updateTeamLabels() {
+    async updateTeamLabels() {
       for (const newLabel of this.addedLabels) {
-        this.addNewLabelToTeamLabels(newLabel.label);
+        const newId = await this.addNewLabelToTeamLabels(newLabel.label);
+        newLabel.id = newId;
+        console.log(newLabel);
       }
+      console.log("added Labels: ", this.addedLabels);
     },
 
     addLabel(labelObject) {
-      console.log(labelObject);
       this.addedLabels.push(labelObject);
-      this.teamLabels.push(labelObject);
-      console.log(this.teamLabels);
     },
 
     toggleLabel(otherLabelObject) {
@@ -161,11 +159,6 @@ export default {
       } else {
         this.questionLabels.push(otherLabelObject);
       }
-      console.log(this.questionLabels);
-    },
-
-    deleteLabel() {
-      console.log("delete data");
     },
 
     isActive(otherLabelObject) {
@@ -195,7 +188,6 @@ export default {
   },
 
   created() {
-    console.log("created questionLabels: ", this.teamLabels);
     this.questionText = this.question.questionText;
     this.questionId = this.question.id;
     this.answers = this.question.answerOptions.map((option) => ({

@@ -12,7 +12,7 @@ export default {
   async fetchUserData({ commit }, user) {
     try {
       // Labels abrufen
-      const labelsCollectionRef = collection(db, `users/${user.uid}/labels`);
+      const labelsCollectionRef = collection(db, `teams/${user.uid}/labels`);
       const labelsQuerySnapshot = await getDocs(labelsCollectionRef);
       const teamLabels = labelsQuerySnapshot.docs.map((doc) => {
         const labelData = doc.data();
@@ -26,7 +26,7 @@ export default {
       // Fragen abrufen
       const questionsCollectionRef = collection(
         db,
-        `users/${user.uid}/questions`
+        `teams/${user.uid}/questions`
       );
       const questionsQuerySnapshot = await getDocs(questionsCollectionRef);
       const teamQuestions = questionsQuerySnapshot.docs.map((doc) => {
@@ -45,12 +45,14 @@ export default {
   },
 
   // eslint-disable-next-line no-unused-vars
-  async uploadPrivateQuestion(state, dataObj) {
+  async uploadPrivateQuestion(context, dataObj) {
     const userCollectionRef = collection(
       db,
-      `users/${auth.currentUser.uid}/questions`
+      `teams/${auth.currentUser.uid}/questions`
     );
     const userDocRef = await addDoc(userCollectionRef, dataObj);
+    dataObj.id = userDocRef.id;
+    context.commit("addTeamQuestion", dataObj);
 
     console.log("Private question created:", userDocRef.id);
   },
@@ -74,7 +76,7 @@ export default {
       if (user) {
         const userLabelsCollectionRef = collection(
           db,
-          `users/${user.uid}/labels`
+          `teams/${user.uid}/labels`
         );
 
         // Fügen Sie das label der Sammlung hinzu und erhalten Sie die Referenz auf das neu erstellte Dokument
@@ -83,10 +85,9 @@ export default {
         });
 
         // Fügen Sie die ID zum label-Objekt hinzu und speichern Sie es im Store
-        const labeledObject = { label: newLabel, id: labelDocRef.id };
-        console.log("after writing: ", labeledObject);
-        context.commit("addNewLabel", labeledObject);
-        return labeledObject.id;
+        const labelObject = { label: newLabel, id: labelDocRef.id };
+        context.commit("addNewLabel", labelObject);
+        return labelObject.id;
       }
     } catch (error) {
       console.error("Error adding new data to user's labels:", error);
@@ -94,12 +95,11 @@ export default {
   },
 
   async updateTeamQuestion(context, questionObject) {
-    console.log(questionObject);
     const user = auth.currentUser;
     if (user) {
       const questionsRef = doc(
         db,
-        "users",
+        "teams",
         user.uid,
         "questions",
         questionObject.id
@@ -111,7 +111,6 @@ export default {
       );
       if (index !== -1) {
         context.getters.getTeamQuestions[index] = questionObject;
-        console.log("updating");
       }
     }
   },
@@ -119,12 +118,42 @@ export default {
   async deleteQuestion(context, questionId) {
     const user = auth.currentUser;
     if (user) {
-      const questionRef = doc(db, "users", user.uid, "questions", questionId);
+      const questionRef = doc(db, "teams", user.uid, "questions", questionId);
       await deleteDoc(questionRef);
       const updatedQuestions = context.getters.getTeamQuestions.filter(
         (question) => question.id !== questionId
       );
       context.commit("setTeamQuestions", updatedQuestions);
     }
+  },
+
+  async deleteLabel(context, labelId) {
+    const user = auth.currentUser;
+    if (user) {
+      const questionRef = doc(db, "teams", user.uid, "labels", labelId);
+      await deleteDoc(questionRef);
+      const updatedLabels = context.getters.getTeamLabels.filter(
+        (labelObject) => labelObject.id !== labelId
+      );
+      context.commit("setTeamLabels", updatedLabels);
+      for (const questionObject of context.getters.getTeamQuestions) {
+        console.log("hier: " + questionObject);
+        await context.dispatch("deleteLabelFromQuestion", {
+          questionObject: questionObject,
+          labelId: labelId,
+        });
+      }
+    }
+  },
+
+  async deleteLabelFromQuestion(context, payload) {
+    // Entfernen Sie das Label aus den Frage-Labels
+    payload.questionObject.questionLabels =
+      payload.questionObject.questionLabels.filter(
+        (labelObject) => labelObject.id !== payload.labelId
+      );
+
+    // Aktualisieren Sie die Frage im Store
+    await context.dispatch("updateTeamQuestion", payload.questionObject);
   },
 };

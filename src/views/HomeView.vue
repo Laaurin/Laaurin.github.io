@@ -48,7 +48,10 @@
           </div>
         </div>
       </div>
-      <div v-else class="col-md-6">
+      <div
+        v-else
+        class="col-md-6 d-flex align-items-center justify-content-center"
+      >
         <login-form></login-form>
       </div>
     </div>

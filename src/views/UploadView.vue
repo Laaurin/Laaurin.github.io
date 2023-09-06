@@ -119,8 +119,12 @@ import QuestionLabel from "@/components/label/QuestionLabel.vue";
 import NewLabel from "@/components/label/NewLabel.vue";
 
 export default {
-  components: { NewLabel, QuestionLabel },
+  components: {
+    NewLabel,
+    QuestionLabel,
+  },
   setup() {
+    const selectedComponent = ref("multipleChoice");
     const questionText = ref("");
     const answerOptions = ref([
       { text: "" },
@@ -139,6 +143,7 @@ export default {
       teamLabels.value.concat(addedLabels.value)
     );
     return {
+      selectedComponent,
       isLoggedIn,
       teamLabels,
       questionText,

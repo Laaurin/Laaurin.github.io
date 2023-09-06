@@ -1,10 +1,13 @@
 <template>
-  <div class="card" style="height: 100%">
+  <div class="card">
     <div class="card-body">
       <h2 class="mb-4">Login</h2>
-      <form @submit.prevent="login">
+      <form
+        @submit.prevent="login"
+        class="d-flex flex-column align-items-center"
+      >
         <div class="form-group">
-          <label for="email" class="form-label label-sm"> Email address </label>
+          <label for="email" class="form-label label-sm">Email address</label>
           <input
             type="email"
             class="form-control form-control-sm"
@@ -27,6 +30,13 @@
         </div>
         <button type="submit" class="my-global-button">Login</button>
       </form>
+      <p class="mt-3">
+        No account?
+        <a
+          href="https://p3pv41relm0.typeform.com/to/xFVQAa4j?typeform-source=lvp8ghhtd8b.typeform.com"
+          >Register here</a
+        >
+      </p>
     </div>
   </div>
 </template>

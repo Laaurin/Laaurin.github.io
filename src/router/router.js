@@ -46,6 +46,12 @@ const routes = [
     component: () => import("../views/SponsorView.vue"),
     meta: { requiresAuth: false, title: "Vis Quiz | Sponsors" },
   },
+  {
+    path: "/users",
+    name: "userSelection",
+    component: () => import("../components/user/UserSelection.vue"),
+    meta: { requiresAuth: true, title: "Vis Quiz | Users" },
+  },
 ];
 
 const router = createRouter({

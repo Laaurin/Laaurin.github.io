@@ -30,7 +30,6 @@
           <button class="sign-out-button" v-if="isLoggedIn" @click="logout">
             Sign Out
           </button>
-          <button @click="debug">debug</button>
         </div>
       </div>
     </div>
@@ -52,10 +51,6 @@ export default {
   name: "TheHeader",
   methods: {
     ...mapActions(["logout"]),
-    debug() {
-      console.log(this.isLoggedIn);
-      console.log(this.$store.getters.token);
-    },
   },
 };
 </script>

@@ -5,15 +5,21 @@
     @click="clickable ? toggleLabel() : null"
   >
     <div class="labelText">{{ labelObject.label }}</div>
-    <div v-if="selected && clickable" class="removeIcon" @click="removeLabel">
+    <div
+      v-if="selected && clickable"
+      class="removeIcon"
+      @click="deleteLabel(labelObject.id)"
+    >
       <i class="bi bi-x"></i>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
-  emits: ["toggle-label", "remove-label"],
+  emits: ["toggle-label"],
   props: {
     labelObject: Object,
     active: Boolean,
@@ -28,13 +34,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["deleteLabel"]),
     toggleLabel() {
       this.selected = !this.selected;
       this.$emit("toggle-label", this.labelObject);
-    },
-    removeLabel(event) {
-      event.stopPropagation(); // Stop the click event from reaching the parent div
-      this.$emit("remove-label", this.labelObject);
     },
   },
   created() {
