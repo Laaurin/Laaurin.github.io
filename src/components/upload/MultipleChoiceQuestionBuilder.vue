@@ -1,151 +1,183 @@
 <template>
-  <form @submit.prevent="submitForm">
-    <div class="mb-3">
-      <div class="question-input-wrapper">
+  <div class="container">
+    <h2>{{ uploading ? "Upload new Question" : "Edit Question" }}</h2>
+    <form>
+      <div class="mb-3">
+        <div class="question-input-wrapper">
+          <input
+            type="text"
+            id="question"
+            v-model="question.questionText"
+            placeholder="Enter your question here"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer1">Option 1:</label>
+          <input
+            type="text"
+            id="answer1"
+            v-model="question.answerOptions[0].text"
+            required
+          />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="0"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer2">Option 2:</label>
+          <input
+            type="text"
+            id="answer2"
+            v-model="question.answerOptions[1].text"
+            required
+          />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="1"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer3">Option 3:</label>
+          <input
+            type="text"
+            id="answer3"
+            v-model="question.answerOptions[2].text"
+            required
+          />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="2"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="option-input-wrapper">
+          <label class="answer-label" for="answer4">Option 4:</label>
+          <input
+            type="text"
+            id="answer4"
+            v-model="question.answerOptions[3].text"
+            required
+          />
+          <input
+            type="radio"
+            v-model="correctAnswerIndex"
+            :value="3"
+            required
+          />
+        </div>
+      </div>
+      <div>
         <input
-          type="text"
-          id="question"
-          v-model="question.questionText"
-          placeholder="Enter your question here"
-          required
+          v-if="uploading"
+          type="checkbox"
+          v-model="isPrivateQuestion"
+          style="margin-right: 10px"
         />
+        <label>private Question</label>
+        <div v-if="isPrivateQuestion || !uploading">
+          <div class="label-list">
+            <div
+              class="label-wrapper"
+              v-for="(labelObject, index) in teamLabels.concat(addedLabels)"
+              :key="index"
+            >
+              <QuestionLabel
+                :label-object="labelObject"
+                :clickable="true"
+                :active="isActive(labelObject)"
+                @toggle-label="toggleLabel"
+              ></QuestionLabel>
+            </div>
+            <div class="label-wrapper">
+              <new-label @new-label="addLabel"></new-label>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="mb-3">
-      <div class="option-input-wrapper">
-        <label class="answer-label" for="answer1">Option 1:</label>
-        <input
-          type="text"
-          id="answer1"
-          v-model="question.answerOptions[0].text"
-          required
-        />
-        <input type="radio" v-model="correctAnswerIndex" :value="0" required />
-      </div>
-    </div>
-    <div class="mb-3">
-      <div class="option-input-wrapper">
-        <label class="answer-label" for="answer2">Option 2:</label>
-        <input
-          type="text"
-          id="answer2"
-          v-model="question.answerOptions[1].text"
-          required
-        />
-        <input type="radio" v-model="correctAnswerIndex" :value="1" required />
-      </div>
-    </div>
-    <div class="mb-3">
-      <div class="option-input-wrapper">
-        <label class="answer-label" for="answer3">Option 3:</label>
-        <input
-          type="text"
-          id="answer3"
-          v-model="question.answerOptions[2].text"
-          required
-        />
-        <input type="radio" v-model="correctAnswerIndex" :value="2" required />
-      </div>
-    </div>
-    <div class="mb-3">
-      <div class="option-input-wrapper">
-        <label class="answer-label" for="answer4">Option 4:</label>
-        <input
-          type="text"
-          id="answer4"
-          v-model="question.answerOptions[3].text"
-          required
-        />
-        <input type="radio" v-model="correctAnswerIndex" :value="3" required />
-      </div>
-    </div>
-    <div class="label-list">
-      <div
-        class="label-wrapper"
-        v-for="(labelObject, index) in teamLabels"
-        :key="index"
-      >
-        <QuestionLabel
-          :label-object="labelObject"
-          :clickable="true"
-          :active="isActive(labelObject)"
-          @toggle-label="toggleLabel"
-          @remove-label="deleteLabel"
-        ></QuestionLabel>
-      </div>
-      <div class="label-wrapper">
-        <new-label @new-label="addLabel"></new-label>
-      </div>
-    </div>
-    <button class="my-global-button" @click="submitForm">
+    </form>
+    <button class="my-global-button" @click="submit">
       {{ uploading ? "Upload Question" : "Save" }}
     </button>
-    <button v-if="!uploading" class="my-global-button" @click="cancelEditing">
+    <button
+      v-if="!uploading"
+      class="my-global-button"
+      @click="this.$emit('cancel')"
+    >
       Cancel
     </button>
-  </form>
+  </div>
 </template>
 
 <script>
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
+import NewLabel from "@/components/label/NewLabel.vue";
+import QuestionLabel from "@/components/label/QuestionLabel.vue";
 
 export default {
+  components: { QuestionLabel, NewLabel },
+
   props: {
     inputQuestion: Object,
     uploading: Boolean,
   },
-  emits: ["returnQuestion"],
-  setup(props) {
+
+  setup(props, { emit }) {
     const store = useStore();
     const teamLabels = computed(() => store.getters.getTeamLabels);
     const addedLabels = ref([]);
-    const displayedLabels = computed(() =>
-      teamLabels.value.concat(addedLabels.value)
+    const isPrivateQuestion = ref(false);
+
+    // Hier prüfen, ob eine Frage über props übergeben wurde
+    const question = ref(
+      props.inputQuestion
+        ? { ...props.inputQuestion }
+        : {
+            id: "",
+            questionText: "",
+            answerOptions: [
+              { text: "", isCorrect: false },
+              { text: "", isCorrect: false },
+              { text: "", isCorrect: false },
+              { text: "", isCorrect: false },
+            ],
+            questionLabels: [],
+            type: "multiple-choice",
+          }
     );
 
-    const question = props.inputQuestion
-      ? ref({ ...props.inputQuestion })
-      : ref({
-          id: "",
-          questionText: "",
-          answerOptions: [
-            { text: "", isCorrect: false },
-            { text: "", isCorrect: false },
-            { text: "", isCorrect: false },
-            { text: "", isCorrect: false },
-          ],
-          questionLabels: [],
-        });
+    const correctAnswerIndex = ref(null);
 
-    const correctAnswerIndex = computed(() => {
-      for (const [
-        index,
-        answerOption,
-      ] of question.value.answerOptions.entries()) {
-        if (answerOption.isCorrect) {
-          return index;
-        }
-      }
-      return -1; // Falls keine richtige Antwort gefunden wurde
-    });
-
-    return {
-      teamLabels,
-      addedLabels,
-      displayedLabels,
-      question,
-      correctAnswerIndex,
-    };
-  },
-  methods: {
-    submitForm() {
-      if (this.correctAnswerIndex === null) {
+    const submit = () => {
+      if (correctAnswerIndex.value === null) {
         alert("Bitte wählen Sie eine richtige Antwort aus.");
         return;
       }
-      this.$emit("returnQuestion", this.question);
-      this.question = {
+      question.value.answerOptions = question.value.answerOptions.map(
+        (answer, index) => {
+          return {
+            text: answer.text,
+            isCorrect: index === correctAnswerIndex.value,
+          };
+        }
+      );
+      emit("returnQuestion", question.value, addedLabels.value);
+      question.value = {
         id: "",
         questionText: "",
         answerOptions: [
@@ -156,28 +188,106 @@ export default {
         ],
         questionLabels: [],
       };
-    },
+      addedLabels.value = [];
+      correctAnswerIndex.value = null;
+      isPrivateQuestion.value = false;
+    };
 
-    isActive(otherLabelObject) {
-      return this.question.questionLabels.some(
+    const isActive = (otherLabelObject) => {
+      return question.value.questionLabels.some(
         (labelObject) => labelObject.label === otherLabelObject.label
       );
-    },
+    };
 
-    toggleLabel(otherLabelObject) {
-      const labelExists = this.question.questionLabels.some(
+    const toggleLabel = (otherLabelObject) => {
+      const labelExists = question.value.questionLabels.some(
         (label) => label.id === otherLabelObject.id
       );
       if (labelExists) {
-        this.question.questionLabels = this.questionLabels.filter(
+        question.value.questionLabels = question.value.questionLabels.filter(
           (labelObject) => labelObject.id !== otherLabelObject.id
         );
       } else {
-        this.questionLabels.push(otherLabelObject);
+        question.value.questionLabels.push(otherLabelObject);
       }
-    },
+    };
+
+    const addLabel = (labelObject) => {
+      addedLabels.value.push(labelObject);
+    };
+
+    onMounted(() => {
+      if (props.inputQuestion) {
+        correctAnswerIndex.value = question.value.answerOptions.findIndex(
+          (option) => option.isCorrect
+        );
+      }
+    });
+
+    return {
+      teamLabels,
+      addedLabels,
+      question,
+      correctAnswerIndex,
+      isPrivateQuestion,
+      submit,
+      isActive,
+      toggleLabel,
+      addLabel,
+    };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  max-width: 500px;
+  margin: 5rem auto auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+h2 {
+  text-align: center;
+}
+
+.answer-label {
+  font-size: 18px;
+}
+
+.question-input-wrapper {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"] {
+  flex: 1;
+  font-size: 16px;
+  padding: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.option-input-wrapper {
+  display: flex;
+  grid-template-columns: auto 1fr; /* data und Eingabe in einer Zeile mit Grid-Layout */
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.label-list {
+  display: flex;
+  flex-wrap: wrap; /* Labels in mehreren Zeilen anzeigen */
+  align-items: center; /* Vertikal ausrichten */
+  margin-top: 10px; /* Abstand oben */
+}
+
+.label-wrapper {
+  margin-right: 10px; /* Abstand zwischen den Labels */
+}
+</style>

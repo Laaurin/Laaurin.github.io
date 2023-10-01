@@ -1,84 +1,12 @@
 <template>
   <div class="pop-up-window">
     <div class="pop-up-inner">
-      <div class="mb-3">
-        <div class="question-input-wrapper">
-          <input
-            type="text"
-            id="question"
-            v-model="questionText"
-            placeholder="Enter your question here"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer1">Option 1:</label>
-          <input type="text" id="answer1" v-model="answers[0].text" required />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="0"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer2">Option 2:</label>
-          <input type="text" id="answer2" v-model="answers[1].text" required />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="1"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer3">Option 3:</label>
-          <input type="text" id="answer3" v-model="answers[2].text" required />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="2"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer4">Option 4:</label>
-          <input type="text" id="answer4" v-model="answers[3].text" required />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="3"
-            required
-          />
-        </div>
-      </div>
-      <div class="label-list">
-        <div
-          class="label-wrapper"
-          v-for="(labelObject, index) in teamLabels.concat(addedLabels)"
-          :key="index"
-        >
-          <QuestionLabel
-            :label-object="labelObject"
-            :clickable="true"
-            :active="isActive(labelObject)"
-            @toggle-label="toggleLabel"
-          ></QuestionLabel>
-        </div>
-        <div class="label-wrapper">
-          <new-label @new-label="addLabel"></new-label>
-        </div>
-      </div>
-      <button class="my-global-button" @click="saveChanges">Save</button>
-      <button class="my-global-button" @click="cancelEditing">Cancel</button>
+      <component
+        :is="currentQuestionType"
+        :inputQuestion="currentQuestion"
+        @cancel="cancelEditing"
+        @returnQuestion="saveChanges"
+      ></component>
     </div>
   </div>
 </template>
@@ -88,9 +16,16 @@ import { computed, ref } from "vue";
 import QuestionLabel from "@/components/label/QuestionLabel.vue";
 import NewLabel from "@/components/label/NewLabel.vue";
 import { mapActions, useStore } from "vuex";
+import MultipleChoiceQuestionBuilder from "@/components/upload/MultipleChoiceQuestionBuilder.vue";
+import FlashCardBuilder from "@/components/upload/FlashCardBuilder.vue";
 
 export default {
-  components: { QuestionLabel, NewLabel },
+  components: {
+    FlashCardBuilder,
+    MultipleChoiceQuestionBuilder,
+    QuestionLabel,
+    NewLabel,
+  },
   emits: ["close"],
   props: {
     question: Object,
@@ -102,12 +37,22 @@ export default {
     const displayedLabels = computed(() =>
       teamLabels.value.concat(addedLabels.value)
     );
-    const myQuestion = ref({ ...props.question });
+    const currentQuestion = ref({ ...props.question });
+    const currentQuestionType = computed(() => {
+      if (props.question.type === "multiple-choice") {
+        return "multiple-choice-question-builder";
+      } else if (props.question.type === "flash-card") {
+        console.log("flashcard");
+        return "flash-card-builder";
+      }
+      return null;
+    });
     return {
       teamLabels,
       addedLabels,
       displayedLabels,
-      myQuestion,
+      currentQuestion,
+      currentQuestionType,
     };
   },
   data() {
@@ -123,9 +68,9 @@ export default {
   methods: {
     ...mapActions(["updateTeamQuestion", "addNewLabelToTeamLabels"]),
 
-    async saveChanges() {
-      await this.updateTeamLabels();
-      const questionObject = this.createPrivateQuestion();
+    async saveChanges(questionObject, addedLabels) {
+      await this.updateTeamLabels(addedLabels);
+      //const questionObject = this.createPrivateQuestion();
       console.log(questionObject);
       await this.updateTeamQuestion(questionObject);
       this.$emit("close");
@@ -135,13 +80,12 @@ export default {
       this.$emit("close");
     },
 
-    async updateTeamLabels() {
-      for (const newLabel of this.addedLabels) {
-        const newId = await this.addNewLabelToTeamLabels(newLabel.label);
-        newLabel.id = newId;
+    async updateTeamLabels(addedLabels) {
+      for (const newLabel of addedLabels) {
+        newLabel.id = await this.addNewLabelToTeamLabels(newLabel.label);
         console.log(newLabel);
       }
-      console.log("added Labels: ", this.addedLabels);
+      console.log("added Labels: ", addedLabels);
     },
 
     addLabel(labelObject) {
@@ -185,21 +129,6 @@ export default {
         }),
       };
     },
-  },
-
-  created() {
-    this.questionText = this.question.questionText;
-    this.questionId = this.question.id;
-    this.answers = this.question.answerOptions.map((option) => ({
-      text: option.text,
-    }));
-    this.questionLabels = this.question.questionLabels.map((labelObject) => ({
-      label: labelObject.label,
-      id: labelObject.id,
-    }));
-    this.correctAnswerIndex = this.question.answerOptions.findIndex(
-      (option) => option.isCorrect
-    );
   },
 };
 </script>

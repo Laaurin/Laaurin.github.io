@@ -1,130 +1,37 @@
 <template>
-  <div class="container">
-    <h2>Upload new Question</h2>
-    <form @submit.prevent="submitForm">
-      <div class="mb-3">
-        <div class="question-input-wrapper">
-          <input
-            type="text"
-            id="question"
-            v-model="questionText"
-            placeholder="Enter your question here"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer1">Option 1:</label>
-          <input
-            type="text"
-            id="answer1"
-            v-model="answerOptions[0].text"
-            required
-          />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="0"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer2">Option 2:</label>
-          <input
-            type="text"
-            id="answer2"
-            v-model="answerOptions[1].text"
-            required
-          />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="1"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer3">Option 3:</label>
-          <input
-            type="text"
-            id="answer3"
-            v-model="answerOptions[2].text"
-            required
-          />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="2"
-            required
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="option-input-wrapper">
-          <label class="answer-label" for="answer4">Option 4:</label>
-          <input
-            type="text"
-            id="answer4"
-            v-model="answerOptions[3].text"
-            required
-          />
-          <input
-            type="radio"
-            v-model="correctAnswerIndex"
-            :value="3"
-            required
-          />
-        </div>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          v-model="isPrivateQuestion"
-          style="margin-right: 10px"
-        />
-        <label>private Question</label>
-        <div v-if="isPrivateQuestion">
-          <div class="label-list">
-            <div
-              class="label-wrapper"
-              v-for="(labelObject, index) in displayLabels"
-              :key="index"
-            >
-              <QuestionLabel
-                :label-object="labelObject"
-                :clickable="true"
-                @toggle-label="toggleLabel"
-              ></QuestionLabel>
-            </div>
-            <div class="label-wrapper">
-              <new-label @new-label="addLabel"></new-label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="my-global-button" type="submit">add Question</button>
-    </form>
+  <div>
+    <button @click="selectedComponent = 'multiple-choice'">
+      multiple choice
+    </button>
+    <button @click="selectedComponent = 'flash-card'">flashcard</button>
   </div>
+  <multiple-choice-question-builder
+    v-if="selectedComponent === 'multiple-choice'"
+    :uploading="true"
+    @return-question="submitQuestion"
+  >
+  </multiple-choice-question-builder>
+  <flash-card-builder
+    v-else-if="selectedComponent === 'flash-card'"
+    :uploading="true"
+    @return-question="submitQuestion"
+  >
+  </flash-card-builder>
 </template>
 
 <script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import QuestionLabel from "@/components/label/QuestionLabel.vue";
-import NewLabel from "@/components/label/NewLabel.vue";
+import MultipleChoiceQuestionBuilder from "@/components/upload/MultipleChoiceQuestionBuilder.vue";
+import FlashCardBuilder from "@/components/upload/FlashCardBuilder.vue";
 
 export default {
   components: {
-    NewLabel,
-    QuestionLabel,
+    FlashCardBuilder,
+    MultipleChoiceQuestionBuilder,
   },
   setup() {
-    const selectedComponent = ref("multipleChoice");
+    const selectedComponent = ref("multiple-choice");
     const questionText = ref("");
     const answerOptions = ref([
       { text: "" },
@@ -156,6 +63,18 @@ export default {
     };
   },
   methods: {
+    async submitQuestion(questionObject, addedLabels) {
+      delete questionObject.id;
+      questionObject.questionLabels = await this.saveNewLabelsToTeam(
+        addedLabels,
+        questionObject.questionLabels
+      );
+      console.log(questionObject);
+      //const dataObj = this.createQuestion(questionObject);
+      //console.log(dataObj);
+      await this.$store.dispatch("uploadPrivateQuestion", questionObject);
+    },
+
     addLabel(labelObject) {
       //this.teamLabels.push(labelObject);
       this.addedLabels.push(labelObject);
@@ -212,22 +131,23 @@ export default {
       return dataObj;
     },
 
-    async saveNewLabelsToTeam() {
+    async saveNewLabelsToTeam(addedLabels, questionLabels) {
       console.log("adding labels...");
-      for (const labelObject of this.addedLabels) {
+      for (const labelObject of addedLabels) {
         const id = await this.$store.dispatch(
           "addNewLabelToTeamLabels",
           labelObject.label
         );
-        const index = this.questionLabels.findIndex(
+        const index = questionLabels.findIndex(
           (label) => label.label === labelObject.label
         );
 
         if (index !== -1) {
           // Aktualisiere die ID des Labels
-          this.questionLabels[index].id = id;
+          questionLabels[index].id = id;
         }
       }
+      return questionLabels;
     },
 
     toggleLabel(labelName) {

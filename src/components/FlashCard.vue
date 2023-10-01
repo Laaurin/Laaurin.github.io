@@ -1,86 +1,83 @@
 <template>
-  <div class="flashcard">
-    <div class="card-content" :class="{ flipped: isFlipped }">
-      <div class="front">
-        <p>{{ flashCard.frontText }}</p>
+  <div class="container">
+    <div class="tile-shadow">
+      <div class="row">
+        <p>{{ question.questionText }}</p>
       </div>
-      <div class="back">
-        <p>{{ flashCard.backText }}</p>
+      <div class="row">
+        <div v-if="isFlipped" @click="toggleAnswer">
+          <hr />
+          <p>
+            {{ question.solutionText }}
+          </p>
+        </div>
+        <button v-else @click="toggleAnswer">show answer</button>
       </div>
     </div>
+    <self-evaluation
+      :question-id="question.id"
+      @submit="this.$emit('next')"
+    ></self-evaluation>
   </div>
 </template>
 
 <script>
+import SelfEvaluation from "@/components/SelfEvaluation.vue";
+
 export default {
-  name: "FlashCard",
-  props: {
-    flashCard: Object,
-  },
+  components: { SelfEvaluation },
+  props: ["question"],
+  emits: ["submitted", "next"],
   data() {
     return {
       isFlipped: false,
     };
   },
-  methods: {},
+  methods: {
+    toggleAnswer() {
+      this.isFlipped = !this.isFlipped;
+    },
+  },
 };
 </script>
 
 <style scoped>
-.flashcard {
-  width: 200px;
+.base-tile {
+  width: 500px;
   height: 300px;
   perspective: 1000px;
 }
 
-.card-content {
+.base-card {
   width: 100%;
   height: 100%;
-  position: relative;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
+  border-width: 0;
 }
 
-.flipped .card-content {
-  transform: rotateY(180deg);
+.tile-shadow {
+  box-shadow: 0 2px 10px #1b1c1e20;
+  border-radius: 10px;
 }
 
 .front,
 .back {
-  width: 100%;
-  height: 100%;
+  box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
-
-.front {
-  background-color: #fff;
-}
-
-.back {
-  background-color: #f0f0f0;
-  transform: rotateY(180deg);
-}
-
-.question,
-.answer {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.flip-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
+  border-image: linear-gradient(to bottom, #5e2ca5, #f40072);
+  border-image-slice: 1;
+  border-radius: 1rem;
+  overflow: hidden;
   cursor: pointer;
 }
 
-.flip-button:hover {
-  background-color: #0056b3;
+.front {
+  background-color: lightgreen;
 }
 </style>

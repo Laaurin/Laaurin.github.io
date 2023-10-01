@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <profile-questions></profile-questions>
-  </div>
+  <profile-questions></profile-questions>
 </template>
 
 <script>

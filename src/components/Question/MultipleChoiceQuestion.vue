@@ -31,6 +31,13 @@
     >
       Submit
     </button>
+    <button
+      class="my-global-button"
+      style="margin-top: 20px"
+      @click="this.$emit('next')"
+    >
+      {{ submitted ? "next" : "skip" }}
+    </button>
   </div>
 </template>
 
@@ -44,7 +51,7 @@ export default {
   props: {
     question: Object,
   },
-  emits: ["submitted"],
+  emits: ["submitted", "next"],
   data() {
     return {
       data: this.question,
@@ -57,6 +64,17 @@ export default {
       if (isNaN(this.selectedAnswerIndex)) {
         console.log("first select an answer!");
         return;
+      }
+      if (this.$store.getters.isProfileSelected) {
+        const value = this.data.answerOptions[this.selectedAnswerIndex]
+          .isCorrect
+          ? 1
+          : 0;
+        console.log("value: ", value);
+        this.$store.dispatch("addUserSubmission", {
+          questionId: this.data.id,
+          value: value,
+        });
       }
       this.submitted = true;
       this.$emit("submitted");

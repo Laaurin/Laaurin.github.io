@@ -2,6 +2,7 @@
   <the-header class="sticky-top"></the-header>
   <base-top></base-top>
   <router-view></router-view>
+  <the-footer></the-footer>
 </template>
 
 <script>
@@ -12,10 +13,11 @@ import BaseTop from "@/components/UI/BaseTop.vue";
 import TheHeader from "@/components/UI/TheHeader.vue";
 import { auth } from "@/firebase/init";
 import { useRouter } from "vue-router";
+import TheFooter from "@/components/UI/TheFooter.vue";
 //import TheFooter from "@/components/UI/TheFooter.vue";
 
 export default {
-  components: { TheHeader, BaseTop },
+  components: { TheFooter, TheHeader, BaseTop },
   setup() {
     const store = useStore();
     const router = useRouter();

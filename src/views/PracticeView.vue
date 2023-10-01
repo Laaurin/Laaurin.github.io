@@ -10,10 +10,9 @@
     v-if="showOptions"
     @questions-selected="passQuestions"
   ></question-selection>
-  <question-training
-    v-if="startTraining"
-    :question-set="questions"
-  ></question-training>
+  <div style="background-color: purple" v-if="startTraining">
+    <question-training :question-set="questions"></question-training>
+  </div>
 </template>
 
 <script>

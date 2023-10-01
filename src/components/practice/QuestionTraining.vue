@@ -1,26 +1,23 @@
 <template>
-  <div style="margin-top: 5rem">
-    <MultipleChoiceQuestion
+  <div style="height: 100%; background-color: lightgreen">
+    <component
+      :is="currentQuestionType"
       :key="currentQuestionIndex"
       :question="currentQuestion"
-      @submitted="submitted = true"
-    ></MultipleChoiceQuestion>
-    <button
-      class="my-global-button"
-      style="margin-top: 20px"
-      @click="nextQuestion"
-    >
-      {{ submitted ? "next" : "skip" }}
-    </button>
+      @submit="submitted = true"
+      @next="nextQuestion"
+    ></component>
   </div>
 </template>
 
 <script>
 import MultipleChoiceQuestion from "@/components/Question/MultipleChoiceQuestion.vue";
+import FlashCard from "@/components/FlashCard.vue";
+import SelfEvaluation from "@/components/SelfEvaluation.vue";
 
 export default {
   name: "PracticeView",
-  components: { MultipleChoiceQuestion },
+  components: { SelfEvaluation, MultipleChoiceQuestion, FlashCard },
   props: ["questionSet"],
   data() {
     return {
@@ -39,6 +36,15 @@ export default {
         this.questionSet[this.currentQuestionIndex % this.questionSet.length] ||
         {}
       );
+    },
+    currentQuestionType() {
+      if (this.currentQuestion.type === "multiple-choice") {
+        return "multiple-choice-question";
+      } else if (this.currentQuestion.type === "flash-card") {
+        console.log("flashcard");
+        return "flash-card";
+      }
+      return null;
     },
   },
   methods: {

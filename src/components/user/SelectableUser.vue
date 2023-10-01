@@ -1,13 +1,23 @@
 <template>
-  <div class="profile">
+  <div class="profile" @click="select">
     <i style="font-size: 50px" class="bi bi-person"></i>
-    <p>vorname nachname</p>
+    <p>{{ userName }}</p>
   </div>
 </template>
 
 <script>
 export default {
   name: "SelectableUser",
+  props: {
+    userName: String,
+  },
+  emits: ["select"],
+  methods: {
+    select() {
+      console.log("selecting");
+      this.$emit("select");
+    },
+  },
 };
 </script>
 

@@ -4,11 +4,13 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/init";
 import dataModule from "./modules/data/index";
 import authModule from "./modules/auth/index";
+import userModule from "./modules/user/index";
 
 export default createStore({
   modules: {
     data: dataModule,
     auth: authModule,
+    user: userModule,
   },
   state: {
     isLoggedIn: false,

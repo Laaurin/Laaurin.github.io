@@ -31,12 +31,23 @@ export default {
       const questionsQuerySnapshot = await getDocs(questionsCollectionRef);
       const teamQuestions = questionsQuerySnapshot.docs.map((doc) => {
         const questionData = doc.data();
-        return {
-          id: doc.id,
-          questionText: questionData.questionText,
-          answerOptions: questionData.answerOptions,
-          questionLabels: questionData.questionLabels || [],
-        };
+        if (questionData.type === "multiple-choice") {
+          return {
+            id: doc.id,
+            questionText: questionData.questionText,
+            answerOptions: questionData.answerOptions,
+            questionLabels: questionData.questionLabels || [],
+            type: "multiple-choice",
+          };
+        } else if (questionData.type === "flash-card") {
+          return {
+            id: doc.id,
+            questionText: questionData.questionText,
+            solutionText: questionData.solutionText,
+            questionLabels: questionData.questionLabels || [],
+            type: "flash-card",
+          };
+        }
       });
       commit("setTeamQuestions", teamQuestions);
     } catch (error) {
@@ -46,6 +57,7 @@ export default {
 
   // eslint-disable-next-line no-unused-vars
   async uploadPrivateQuestion(context, dataObj) {
+    console.log("called");
     const userCollectionRef = collection(
       db,
       `teams/${auth.currentUser.uid}/questions`
@@ -147,13 +159,11 @@ export default {
   },
 
   async deleteLabelFromQuestion(context, payload) {
-    // Entfernen Sie das Label aus den Frage-Labels
     payload.questionObject.questionLabels =
       payload.questionObject.questionLabels.filter(
         (labelObject) => labelObject.id !== payload.labelId
       );
 
-    // Aktualisieren Sie die Frage im Store
     await context.dispatch("updateTeamQuestion", payload.questionObject);
   },
 };
