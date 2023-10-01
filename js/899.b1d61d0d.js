@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmultiple_choice"]=self["webpackChunkmultiple_choice"]||[]).push([[899],{2899:function(e,n,u){function r(e,n,u,r,t,c){return"unser impressum gibt es gar nicht."}u.r(n),u.d(n,{default:function(){return s}});var t={name:"ImpressumView"},c=u(89);const i=(0,c.Z)(t,[["render",r]]);var s=i}}]);
+//# sourceMappingURL=899.b1d61d0d.js.map
