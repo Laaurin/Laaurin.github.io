@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%; background-color: lightgreen">
+  <div style="height: 100%">
     <component
       :is="currentQuestionType"
       :key="currentQuestionIndex"
@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import MultipleChoiceQuestion from "@/components/Question/MultipleChoiceQuestion.vue";
-import FlashCard from "@/components/FlashCard.vue";
-import SelfEvaluation from "@/components/SelfEvaluation.vue";
+import MultipleChoiceQuestion from "@/components/Question/multiple-choice/MultipleChoiceQuestion.vue";
+import FlashCard from "@/components/Question/flash-card/FlashCard.vue";
+import SelfEvaluation from "@/components/Question/flash-card/SelfEvaluation.vue";
 
 export default {
   name: "PracticeView",
@@ -26,14 +26,14 @@ export default {
       submitted: false,
     };
   },
-  created() {
+  mounted() {
     console.log(this.questionSet);
-    //this.questions = this.shuffleArray(this.questionSet);
+    this.questions = this.shuffleArray(this.questionSet);
   },
   computed: {
     currentQuestion() {
       return (
-        this.questionSet[this.currentQuestionIndex % this.questionSet.length] ||
+        this.questions[this.currentQuestionIndex % this.questionSet.length] ||
         {}
       );
     },
@@ -56,11 +56,14 @@ export default {
     },
 
     shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+      const shuffledArray = [...array];
+
+      function compareRandom() {
+        return Math.random() - 0.5;
       }
-      return array;
+      shuffledArray.sort(compareRandom);
+
+      return shuffledArray;
     },
   },
 };

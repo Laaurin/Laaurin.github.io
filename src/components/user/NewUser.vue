@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!addingUser">
+  <div v-if="!addingUser" class="profile">
     <i
       style="font-size: 30px; cursor: pointer"
       class="bi bi-plus-circle"
@@ -47,4 +47,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Horizontal zentrieren */
+  justify-content: center;
+  text-align: center;
+  aspect-ratio: 1;
+  height: 150px;
+}
+</style>

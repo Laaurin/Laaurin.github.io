@@ -8,11 +8,9 @@
       v-model="selectedOption"
     />
     <div :class="radioTileClasses" class="radio-tile" ref="radioTile">
-      <span
-        class="radio-label"
-        :class="{ 'cutoff-text': index !== selectedAnswerIndex }"
-        >{{ answerOption.text }}</span
-      >
+      <span class="radio-label" :class="{ 'cutoff-text': !isSelected }">
+        {{ answerOption.text }}
+      </span>
     </div>
   </label>
 </template>
@@ -22,8 +20,7 @@ export default {
   name: "AnswerOption",
   props: {
     answerOption: Object,
-    index: Number,
-    selectedAnswerIndex: Number,
+    isSelected: Boolean,
     submitted: Boolean,
   },
   emits: ["selected"],
@@ -58,9 +55,7 @@ export default {
           //this.index === this.selectedAnswerIndex &&
           this.answerOption.isCorrect,
         incorrect:
-          this.submitted &&
-          this.index === this.selectedAnswerIndex &&
-          !this.answerOption.isCorrect,
+          this.submitted && this.isSelected && !this.answerOption.isCorrect,
         //"not-selected":
         //  this.submittedd &&
         //  this.answerOption.isCorrect &&

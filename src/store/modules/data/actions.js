@@ -72,6 +72,7 @@ export default {
   // eslint-disable-next-line no-unused-vars
   async uploadPublicQuestion({ state, commit }, dataObj) {
     try {
+      delete dataObj.questionLabels;
       const colRef = collection(db, "unreviewedQuestions");
       const docRef = await addDoc(colRef, dataObj);
 

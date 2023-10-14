@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Welcome To Vis Quiz</h1>
+    <h1>Welcome To mootcoach.com</h1>
     <div class="row">
       <div
         class="col-md-6 d-none d-md-inline"
@@ -56,11 +56,13 @@
       </div>
     </div>
   </div>
+  <user-selection></user-selection>
 </template>
 
 <script>
 import LoginForm from "@/components/LoginForm.vue";
 import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
+import UserSelection from "@/components/user/UserSelection.vue";
 //import SponsorBar from "@/components/UI/SponsorBar.vue";
 
 export default {
@@ -82,7 +84,7 @@ export default {
     },
   },
   name: "LandingPage",
-  components: { IntroductionCarousel, LoginForm },
+  components: { UserSelection, IntroductionCarousel, LoginForm },
 };
 </script>
 

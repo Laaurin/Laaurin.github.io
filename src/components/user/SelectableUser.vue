@@ -14,7 +14,6 @@ export default {
   emits: ["select"],
   methods: {
     select() {
-      console.log("selecting");
       this.$emit("select");
     },
   },
@@ -23,8 +22,14 @@ export default {
 
 <style scoped>
 .profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Horizontal zentrieren */
+  justify-content: center;
+  text-align: center; /* Zentriert den Text horizontal */
   box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
   border-radius: 1rem;
   aspect-ratio: 1;
+  height: 150px;
 }
 </style>

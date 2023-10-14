@@ -1,22 +1,42 @@
 <template>
-  <div>
-    <button @click="selectedComponent = 'multiple-choice'">
-      multiple choice
-    </button>
-    <button @click="selectedComponent = 'flash-card'">flashcard</button>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <side-bar>
+          <div class="button-outer">
+            <button
+              class="btn my-button button-text"
+              @click="selectedComponent = 'multiple-choice'"
+            >
+              Multiple Choice
+            </button>
+          </div>
+          <div class="button-outer">
+            <button
+              class="btn my-button button-text"
+              @click="selectedComponent = 'flash-card'"
+            >
+              Flashcard
+            </button>
+          </div>
+        </side-bar>
+      </div>
+      <div class="col-9">
+        <multiple-choice-question-builder
+          v-if="selectedComponent === 'multiple-choice'"
+          :uploading="true"
+          @return-question="submitQuestion"
+        >
+        </multiple-choice-question-builder>
+        <flash-card-builder
+          v-else-if="selectedComponent === 'flash-card'"
+          :uploading="true"
+          @return-question="submitQuestion"
+        >
+        </flash-card-builder>
+      </div>
+    </div>
   </div>
-  <multiple-choice-question-builder
-    v-if="selectedComponent === 'multiple-choice'"
-    :uploading="true"
-    @return-question="submitQuestion"
-  >
-  </multiple-choice-question-builder>
-  <flash-card-builder
-    v-else-if="selectedComponent === 'flash-card'"
-    :uploading="true"
-    @return-question="submitQuestion"
-  >
-  </flash-card-builder>
 </template>
 
 <script>
@@ -24,9 +44,11 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import MultipleChoiceQuestionBuilder from "@/components/upload/MultipleChoiceQuestionBuilder.vue";
 import FlashCardBuilder from "@/components/upload/FlashCardBuilder.vue";
+import SideBar from "@/components/UI/SideBar/SideBar.vue";
 
 export default {
   components: {
+    SideBar,
     FlashCardBuilder,
     MultipleChoiceQuestionBuilder,
   },
@@ -164,6 +186,38 @@ export default {
 </script>
 
 <style scoped>
+.col-3 {
+  padding-left: 0;
+}
+
+.button-text {
+  color: whitesmoke;
+  text-align: left;
+}
+
+.button-outer {
+  margin-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.my-button {
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  position: relative; /* Position für das Pseudo-Element */
+}
+
+.my-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ccc; /* Farbe der Trennlinie */
+}
+
 .container {
   max-width: 500px;
   margin: 5rem auto auto;

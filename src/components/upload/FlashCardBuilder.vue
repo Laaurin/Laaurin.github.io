@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>{{ uploading ? "Upload new Flashcard" : "Edit Flashcard" }}</h2>
+    <h2>{{ uploading ? "Upload Flashcard" : "Edit Flashcard" }}</h2>
     <form>
       <div class="flashcard">
         <div class="flashcard-content">
@@ -34,13 +34,13 @@
           <new-label @new-label="addLabel"></new-label>
         </div>
       </div>
-      <button class="my-global-button" @click="submit">
+      <button class="my-global-button" @click.prevent="submit">
         {{ uploading ? "Upload Question" : "Save" }}
       </button>
       <button
         v-if="!uploading"
         class="my-global-button"
-        @click="this.$emit('cancel')"
+        @click.prevent="this.$emit('cancel')"
       >
         Cancel
       </button>
@@ -61,7 +61,7 @@ export default {
     inputQuestion: Object,
     uploading: Boolean,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
     const teamLabels = computed(() => store.getters.getTeamLabels);
     const addedLabels = ref([]);
@@ -75,59 +75,68 @@ export default {
           type: "flash-card",
         });
 
-    return {
-      question,
-      teamLabels,
-      addedLabels,
-    };
-  },
-
-  methods: {
-    submit() {
+    const submit = () => {
       if (
-        this.question.questionText === "" ||
-        this.question.solutionText === ""
+        question.value.questionText === "" ||
+        question.value.solutionText === ""
       ) {
         alert("sooo nicht");
         return;
       }
-      this.$emit("returnQuestion", this.question, this.addedLabels);
-      this.question = {
+      emit("returnQuestion", question.value, addedLabels.value);
+      question.value = {
         id: "",
         questionText: "",
         solutionText: "",
         questionLabels: [],
       };
-      this.addedLabels = [];
-    },
+      addedLabels.value = [];
+    };
 
-    isActive(otherLabelObject) {
-      return this.question.questionLabels.some(
+    const isActive = (otherLabelObject) => {
+      return question.value.questionLabels.some(
         (labelObject) => labelObject.label === otherLabelObject.label
       );
-    },
+    };
 
-    toggleLabel(otherLabelObject) {
-      const labelExists = this.question.questionLabels.some(
+    const toggleLabel = (otherLabelObject) => {
+      const labelExists = question.value.questionLabels.some(
         (label) => label.id === otherLabelObject.id
       );
       if (labelExists) {
-        this.question.questionLabels = this.question.questionLabels.filter(
+        question.value.questionLabels = question.value.questionLabels.filter(
           (labelObject) => labelObject.id !== otherLabelObject.id
         );
       } else {
-        this.question.questionLabels.push(otherLabelObject);
+        question.value.questionLabels.push(otherLabelObject);
       }
-    },
+    };
 
-    addLabel(labelObject) {
-      this.addedLabels.push(labelObject);
-    },
+    const addLabel = (labelObject) => {
+      addedLabels.value.push(labelObject);
+    };
+
+    return {
+      question,
+      teamLabels,
+      addedLabels,
+      submit,
+      isActive,
+      toggleLabel,
+      addLabel,
+    };
   },
 };
 </script>
 
 <style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .container {
   max-width: 500px;
   margin: 5rem auto auto;
@@ -142,7 +151,6 @@ export default {
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-right: 20px; /* Abstand zwischen den Karten */
   font-size: 18px;
   font-weight: bold;
   display: flex;

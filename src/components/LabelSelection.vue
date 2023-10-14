@@ -5,6 +5,7 @@
       v-for="(labelObject, index) in displayLabels"
       :key="index"
     >
+
       <QuestionLabel
         :label-object="labelObject"
         :clickable="true"

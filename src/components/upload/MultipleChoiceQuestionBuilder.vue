@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>{{ uploading ? "Upload new Question" : "Edit Question" }}</h2>
+    <h2>{{ uploading ? "Upload Question" : "Edit Question" }}</h2>
     <form>
       <div class="mb-3">
         <div class="question-input-wrapper">
@@ -81,14 +81,18 @@
           />
         </div>
       </div>
-      <div>
+      <div
+        v-if="uploading"
+        class="d-flex justify-content-center align-items-center"
+      >
         <input
-          v-if="uploading"
           type="checkbox"
           v-model="isPrivateQuestion"
           style="margin-right: 10px"
         />
         <label>private Question</label>
+      </div>
+      <div class="private-question-wrapper">
         <div v-if="isPrivateQuestion || !uploading">
           <div class="label-list">
             <div
@@ -116,7 +120,7 @@
     <button
       v-if="!uploading"
       class="my-global-button"
-      @click="this.$emit('cancel')"
+      @click.prevent="this.$emit('cancel')"
     >
       Cancel
     </button>
@@ -163,9 +167,25 @@ export default {
 
     const correctAnswerIndex = ref(null);
 
-    const submit = () => {
+    const submit = async () => {
       if (correctAnswerIndex.value === null) {
         alert("Bitte wählen Sie eine richtige Antwort aus.");
+        return;
+      }
+      if (props.uploading && !isPrivateQuestion.value) {
+        await store.dispatch("uploadPublicQuestion", question.value);
+        question.value = {
+          id: "",
+          questionText: "",
+          answerOptions: [
+            { text: "", isCorrect: false },
+            { text: "", isCorrect: false },
+            { text: "", isCorrect: false },
+            { text: "", isCorrect: false },
+          ],
+          questionLabels: [],
+        };
+        correctAnswerIndex.value = null;
         return;
       }
       question.value.answerOptions = question.value.answerOptions.map(
@@ -242,10 +262,20 @@ export default {
 <style scoped>
 .container {
   max-width: 500px;
-  margin: 5rem auto auto;
+  margin: 0 auto auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Hinzugefügte Regel für die Zentrierung */
+}
+
+.private-question-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 h2 {

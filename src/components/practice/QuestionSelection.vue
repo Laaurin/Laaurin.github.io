@@ -1,48 +1,44 @@
 <template>
-  <div>
-    <button
-      class="my-global-button set-selection-button"
-      @click="selectPublicQuestions"
-    >
-      <div class="container text-center">
-        <div class="row justify-content-start">
-          <div class="col-2">
-            <i class="bi bi-people-fill"></i>
-          </div>
-          <div class="col d-flex align-items-start">Public Questions</div>
+  <div class="button-outer">
+    <button class="btn set-selection-button" @click="selectPublicQuestions">
+      <div class="button-content">
+        <div class="button-icon">
+          <i class="bi bi-people-fill"></i>
         </div>
+        <div class="button-text">Public Questions</div>
       </div>
     </button>
   </div>
-  <div>
-    <button
-      class="my-global-button set-selection-button"
-      @click="selectPrivateQuestions"
-    >
-      <div class="container text-center">
-        <div class="row justify-content-start">
-          <div class="col-2">
-            <i class="bi bi-person-fill"></i>
-          </div>
-          <div class="col d-flex align-items-start">Team Questions</div>
+  <div class="button-outer">
+    <button class="btn set-selection-button" @click="selectPrivateQuestions">
+      <div class="button-content">
+        <div class="button-icon">
+          <i class="bi bi-person-fill"></i>
         </div>
+        <div class="button-text">Team Questions</div>
       </div>
     </button>
   </div>
-  <div v-for="label in teamLabelsInUse" :key="label">
+  <div class="button-outer">
+    <button class="btn set-selection-button">
+      <div class="button-content">
+        <div class="button-icon">
+          <i class="bi bi-exclamation-circle"></i>
+        </div>
+        <div class="button-text">bad</div>
+      </div>
+    </button>
+  </div>
+  <div v-for="label in teamLabelsInUse" :key="label" class="button-outer">
     <button
-      class="my-global-button set-selection-button"
+      class="btn set-selection-button"
       @click="selectQuestionsByLabel(label)"
     >
-      <div class="container text-center">
-        <div class="row justify-content-start">
-          <div class="col-2">
-            <i class="bi bi-tag-fill"></i>
-          </div>
-          <div class="col d-flex align-items-start">
-            {{ label }}
-          </div>
+      <div class="button-content">
+        <div class="button-icon">
+          <i class="bi bi-tag-fill"></i>
         </div>
+        <div class="button-text">{{ label }}</div>
       </div>
     </button>
   </div>
@@ -60,10 +56,26 @@ export default {
   setup() {
     const store = useStore();
     const questions = ref([]);
-    const teamLabelsInUse = ref([]);
-    const publicQuestions = computed(() => store.getters.getPublicQuestions);
-    const teamQuestions = computed(() => store.getters.getTeamQuestions);
-    const teamLabels = computed(() => store.getters.getTeamLabels);
+    const teamLabelsInUse = computed(() => {
+      const labelsInUse = new Set();
+
+      teamQuestions.value.forEach((question) => {
+        question.questionLabels.forEach((label) => {
+          labelsInUse.add(label.label);
+        });
+      });
+
+      return Array.from(labelsInUse);
+    });
+    const publicQuestions = computed(() => {
+      return store.getters.getPublicQuestions;
+    });
+    const teamQuestions = computed(() => {
+      return store.getters.getTeamQuestions;
+    });
+    const teamLabels = computed(() => {
+      return store.getters.getTeamLabels;
+    });
     return {
       publicQuestions,
       teamLabels,
@@ -109,38 +121,44 @@ export default {
       console.log("questions:" + this.questions);
       this.$emit("questionsSelected", this.questions);
     },
-
-    getLabelsInUse(questions) {
-      const labelsInUse = new Set();
-
-      questions.forEach((question) => {
-        question.questionLabels.forEach((label) => {
-          labelsInUse.add(label.label);
-        });
-      });
-
-      return Array.from(labelsInUse);
-    },
-  },
-  created() {
-    this.teamLabelsInUse = this.getLabelsInUse(this.teamQuestions);
   },
 };
 </script>
 
 <style scoped>
 .set-selection-button {
-  min-width: 300px;
-}
-.button-content {
-  display: flex;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  position: relative; /* Position für das Pseudo-Element */
 }
 
-.button-icon {
-  align-items: start;
+.set-selection-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ccc; /* Farbe der Trennlinie */
+}
+
+.button-content {
+  display: flex; /* Zeigt die Elemente in einer Zeile an */
+  align-items: center; /* Zentriert die Elemente vertikal in der Zeile */
 }
 
 .button-text {
-  align-items: center;
+  color: whitesmoke;
+}
+
+.button-icon {
+  color: whitesmoke;
+}
+
+.button-outer {
+  margin-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>

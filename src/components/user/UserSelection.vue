@@ -1,19 +1,21 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div
-        class="col selection-option"
-        :class="{ active: user.id === selectedProfileId }"
-        v-for="user in userList"
-        :key="user.id"
-      >
-        <selectable-user
-          :user-name="user.name"
-          @select="setActiveUser(user.id)"
-        ></selectable-user>
-      </div>
-      <div class="col selection-option">
-        <new-user></new-user>
+  <div class="pop-up-window">
+    <div class="pop-up-inner">
+      <div class="d-flex justify-content-start">
+        <div
+          :class="{ active: user.id === selectedProfileId }"
+          class="selection-option"
+          v-for="user in userList"
+          :key="user.id"
+        >
+          <selectable-user
+            :user-name="user.name"
+            @select="setActive(user)"
+          ></selectable-user>
+        </div>
+        <div>
+          <new-user></new-user>
+        </div>
       </div>
     </div>
   </div>
@@ -28,40 +30,68 @@ import { onBeforeMount, ref } from "vue";
 export default {
   name: "UserSelection",
   components: { NewUser, SelectableUser },
-  setup() {
+  emits: ["userSelected"],
+  setup(props, { emit }) {
     const store = useStore();
     const userList = ref(store.getters.userProfiles);
     const selectedProfileId = ref(store.getters.userProfileId);
     onBeforeMount(async () => {
-      console.log(userList.value);
       if (userList.value.length === 0) {
-        console.log("fetching profiles");
         await store.dispatch("fetchUserProfiles");
         userList.value = store.getters.userProfiles;
       }
-      console.log(userList.value);
     });
-    const setActiveUser = (userId) => {
-      store.commit("setActiveUser", userId);
+    const setUser = async (user) => {
+      console.log("setting" + user);
+      store.commit("setActiveUser", { user: user });
+      await store.dispatch("fetchUserStats");
+      console.log(store.getters.userStats);
+      emit("userSelected");
     };
     return {
       userList,
       selectedProfileId,
-      setActiveUser,
+      setUser,
     };
+  },
+
+  methods: {
+    async setActive(user) {
+      console.log(user);
+      await this.$store.dispatch("selectUserProfile", user);
+      await this.$store.dispatch("fetchUserStats");
+      console.log(this.$store.getters.userStats);
+      this.$emit("userSelected");
+    },
   },
 };
 </script>
 
 <style scoped>
-.selection-option {
+.pop-up-window {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pop-up-inner {
+  background-color: white;
+  padding: 32px;
+  width: 100%;
 }
 
-.selection-option:hover {
-  background-color: #f0f0f0; /* Hintergrundfarbe im Hover-Zustand */
+.selection-option {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .active {
-  background-color: green;
+  border-color: #42b983;
 }
 </style>

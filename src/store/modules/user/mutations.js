@@ -11,8 +11,13 @@ export default {
     state.userProfiles = profiles;
   },
 
-  setActiveUser(state, userId) {
+  setActiveUser(state, user) {
     console.log("setting user id");
-    state.userProfileId = userId;
+    state.userProfileId = user.id;
+    state.userProfileName = user.name;
+  },
+
+  setUserStats(state, stats) {
+    state.userStats = stats;
   },
 };

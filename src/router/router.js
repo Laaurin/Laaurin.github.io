@@ -20,7 +20,11 @@ const routes = [
     path: "/practice",
     name: "practice",
     component: () => import("../views/PracticeView.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Practice" },
+    meta: {
+      requiresAuth: true,
+      requiresUser: true,
+      title: "Vis Quiz | Practice",
+    },
   },
   {
     path: "/signup",
@@ -47,10 +51,10 @@ const routes = [
     meta: { requiresAuth: false, title: "Vis Quiz | Sponsors" },
   },
   {
-    path: "/users",
-    name: "userSelection",
-    component: () => import("../components/user/UserSelection.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Users" },
+    path: "/review",
+    name: "review",
+    component: () => import("../views/ReviewView.vue"),
+    meta: { requiresAuth: true, title: "Vis Quiz | Review" },
   },
 ];
 

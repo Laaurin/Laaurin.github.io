@@ -7,6 +7,8 @@ export default {
     return {
       userProfiles: [],
       userProfileId: null,
+      userProfileName: null,
+      userStats: [],
     };
   },
   mutations: userMutations,

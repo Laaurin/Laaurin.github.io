@@ -6,7 +6,7 @@
   >
     <div class="labelText">{{ labelObject.label }}</div>
     <div
-      v-if="selected && clickable"
+      v-if="deletable && selected && clickable"
       class="removeIcon"
       @click="deleteLabel(labelObject.id)"
     >
@@ -26,6 +26,10 @@ export default {
     clickable: {
       type: Boolean,
       default: false,
+    },
+    deletable: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {

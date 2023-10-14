@@ -47,6 +47,14 @@ export default {
         userId: userId,
       });
     }
+    const profileId = localStorage.getItem("profileId");
+    const userName = localStorage.getItem("userName");
+    if (profileId && userName) {
+      context.commit("setActiveUser", {
+        id: profileId,
+        name: userName,
+      });
+    }
   },
   async logout(context) {
     try {
@@ -54,6 +62,8 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
       localStorage.removeItem("tokenExpiration");
+      localStorage.removeItem("profileId");
+      localStorage.removeItem("userName");
       clearTimeout(timer);
       context.commit("setUser", {
         token: null,

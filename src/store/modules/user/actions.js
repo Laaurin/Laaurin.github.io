@@ -1,16 +1,9 @@
-import {
-  addDoc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  collection,
-  getDocs,
-  doc,
-} from "firebase/firestore";
+import { addDoc, setDoc, collection, getDocs, doc } from "firebase/firestore";
 import db from "@/firebase/init";
 
 export default {
   async createNewUserProfile(context, dataObj) {
+    console.log("writing new profile");
     const userCollectionRef = collection(
       db,
       `teams/${context.getters.userId}/profiles`
@@ -21,6 +14,7 @@ export default {
   },
 
   async fetchUserProfiles(context) {
+    console.log("reading profiles");
     const profilesCollectionRef = collection(
       db,
       `teams/${context.getters.userId}/profiles`
@@ -36,37 +30,57 @@ export default {
     context.commit("setUserProfiles", userProfiles);
   },
 
-  async addUserSubmission(context, payload) {
-    console.log(payload.value, payload.questionId);
+  async fetchUserStats(context) {
+    console.log("reading user stats");
     const userId = context.getters.userId;
     const userProfileId = context.getters.userProfileId;
-
-    // Verweise auf die Statistik-Dokumente für diese Frage
-    const statisticRef = doc(
+    const statsCollectionRef = collection(
       db,
-      `teams/${userId}/profiles/${userProfileId}/stats/${payload.questionId}/`
+      `teams/${userId}/profiles/${userProfileId}/stats`
     );
-
-    // Überprüfen, ob das Statistik-Dokument bereits existiert
-    const statisticSnapshot = await getDoc(statisticRef);
-
-    if (statisticSnapshot.exists()) {
-      // Wenn das Dokument bereits existiert, aktualisiere die Statistiken
-      const statisticData = statisticSnapshot.data();
-      statisticData.totalSubmissions++; // Erhöhe die Gesamtanzahl der Einsendungen
-      statisticData.totalScore += payload.value; // Füge die value zur Gesamtpunktzahl hinzu
-
-      // Aktualisiere das Statistik-Dokument in der Datenbank
-      await updateDoc(statisticRef, statisticData);
-    } else {
-      // Wenn das Dokument noch nicht existiert, erstelle es
-      const newStatisticData = {
-        totalSubmissions: 1,
-        totalScore: payload.value, // Setze die Gesamtpunktzahl auf die value
+    const statsQuerySnapshot = await getDocs(statsCollectionRef);
+    const userStats = statsQuerySnapshot.docs.map((doc) => {
+      const data = doc.data(); // Hier greifen wir auf die Daten im Dokument zu
+      return {
+        id: doc.id,
+        totalScore: data.totalScore,
+        totalSubmissions: data.totalSubmissions,
       };
+    });
+    context.commit("setUserStats", userStats);
+  },
 
-      // Erstelle das Statistik-Dokument in der Datenbank
-      await setDoc(statisticRef, newStatisticData);
+  async addUserSubmission(context, payload) {
+    const userId = context.getters.userId;
+    const userProfileId = context.getters.userProfileId;
+    const questionId = payload.questionId;
+    const stats = context.getters.userStats;
+
+    let questionStats = stats.find((stat) => stat.id === questionId);
+
+    if (questionStats) {
+      questionStats.totalSubmissions++;
+      questionStats.totalScore += payload.value;
+    } else {
+      questionStats = {
+        id: questionId,
+        totalSubmissions: 1,
+        totalScore: payload.value,
+      };
+      stats.push(questionStats);
     }
+    await setDoc(
+      doc(db, "teams", userId, "profiles", userProfileId, "stats", questionId),
+      {
+        totalSubmissions: questionStats.totalSubmissions,
+        totalScore: questionStats.totalScore,
+      }
+    );
+  },
+
+  selectUserProfile(context, user) {
+    context.commit("setActiveUser", user);
+    localStorage.setItem("profileId", user.id);
+    localStorage.setItem("userName", user.name);
   },
 };

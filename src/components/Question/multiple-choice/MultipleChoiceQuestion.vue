@@ -16,9 +16,8 @@
       >
         <answer-option
           :answer-option="answerOption"
-          :index="index"
+          :is-selected="index === selectedAnswerIndex"
           :submitted="submitted"
-          :selected-answer-index="selectedAnswerIndex"
           @selected="selectAnswer(index)"
         ></answer-option>
       </div>
@@ -41,8 +40,8 @@
 </template>
 
 <script>
-import AnswerOption from "@/components/Question/AnswerOption.vue";
-import QuestionText from "@/components/Question/QuestionText.vue";
+import AnswerOption from "@/components/Question/multiple-choice/AnswerOption.vue";
+import QuestionText from "@/components/Question/multiple-choice/QuestionText.vue";
 
 export default {
   name: "MultipleChoiceQuestion",
@@ -96,21 +95,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.red {
-  background-color: red;
-}
-
-.blue {
-  background-color: blue;
-}
-
-.green {
-  background-color: green;
-}
-
-.yellow {
-  background-color: yellow;
-}
-</style>

@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-md bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Willem C. Vis Moot - Training</a>
+  <nav class="navbar navbar-expand-md bg-body-tertiary py-3 shadow">
+    <div class="container-fluid me-5">
+      <a class="navbar-brand logo ms-2" href="#">mootcoach.com</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -13,7 +13,10 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div
+        class="collapse navbar-collapse justify-content-end"
+        id="navbarNavAltMarkup"
+      >
         <div class="navbar-nav">
           <router-link to="/" class="nav-item nav-link">Home</router-link>
           <router-link to="/upload" class="nav-item nav-link"
@@ -61,5 +64,14 @@ export default {
   background-color: transparent;
   outline: none;
   float: end;
+}
+
+.nav-item {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.logo {
+  color: #e08f43;
 }
 </style>

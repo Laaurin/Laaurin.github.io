@@ -1,26 +1,13 @@
 <template>
   <div class="profile-questions">
-    <div class="filter-bar">
-      <label for="filter">Filter by Label:</label>
-      <select class="dropdown" id="filter" v-model="selectedLabel">
-        <option value="" class="dropdown-item">All Labels</option>
-        <option
-          class="dropdown-item"
-          v-for="labelObject in teamLabels"
-          :key="labelObject.id"
-          :value="labelObject.label"
-        >
-          {{ labelObject.label }}
-        </option>
-      </select>
-    </div>
-    <div class="container questions-list">
-      <div v-for="(question, index) in filteredQuestions" :key="index">
+    <div class="questions-list">
+      <div v-for="question in filteredQuestions" :key="question.id">
         <editable-question
           :question="question"
           @edit="edit"
           @delete="deleteQuestion(question.id)"
         ></editable-question>
+        <hr />
       </div>
     </div>
   </div>
@@ -35,7 +22,7 @@
 import EditableQuestion from "@/components/profile/EditableQuestion.vue";
 import EditQuestionWindow from "@/components/profile/EditQuestionWindow.vue";
 import { computed, ref } from "vue";
-import { mapActions, useStore } from "vuex";
+import { useStore } from "vuex";
 
 export default {
   name: "ProfileQuestions",
@@ -43,37 +30,36 @@ export default {
     EditQuestionWindow,
     EditableQuestion,
   },
-  setup() {
+  props: ["questions"],
+  setup(props) {
     const store = useStore();
 
     const selectedLabel = ref("");
     const editQuestion = ref(false);
     const questionInEdit = ref(null);
 
-    const teamQuestions = computed(() => store.getters.getTeamQuestions);
     const teamLabels = computed(() => store.getters.getTeamLabels);
-    const filteredQuestions = computed(() => {
-      if (!selectedLabel.value) {
-        return teamQuestions.value;
-      }
-      return teamQuestions.value.filter((question) =>
-        question.questionLabels.some(
-          (labelObject) => labelObject.label === selectedLabel.value
-        )
+    const filteredQuestions = computed(() => props.questions);
+
+    const deleteQuestion = (questionId) => {
+      console.log(filteredQuestions.value);
+      filteredQuestions.value = filteredQuestions.value.filter(
+        (question) => question.id !== questionId
       );
-    });
+      store.dispatch("deleteQuestion", questionId);
+      console.log(filteredQuestions.value);
+    };
+
     return {
-      teamQuestions,
       teamLabels,
       filteredQuestions,
       editQuestion,
       questionInEdit,
       selectedLabel,
+      deleteQuestion,
     };
   },
   methods: {
-    ...mapActions(["deleteQuestion"]),
-
     edit(question) {
       this.questionInEdit = question;
       this.editQuestion = true;
@@ -83,8 +69,11 @@ export default {
 </script>
 
 <style scoped>
+hr {
+  margin: 0;
+}
 .profile-questions {
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .filter-bar {
@@ -93,7 +82,6 @@ export default {
 
 .questions-list {
   display: grid;
-  grid-template-columns: 1fr; /* Eine Frage pro Zeile */
-  gap: 20px;
+  grid-template-columns: 1fr;
 }
 </style>
