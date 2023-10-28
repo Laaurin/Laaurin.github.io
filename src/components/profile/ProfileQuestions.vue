@@ -1,11 +1,12 @@
 <template>
   <div class="profile-questions">
     <div class="questions-list">
+      <hr />
       <div v-for="question in filteredQuestions" :key="question.id">
         <editable-question
           :question="question"
-          @edit="edit"
-          @delete="deleteQuestion(question.id)"
+          @edit="editQuestionHandler(question)"
+          @delete="deleteQuestionHandler(question.id)"
         ></editable-question>
         <hr />
       </div>
@@ -31,23 +32,32 @@ export default {
     EditableQuestion,
   },
   props: ["questions"],
-  setup(props) {
+  async setup(props) {
     const store = useStore();
-
+    await store.dispatch("fetchUserStats");
+    console.log(store.getters.userStats);
     const selectedLabel = ref("");
     const editQuestion = ref(false);
     const questionInEdit = ref(null);
 
     const teamLabels = computed(() => store.getters.getTeamLabels);
-    const filteredQuestions = computed(() => props.questions);
+
+    const filteredQuestions = ref([props.questions]); // Initialisiere filteredQuestions mit einem leeren Array
 
     const deleteQuestion = (questionId) => {
-      console.log(filteredQuestions.value);
       filteredQuestions.value = filteredQuestions.value.filter(
         (question) => question.id !== questionId
       );
       store.dispatch("deleteQuestion", questionId);
-      console.log(filteredQuestions.value);
+    };
+
+    const editQuestionHandler = (question) => {
+      questionInEdit.value = question;
+      editQuestion.value = true;
+    };
+
+    const deleteQuestionHandler = (questionId) => {
+      deleteQuestion(questionId);
     };
 
     return {
@@ -56,14 +66,9 @@ export default {
       editQuestion,
       questionInEdit,
       selectedLabel,
-      deleteQuestion,
+      editQuestionHandler,
+      deleteQuestionHandler,
     };
-  },
-  methods: {
-    edit(question) {
-      this.questionInEdit = question;
-      this.editQuestion = true;
-    },
   },
 };
 </script>

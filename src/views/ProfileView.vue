@@ -1,37 +1,43 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-3">
-        <side-bar class="shadow">
-          <question-filter
-            @questions-filtered="updateQuestions"
-          ></question-filter>
+      <div class="col-3 sidebar">
+        <side-bar class="shadow sidebar">
+          <template #sidebar-content>
+            <question-filter
+              @questions-filtered="updateQuestions"
+            ></question-filter>
+          </template>
         </side-bar>
       </div>
       <div class="col">
-        <profile-questions :questions="filteredQuestions"></profile-questions>
+        <suspense>
+          <template #default>
+            <profile-questions
+              :questions="filteredQuestions"
+            ></profile-questions>
+          </template>
+          <template #fallback>
+            <div class="spinner-border" role="status">
+              <span class="sr-only"></span>
+            </div>
+          </template>
+        </suspense>
       </div>
     </div>
   </div>
-  <user-selection
-    v-if="isProfileSelected === false"
-    @user-selected="isProfileSelected = true"
-  ></user-selection>
 </template>
 
 <script>
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
 import QuestionFilter from "@/components/profile/QuestionFilter.vue";
-import UserSelection from "@/components/user/UserSelection.vue";
 
 export default {
-  components: { QuestionFilter, SideBar, ProfileQuestions, UserSelection },
+  components: { QuestionFilter, SideBar, ProfileQuestions },
   data() {
     return {
       filteredQuestions: [],
-      isProfileSelected: this.$store.getters.userProfileId !== null,
-      changeUser: false,
     };
   },
   methods: {
@@ -40,13 +46,18 @@ export default {
       this.filteredQuestions = newQuestions;
     },
   },
-  created() {
-    this.filteredQuestions = this.$store.getters.getTeamQuestions;
+  async created() {
+    this.filteredQuestions = await this.$store.getters.getTeamQuestions;
   },
 };
 </script>
 
 <style scoped>
+.sidebar {
+  position: -webkit-sticky;
+  top: 250px;
+}
+
 .col-3 {
   padding-left: 0;
 }

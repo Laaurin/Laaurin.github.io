@@ -8,7 +8,7 @@
   </div>
   <div v-else>
     <input
-      v-model="user.name"
+      v-model="name"
       placeholder="Enter user's name"
       @keydown.enter="saveUser"
     />
@@ -23,9 +23,7 @@ export default {
   data() {
     return {
       addingUser: false,
-      user: {
-        name: "",
-      },
+      name: "",
     };
   },
   methods: {
@@ -33,14 +31,15 @@ export default {
       this.addingUser = !this.addingUser;
     },
     saveUser() {
-      this.$store.dispatch("createNewUserProfile", this.user);
+      this.$store.dispatch("createNewUserProfile", { name: this.name });
+      this.name = "";
       this.toggleAddingUser();
       // Der neue Benutzername ist in this.newUserName verfügbar.
       // Führen Sie hier den Speichervorgang aus.
       // Wenn der Vorgang abgeschlossen ist, können Sie den Zustand zurücksetzen.
     },
     cancelUser() {
-      this.newUserName = "";
+      this.name = "";
       this.toggleAddingUser();
     },
   },

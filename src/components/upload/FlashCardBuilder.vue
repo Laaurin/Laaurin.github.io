@@ -89,6 +89,7 @@ export default {
         questionText: "",
         solutionText: "",
         questionLabels: [],
+        type: "flash-card",
       };
       addedLabels.value = [];
     };

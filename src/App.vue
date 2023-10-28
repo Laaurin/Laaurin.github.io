@@ -14,7 +14,6 @@ import TheHeader from "@/components/UI/TheHeader.vue";
 import { auth } from "@/firebase/init";
 import { useRouter } from "vue-router";
 import TheFooter from "@/components/UI/TheFooter.vue";
-//import TheFooter from "@/components/UI/TheFooter.vue";
 
 export default {
   components: { TheFooter, TheHeader, BaseTop },

@@ -59,8 +59,6 @@ export default {
     async setActive(user) {
       console.log(user);
       await this.$store.dispatch("selectUserProfile", user);
-      await this.$store.dispatch("fetchUserStats");
-      console.log(this.$store.getters.userStats);
       this.$emit("userSelected");
     },
   },

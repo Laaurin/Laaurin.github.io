@@ -40,8 +40,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { ref } from "vue";
 import MultipleChoiceQuestionBuilder from "@/components/upload/MultipleChoiceQuestionBuilder.vue";
 import FlashCardBuilder from "@/components/upload/FlashCardBuilder.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
@@ -65,23 +64,14 @@ export default {
     const isPrivateQuestion = ref(false);
     const questionLabels = ref([]);
     const addedLabels = ref([]);
-    const store = useStore();
-    const isLoggedIn = computed(() => store.getters.isLoggedIn);
-    const teamLabels = computed(() => store.getters.getTeamLabels);
-    const displayLabels = computed(() =>
-      teamLabels.value.concat(addedLabels.value)
-    );
     return {
       selectedComponent,
-      isLoggedIn,
-      teamLabels,
       questionText,
       answerOptions,
       questionLabels,
       correctAnswerIndex,
       isPrivateQuestion,
       addedLabels,
-      displayLabels,
     };
   },
   methods: {

@@ -207,6 +207,7 @@ export default {
           { text: "", isCorrect: false },
         ],
         questionLabels: [],
+        type: "multiple-choice",
       };
       addedLabels.value = [];
       correctAnswerIndex.value = null;

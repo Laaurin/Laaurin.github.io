@@ -49,6 +49,7 @@ export default {
           };
         }
       });
+      console.log(teamQuestions);
       commit("setTeamQuestions", teamQuestions);
     } catch (error) {
       console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
@@ -66,7 +67,7 @@ export default {
     dataObj.id = userDocRef.id;
     context.commit("addTeamQuestion", dataObj);
 
-    console.log("Private question created:", userDocRef.id);
+    console.log("Private question created:", dataObj.id);
   },
 
   // eslint-disable-next-line no-unused-vars

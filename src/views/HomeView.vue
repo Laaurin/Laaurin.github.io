@@ -56,13 +56,11 @@
       </div>
     </div>
   </div>
-  <user-selection></user-selection>
 </template>
 
 <script>
 import LoginForm from "@/components/LoginForm.vue";
 import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
-import UserSelection from "@/components/user/UserSelection.vue";
 //import SponsorBar from "@/components/UI/SponsorBar.vue";
 
 export default {
@@ -84,7 +82,7 @@ export default {
     },
   },
   name: "LandingPage",
-  components: { UserSelection, IntroductionCarousel, LoginForm },
+  components: { IntroductionCarousel, LoginForm },
 };
 </script>
 

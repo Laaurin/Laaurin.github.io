@@ -1,16 +1,30 @@
 <template>
   <div class="sidebar shadow-lg">
     <profil-icon></profil-icon>
+    <button @click="showUserSelection = true">change user</button>
     <slot></slot>
+    <slot name="sidebar-content"></slot>
   </div>
+  <user-selection
+    v-if="showUserSelection"
+    @user-selected="showUserSelection = false"
+  ></user-selection>
 </template>
 
 <script>
 import ProfilIcon from "@/components/UI/SideBar/ProfileIcon.vue";
+import UserSelection from "@/components/user/UserSelection.vue";
 
 export default {
   name: "SideBar",
-  components: { ProfilIcon },
+  components: { UserSelection, ProfilIcon },
+
+  data() {
+    return {
+      showUserSelection: this.$store.getters.userProfileId === null,
+      changeUser: false,
+    };
+  },
 };
 </script>
 

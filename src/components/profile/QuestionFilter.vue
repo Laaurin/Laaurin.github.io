@@ -63,7 +63,6 @@ export default {
 
     const addQuestionsWithSelectedTypes = (questions) => {
       filteredQuestions.value = questions.filter((question) => {
-        console.log(question);
         return selectedTypes.value.every((type) => question.type === type);
       });
       emit("questionsFiltered", filteredQuestions.value);

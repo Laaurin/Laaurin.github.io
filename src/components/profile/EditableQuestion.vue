@@ -17,18 +17,16 @@
             </div>
           </div>
         </div>
-        <div class="row align-items-center">
-          <div class="col">
-            <div class="d-flex flex-wrap">
-              <div
-                v-for="labelObject in question.questionLabels"
-                :key="labelObject.id"
-              >
-                <question-label
-                  :label-object="labelObject"
-                  :active="true"
-                ></question-label>
-              </div>
+        <div class="col">
+          <div class="d-flex flex-wrap">
+            <div
+              v-for="labelObject in question.questionLabels"
+              :key="labelObject.id"
+            >
+              <question-label
+                :label-object="labelObject"
+                :active="true"
+              ></question-label>
             </div>
           </div>
         </div>
@@ -50,7 +48,6 @@
       >
         <i
           :class="{ 'delete-icon': isDeleting, default: !isDeleting }"
-          @animationend="resetDeleteButton"
           class="bi bi-trash"
         ></i>
         <span class="d-none d-md-inline">{{ deleteButtonText }}</span>
@@ -60,20 +57,21 @@
 </template>
 
 <script>
-import QuestionLabel from "@/components/label/QuestionLabel.vue";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import QuestionLabel from "@/components/label/QuestionLabel.vue";
 import StatusBar from "@/components/profile/StatusBar.vue";
 
 export default {
   components: { StatusBar, QuestionLabel },
-  emits: ["edit", "delete"],
   props: {
     question: Object,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
+
     const teamLabels = computed(() => store.getters.getTeamLabels);
+
     const stats = computed(() => {
       const questionStats = store.getters.userStats.find(
         (stat) => stat.id === props.question.id
@@ -81,41 +79,47 @@ export default {
       return questionStats ?? { totalSubmissions: 0, totalScore: 0 };
     });
 
-    // Jetzt können Sie auf das gewünschte Objekt in matchingStat zugreifen
+    const showLabels = computed(() => {
+      return props.question.questionLabels.length === 0;
+    });
+
+    const extended = ref(false);
+    const isDeleting = ref(false);
+
+    const deleteButtonText = computed(() => {
+      return isDeleting.value ? "Confirm" : "Delete";
+    });
+
+    const editQuestion = () => {
+      emit("edit", props.question);
+    };
+
+    const toggleDelete = () => {
+      if (isDeleting.value) {
+        deleteQuestion(); // Hier die eigentliche Löschfunktion aufrufen
+      } else {
+        isDeleting.value = true;
+        setTimeout(() => {
+          isDeleting.value = false;
+        }, 3000);
+      }
+    };
+
+    const deleteQuestion = () => {
+      emit("delete", props.question);
+      isDeleting.value = false;
+    };
+
     return {
       teamLabels,
       stats,
+      showLabels,
+      extended,
+      isDeleting,
+      deleteButtonText,
+      editQuestion,
+      toggleDelete,
     };
-  },
-  data() {
-    return {
-      extended: false,
-      isDeleting: false,
-    };
-  },
-  computed: {
-    deleteButtonText() {
-      return this.isDeleting ? "Confirm " : "Delete";
-    },
-  },
-  methods: {
-    editQuestion() {
-      this.$emit("edit", this.question);
-    },
-    toggleDelete() {
-      if (this.isDeleting) {
-        this.delete(); // Hier die eigentliche Löschfunktion aufrufen
-      } else {
-        this.isDeleting = true;
-        setTimeout(() => {
-          this.isDeleting = false;
-        }, 3000);
-      }
-    },
-    delete() {
-      this.$emit("delete", this.question);
-      this.isDeleting = false;
-    },
   },
 };
 </script>

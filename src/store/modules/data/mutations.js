@@ -6,6 +6,8 @@ export default {
   },
   setTeamQuestions(state, questions) {
     state.teamQuestions = questions;
+    console.log("teamquestions sind da");
+    console.log(questions);
   },
   addTeamQuestion(state, questionObject) {
     if (questionObject.id === null) {
