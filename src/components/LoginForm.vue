@@ -1,7 +1,7 @@
 <template>
-  <div class="card">
+  <div class="">
     <div class="card-body">
-      <h2 class="mb-4">Login</h2>
+      <h2 class="mb-4 text-center">Get started!</h2>
       <form
         @submit.prevent="login"
         class="d-flex flex-column align-items-center"

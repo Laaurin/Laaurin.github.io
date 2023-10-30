@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-3 sidebar">
-        <side-bar class="shadow sidebar">
+        <side-bar>
           <template #sidebar-content>
             <question-filter
               @questions-filtered="updateQuestions"
@@ -11,43 +11,41 @@
         </side-bar>
       </div>
       <div class="col">
-        <suspense>
-          <template #default>
-            <profile-questions
-              :questions="filteredQuestions"
-            ></profile-questions>
-          </template>
-          <template #fallback>
-            <div class="spinner-border" role="status">
-              <span class="sr-only"></span>
-            </div>
-          </template>
-        </suspense>
+        <profile-questions :questions="filteredQuestions"></profile-questions>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from "vue";
+import { useStore } from "vuex"; // Stelle sicher, dass die Vuex-Store-Verbindung hergestellt ist
+
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
 import QuestionFilter from "@/components/profile/QuestionFilter.vue";
 
 export default {
   components: { QuestionFilter, SideBar, ProfileQuestions },
-  data() {
-    return {
-      filteredQuestions: [],
+  setup() {
+    const store = useStore();
+
+    const filteredQuestions = ref([]);
+
+    const debug = () => {
+      console.log(store.getters.getTeamQuestions);
     };
-  },
-  methods: {
-    updateQuestions(newQuestions) {
-      console.log("called");
-      this.filteredQuestions = newQuestions;
-    },
-  },
-  async created() {
-    this.filteredQuestions = await this.$store.getters.getTeamQuestions;
+
+    const updateQuestions = (newQuestions) => {
+      console.log("Called");
+      filteredQuestions.value = newQuestions;
+    };
+
+    return {
+      filteredQuestions,
+      updateQuestions,
+      debug,
+    };
   },
 };
 </script>

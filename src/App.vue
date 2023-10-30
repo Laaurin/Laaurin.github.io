@@ -26,6 +26,9 @@ export default {
         if (user) {
           store.commit("setLoggedIn", true);
           await store.dispatch("fetchUserData", user);
+          if (store.getters.userProfileId !== null) {
+            await store.dispatch("fetchUserStats");
+          }
         } else {
           store.commit("setLoggedIn", false);
           await router.push("/");

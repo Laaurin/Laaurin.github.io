@@ -11,51 +11,45 @@
 </template>
 
 <script>
+import { ref, computed, watchEffect } from "vue";
+import SelfEvaluation from "@/components/Question/flash-card/SelfEvaluation.vue";
 import MultipleChoiceQuestion from "@/components/Question/multiple-choice/MultipleChoiceQuestion.vue";
 import FlashCard from "@/components/Question/flash-card/FlashCard.vue";
-import SelfEvaluation from "@/components/Question/flash-card/SelfEvaluation.vue";
 
 export default {
   name: "PracticeView",
   components: { SelfEvaluation, MultipleChoiceQuestion, FlashCard },
   props: ["questionSet"],
-  data() {
-    return {
-      questions: [],
-      currentQuestionIndex: 0,
-      submitted: false,
-    };
-  },
-  mounted() {
-    console.log(this.questionSet);
-    this.questions = this.shuffleArray(this.questionSet);
-  },
-  computed: {
-    currentQuestion() {
+  setup(props) {
+    const questions = ref([]);
+    const currentQuestionIndex = ref(0);
+    const submitted = ref(false);
+
+    const currentQuestion = computed(() => {
       return (
-        this.questions[this.currentQuestionIndex % this.questionSet.length] ||
-        {}
+        questions.value[
+          currentQuestionIndex.value % props.questionSet.length
+        ] || {}
       );
-    },
-    currentQuestionType() {
-      if (this.currentQuestion.type === "multiple-choice") {
+    });
+
+    const currentQuestionType = computed(() => {
+      if (currentQuestion.value.type === "multiple-choice") {
         return "multiple-choice-question";
-      } else if (this.currentQuestion.type === "flash-card") {
-        console.log("flashcard");
+      } else if (currentQuestion.value.type === "flash-card") {
         return "flash-card";
       }
       return null;
-    },
-  },
-  methods: {
-    nextQuestion() {
-      if (this.questionSet.length > 1) {
-        this.currentQuestionIndex++;
-      }
-      this.submitted = false;
-    },
+    });
 
-    shuffleArray(array) {
+    const nextQuestion = () => {
+      if (props.questionSet.length > 1) {
+        currentQuestionIndex.value++;
+      }
+      submitted.value = false;
+    };
+
+    const shuffleArray = (array) => {
       const shuffledArray = [...array];
 
       function compareRandom() {
@@ -64,7 +58,22 @@ export default {
       shuffledArray.sort(compareRandom);
 
       return shuffledArray;
-    },
+    };
+
+    // Initialisierung der Fragen beim Laden der Komponente
+    watchEffect(() => {
+      if (props.questionSet.length > 0) {
+        questions.value = shuffleArray(props.questionSet);
+      }
+    });
+
+    return {
+      questions,
+      currentQuestion,
+      currentQuestionType,
+      submitted,
+      nextQuestion,
+    };
   },
 };
 </script>

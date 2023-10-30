@@ -73,5 +73,4 @@ export default {
       console.error("Fehler beim Abmelden:", error.message);
     }
   },
-  signUp() {},
 };

@@ -19,16 +19,6 @@
       </div>
     </button>
   </div>
-  <div class="button-outer">
-    <button class="btn set-selection-button">
-      <div class="button-content">
-        <div class="button-icon">
-          <i class="bi bi-exclamation-circle"></i>
-        </div>
-        <div class="button-text">bad</div>
-      </div>
-    </button>
-  </div>
   <div v-for="label in teamLabelsInUse" :key="label" class="button-outer">
     <button
       class="btn set-selection-button"

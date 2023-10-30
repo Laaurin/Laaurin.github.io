@@ -28,7 +28,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import QuestionLabel from "@/components/label/QuestionLabel.vue";
 
 export default {
@@ -42,6 +42,13 @@ export default {
     });
     const teamQuestions = computed(() => {
       return store.getters.getTeamQuestions;
+    });
+    watch(teamQuestions, (newQuestions) => {
+      console.log("change");
+      emit("questionsFiltered", newQuestions);
+    });
+    onMounted(() => {
+      emit("questionsFiltered", teamQuestions.value);
     });
     const questionTypes = ref(["multiple-choice", "flash-card"]);
     const selectedLabels = ref([]);

@@ -32,9 +32,8 @@ export default {
     EditableQuestion,
   },
   props: ["questions"],
-  async setup(props) {
+  setup(props) {
     const store = useStore();
-    await store.dispatch("fetchUserStats");
     console.log(store.getters.userStats);
     const selectedLabel = ref("");
     const editQuestion = ref(false);
@@ -42,7 +41,7 @@ export default {
 
     const teamLabels = computed(() => store.getters.getTeamLabels);
 
-    const filteredQuestions = ref([props.questions]); // Initialisiere filteredQuestions mit einem leeren Array
+    const filteredQuestions = computed(() => props.questions);
 
     const deleteQuestion = (questionId) => {
       filteredQuestions.value = filteredQuestions.value.filter(

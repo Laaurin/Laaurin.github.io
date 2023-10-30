@@ -9,7 +9,7 @@
     </div>
     <div class="col">
       <div>
-        <div class="text-start" @click="extended = !extended">
+        <div class="text-start overflow-hidden" @click="extended = !extended">
           {{ question.questionText }}
           <div v-if="extended">
             <div v-for="(option, index) in question.answerOptions" :key="index">
@@ -22,6 +22,7 @@
             <div
               v-for="labelObject in question.questionLabels"
               :key="labelObject.id"
+              class="overflow-hidden"
             >
               <question-label
                 :label-object="labelObject"
