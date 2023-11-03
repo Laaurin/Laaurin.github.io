@@ -1,7 +1,8 @@
 <template>
   <div class="profile ms-3">
-    <div class="text" style="font-weight: bold">Uni</div>
+    <div class="text" style="font-weight: bold">KAZGUU University</div>
     <div class="text">{{ userName || "no user selected" }}</div>
+    <button @click="buttonClick">change user</button>
   </div>
 </template>
 
@@ -11,15 +12,21 @@ import { computed } from "vue";
 
 export default {
   name: "ProfilIcon",
-  setup() {
+  emits: ["showUserSelection"],
+  setup(props, { emit }) {
     const store = useStore();
 
     const userName = computed(
       () => store.getters.userProfileName || "no user selected"
     );
 
+    const buttonClick = () => {
+      emit("showUserSelection");
+    };
+
     return {
       userName,
+      buttonClick,
     };
   },
 };
@@ -27,7 +34,7 @@ export default {
 
 <style scoped>
 .profile {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 .text {
   font-size: x-large;

@@ -18,6 +18,8 @@ export default {
   },
 
   setUserStats(state, stats) {
+    console.log("setting user stets");
     state.userStats = stats;
+    console.log(state.userStats);
   },
 };

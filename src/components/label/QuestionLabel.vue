@@ -17,6 +17,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { ref } from "vue";
 
 export default {
   emits: ["toggle-label"],
@@ -32,20 +33,19 @@ export default {
       default: true,
     },
   },
-  data() {
+  setup(props, { emit }) {
+    const selected = ref(props.active);
+    const toggleLabel = () => {
+      selected.value = !selected.value;
+      emit("toggle-label", props.labelObject);
+    };
     return {
-      selected: false,
+      selected,
+      toggleLabel,
     };
   },
   methods: {
     ...mapActions(["deleteLabel"]),
-    toggleLabel() {
-      this.selected = !this.selected;
-      this.$emit("toggle-label", this.labelObject);
-    },
-  },
-  created() {
-    this.selected = this.active;
   },
   name: "QuestionLabel",
 };
@@ -53,6 +53,8 @@ export default {
 
 <style scoped>
 .labelCard {
+  user-select: none;
+  cursor: default;
   position: relative; /* Needed for positioning the remove icon */
   border-radius: 1rem;
   background-color: lightgray;
@@ -67,6 +69,10 @@ export default {
 .active {
   background-color: lightgreen;
   color: #616e7f;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .labelText {

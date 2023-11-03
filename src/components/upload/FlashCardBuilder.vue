@@ -25,6 +25,7 @@
           :key="index"
         >
           <QuestionLabel
+            :active="isActive(labelObject)"
             :label-object="labelObject"
             :clickable="true"
             @toggle-label="toggleLabel"

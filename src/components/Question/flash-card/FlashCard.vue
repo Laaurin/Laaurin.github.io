@@ -1,10 +1,10 @@
 <template>
   <div class="shadow flashcard-outer">
-    <div>
+    <div class="text-center">
       <p>{{ question.questionText }}</p>
     </div>
     <div class="d-flex justify-content-center align-items-center">
-      <div v-if="isFlipped" @click="toggleAnswer">
+      <div v-if="isFlipped" @click="toggleAnswer" class="text-center">
         <hr />
         <p>
           {{ question.solutionText }}

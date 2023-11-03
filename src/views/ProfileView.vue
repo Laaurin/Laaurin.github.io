@@ -3,11 +3,9 @@
     <div class="row">
       <div class="col-3 sidebar">
         <side-bar>
-          <template #sidebar-content>
-            <question-filter
-              @questions-filtered="updateQuestions"
-            ></question-filter>
-          </template>
+          <question-filter
+            @questions-filtered="updateQuestions"
+          ></question-filter>
         </side-bar>
       </div>
       <div class="col">
@@ -52,8 +50,9 @@ export default {
 
 <style scoped>
 .sidebar {
-  position: -webkit-sticky;
-  top: 250px;
+  position: sticky;
+  top: 88px;
+  height: calc(100dvh - 100px);
 }
 
 .col-3 {

@@ -18,6 +18,9 @@
         id="navbarNavAltMarkup"
       >
         <div class="navbar-nav">
+          <router-link to="/review" class="nav-item nav-link">
+            Review
+          </router-link>
           <router-link to="/" class="nav-item nav-link">Home</router-link>
           <router-link to="/upload" class="nav-item nav-link"
             >Upload Question</router-link
@@ -71,7 +74,22 @@ export default {
   margin-left: 1rem;
 }
 
+nav a {
+  color: #2c3e50;
+  transition: color 0.3s; /* Füge einen Übergangseffekt hinzu */
+}
+
+nav a.router-link-exact-active {
+  text-decoration: underline;
+}
+
+/* Ändere die Schriftfarbe beim Hover-Effekt */
+nav a:hover {
+  color: #42b983;
+}
+
 .logo {
   color: #e08f43;
+  font-weight: bold;
 }
 </style>

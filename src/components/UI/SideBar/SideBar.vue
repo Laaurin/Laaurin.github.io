@@ -1,9 +1,11 @@
 <template>
   <div class="sidebar shadow-lg">
-    <profil-icon></profil-icon>
-    <button @click="showUserSelection = true">change user</button>
+    <profil-icon
+      class="mb-5"
+      style="position: relative"
+      @showUserSelection="showUserSelection = true"
+    ></profil-icon>
     <slot></slot>
-    <slot name="sidebar-content"></slot>
   </div>
   <user-selection
     v-if="showUserSelection"
@@ -31,8 +33,7 @@ export default {
 <style scoped>
 .sidebar {
   width: 100%;
-  min-height: 100vh;
-  height: 100%;
+  height: calc(100dvh - 100px);
   background: #616e7f;
   font-size: 0.65em;
   border-top-right-radius: 10px;

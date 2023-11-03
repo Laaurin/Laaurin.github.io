@@ -10,7 +10,7 @@
         >
           <selectable-user
             :user-name="user.name"
-            @select="setActive(user)"
+            @select="setUser(user)"
           ></selectable-user>
         </div>
         <div>
@@ -43,7 +43,8 @@ export default {
     });
     const setUser = async (user) => {
       console.log("setting" + user);
-      store.commit("setActiveUser", { user: user });
+      //store.commit("setActiveUser", { user: user });
+      await store.dispatch("selectUserProfile", user);
       await store.dispatch("fetchUserStats");
       console.log(store.getters.userStats);
       emit("userSelected");
@@ -53,14 +54,6 @@ export default {
       selectedProfileId,
       setUser,
     };
-  },
-
-  methods: {
-    async setActive(user) {
-      console.log(user);
-      await this.$store.dispatch("selectUserProfile", user);
-      this.$emit("userSelected");
-    },
   },
 };
 </script>
@@ -72,7 +65,7 @@ export default {
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 99;
+  z-index: 999;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;

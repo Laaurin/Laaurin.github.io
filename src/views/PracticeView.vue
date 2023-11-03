@@ -34,12 +34,10 @@ export default {
   setup() {
     const store = useStore();
     const questions = ref([]);
-    const showOptions = ref(true);
     const startTraining = ref(false);
     const isProfileSelected = ref(store.getters.userProfileId !== null);
     return {
       questions,
-      showOptions,
       startTraining,
       isProfileSelected,
     };

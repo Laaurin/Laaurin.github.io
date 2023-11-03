@@ -71,6 +71,7 @@ export default {
       questions,
       currentQuestion,
       currentQuestionType,
+      currentQuestionIndex,
       submitted,
       nextQuestion,
     };

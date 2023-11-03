@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { ref, computed, watch } from "vue";
+
 export default {
   name: "AnswerOption",
   props: {
@@ -24,49 +26,36 @@ export default {
     submitted: Boolean,
   },
   emits: ["selected"],
-  data() {
-    return {
-      selectedOption: false,
-    };
-  },
-  methods: {
-    selectAnswer() {
-      console.log("select");
-      if (this.submitted) {
+  setup(props, { emit }) {
+    const selectedOption = ref(false);
+
+    const selectAnswer = () => {
+      if (props.submitted) {
         return;
       }
-      this.$emit("selected", this.index);
-    },
-  },
-  computed: {
-    isTextTooLarge() {
-      const radioTileWidth = this.$refs.radioTile.clientWidth;
-      const radioLabelWidth =
-        this.$refs.radioTile.querySelector(".radio-data").clientWidth;
+      emit("selected", selectedOption.value);
+    };
 
-      return radioLabelWidth > radioTileWidth;
-    },
-    radioTileClasses() {
-      return {
-        "radio-tile": true,
-        selected: !this.submitted && this.index === this.selectedAnswerIndex,
-        correct:
-          this.submitted &&
-          //this.index === this.selectedAnswerIndex &&
-          this.answerOption.isCorrect,
-        incorrect:
-          this.submitted && this.isSelected && !this.answerOption.isCorrect,
-        //"not-selected":
-        //  this.submittedd &&
-        //  this.answerOption.isCorrect &&
-        //  this.index !== this.selectedAnswerIndex,
-      };
-    },
-  },
-  watch: {
-    answerOption() {
-      this.selectedOption = false;
-    },
+    const radioTileClasses = computed(() => ({
+      "radio-tile": true,
+      selected: !props.submitted && props.isSelected,
+      correct: props.submitted && props.answerOption.isCorrect,
+      incorrect:
+        props.submitted && props.isSelected && !props.answerOption.isCorrect,
+    }));
+
+    watch(
+      () => props.answerOption,
+      () => {
+        selectedOption.value = false;
+      }
+    );
+
+    return {
+      selectedOption,
+      selectAnswer,
+      radioTileClasses,
+    };
   },
 };
 </script>

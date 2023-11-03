@@ -25,6 +25,7 @@ export default {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           store.commit("setLoggedIn", true);
+          await router.push("/upload");
           await store.dispatch("fetchUserData", user);
           if (store.getters.userProfileId !== null) {
             await store.dispatch("fetchUserStats");
@@ -45,18 +46,5 @@ export default {
 
 body {
   font-family: "Roboto", sans-serif;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>

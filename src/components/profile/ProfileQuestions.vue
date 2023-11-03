@@ -34,7 +34,6 @@ export default {
   props: ["questions"],
   setup(props) {
     const store = useStore();
-    console.log(store.getters.userStats);
     const selectedLabel = ref("");
     const editQuestion = ref(false);
     const questionInEdit = ref(null);

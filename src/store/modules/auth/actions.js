@@ -69,6 +69,7 @@ export default {
         token: null,
         userId: null,
       });
+      context.commit("setActiveUser", { id: null, name: null });
     } catch (error) {
       console.error("Fehler beim Abmelden:", error.message);
     }

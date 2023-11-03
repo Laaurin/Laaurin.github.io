@@ -5,13 +5,24 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   props: {
+    questionId: Number,
     correctCount: Number,
     totalCount: Number,
   },
-  computed: {
-    barColor() {
+  setup(props) {
+    const store = useStore();
+    const stats = computed(() => {
+      const questionStats = store.getters.userStats.find(
+        (stat) => stat.id === props.questionId
+      );
+      return questionStats ?? { totalSubmissions: 0, totalScore: 0 };
+    });
+    const barColor = computed(() => {
       /*
        * 0 - 60 dunkel rot
        * 60 -70 rot
@@ -25,20 +36,26 @@ export default {
         "#008000", // Grün
       ];
 
-      if (this.totalCount === 0) {
+      if (stats.value.totalSubmissions === 0) {
         // Verhindere die Division durch 0 und gib eine Standardfarbe zurück
         return "#808080";
       }
 
       const index = Math.min(
-        Math.floor((this.correctCount / this.totalCount) * colors.length),
+        Math.floor(
+          (stats.value.totalScore / stats.value.totalSubmissions) *
+            colors.length
+        ),
         colors.length - 1
       );
 
       console.log(index);
 
       return colors[index];
-    },
+    });
+    return {
+      barColor,
+    };
   },
 };
 </script>

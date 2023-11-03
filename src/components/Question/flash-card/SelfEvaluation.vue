@@ -1,29 +1,26 @@
 <template>
-  <div class="outer shadow">
+  <div class="outer">
     <div class="d-flex justify-content-center">
       <button
-        class="item"
-        style="background-color: #8b0000"
+        class="item my-global-button"
         :disabled="submitted"
         @click="submit(0)"
       >
-        bad
+        needed improvement
       </button>
       <button
-        class="item"
-        style="background-color: #e08f43"
+        class="item my-global-button"
         :disabled="submitted"
         @click="submit(0.5)"
       >
-        ok
+        good
       </button>
       <button
-        class="item"
-        style="background-color: #008000"
+        class="item my-global-button"
         :disabled="submitted"
         @click="submit(1)"
       >
-        good
+        excellent
       </button>
     </div>
   </div>
@@ -57,7 +54,6 @@ export default {
 .outer {
   border-radius: 10px;
   padding: 20px;
-  background: #616e7f;
 }
 
 .item {

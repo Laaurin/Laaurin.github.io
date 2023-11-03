@@ -1,11 +1,6 @@
 <template>
   <div class="question-wrapper">
-    <div
-      class="info__title"
-      ref="questionText"
-      :class="fontSizeClass"
-      @mouseenter="checkFontSize"
-    >
+    <div class="info__title font-size-medium" ref="questionText">
       {{ question }}
     </div>
   </div>
@@ -21,29 +16,6 @@ export default {
     return {
       fontSizeClass: "font-size-max",
     };
-  },
-  methods: {
-    checkFontSize() {
-      const element = this.$refs.questionText;
-      if (element) {
-        const availableWidth = element.offsetWidth;
-        const textLength = this.question.length;
-
-        if (availableWidth < 200 && textLength > 30) {
-          this.fontSizeClass = "font-size-scroll";
-        } else if (availableWidth < 150) {
-          this.fontSizeClass = "font-size-min";
-        } else if (availableWidth < 250 && textLength > 40) {
-          this.fontSizeClass = "font-size-medium";
-        } else {
-          this.fontSizeClass = "font-size-max";
-        }
-        console.log(this.fontSizeClass);
-      }
-    },
-  },
-  mounted() {
-    this.checkFontSize();
   },
 };
 </script>
