@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-3 sidebar">
-        <side-bar>
+        <side-bar :show="false">
           <question-filter
             @questions-filtered="updateQuestions"
           ></question-filter>
@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useStore } from "vuex"; // Stelle sicher, dass die Vuex-Store-Verbindung hergestellt ist
+import { onBeforeMount, ref } from "vue";
+//import { useStore } from "vuex";
 
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
@@ -26,13 +26,9 @@ import QuestionFilter from "@/components/profile/QuestionFilter.vue";
 export default {
   components: { QuestionFilter, SideBar, ProfileQuestions },
   setup() {
-    const store = useStore();
+    //const store = useStore();
 
     const filteredQuestions = ref([]);
-
-    const debug = () => {
-      console.log(store.getters.getTeamQuestions);
-    };
 
     const updateQuestions = (newQuestions) => {
       console.log("Called");
@@ -42,7 +38,6 @@ export default {
     return {
       filteredQuestions,
       updateQuestions,
-      debug,
     };
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="row question-wrapper">
-    <div class="col-1">
+    <div class="col-1 ps-3">
       <status-bar
         v-if="stats.totalSubmissions !== 0"
         :correct-count="stats.totalScore"
@@ -33,14 +33,15 @@
         </div>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3 d-flex justify-content-end">
+      <div class="vertical-line"></div>
       <button
         class="my-global-button"
         style="margin: 5px"
         @click="editQuestion"
       >
         <i class="bi bi-pencil-square"></i>
-        <span class="d-none d-md-inline">Edit</span>
+        <!--<span class="d-none d-md-inline">Edit</span>-->
       </button>
       <button
         class="my-global-button"
@@ -51,7 +52,7 @@
           :class="{ 'delete-icon': isDeleting, default: !isDeleting }"
           class="bi bi-trash"
         ></i>
-        <span class="d-none d-md-inline">{{ deleteButtonText }}</span>
+        <!--<span class="d-none d-md-inline">{{ deleteButtonText }}</span>-->
       </button>
     </div>
   </div>
@@ -129,6 +130,7 @@ export default {
 .question-wrapper {
   margin-top: 15px;
   margin-bottom: 15px;
+  z-index: 1;
 }
 .default-icon {
   color: white;
@@ -136,6 +138,21 @@ export default {
 .delete-icon {
   animation: colorChange 3s linear;
   animation-fill-mode: forwards;
+}
+.vertical-line {
+  width: 1px; /* Breite der vertikalen Linie */
+  height: 100%; /* Höhe der vertikalen Linie */
+  background-color: #000; /* Farbe der Linie */
+  margin: 0 10px; /* Abstand zu den umgebenden Elementen anpassen */
+}
+
+.my-global-button {
+  max-height: 40px;
+  padding: 5px 28px;
+}
+
+i {
+  font-size: 14px;
 }
 
 @keyframes colorChange {

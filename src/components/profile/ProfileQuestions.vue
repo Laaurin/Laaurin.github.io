@@ -1,14 +1,16 @@
 <template>
   <div class="profile-questions">
-    <div class="questions-list">
-      <hr />
-      <div v-for="question in filteredQuestions" :key="question.id">
-        <editable-question
-          :question="question"
-          @edit="editQuestionHandler(question)"
-          @delete="deleteQuestionHandler(question.id)"
-        ></editable-question>
-        <hr />
+    <div style="position: relative">
+      <div class="questions-list">
+        <hr v-if="filteredQuestions.length > 0" />
+        <div v-for="question in filteredQuestions" :key="question.id">
+          <editable-question
+            :question="question"
+            @edit="editQuestionHandler(question)"
+            @delete="deleteQuestionHandler(question.id)"
+          ></editable-question>
+          <hr />
+        </div>
       </div>
     </div>
   </div>
@@ -22,7 +24,7 @@
 <script>
 import EditableQuestion from "@/components/profile/EditableQuestion.vue";
 import EditQuestionWindow from "@/components/profile/EditQuestionWindow.vue";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -41,6 +43,12 @@ export default {
     const teamLabels = computed(() => store.getters.getTeamLabels);
 
     const filteredQuestions = computed(() => props.questions);
+
+    const userStats = computed(() => store.getters.userStats);
+
+    watch(userStats, () => {
+      console.log("stats updated");
+    });
 
     const deleteQuestion = (questionId) => {
       filteredQuestions.value = filteredQuestions.value.filter(
@@ -77,10 +85,18 @@ hr {
 }
 .profile-questions {
   margin-top: 0;
+  padding: 10px;
 }
 
 .filter-bar {
   margin-bottom: 10px;
+}
+
+.profile-page {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* Weitere Stile für die Hintergrundpositionierung */
 }
 
 .questions-list {

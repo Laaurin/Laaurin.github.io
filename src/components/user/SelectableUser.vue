@@ -30,6 +30,8 @@ export default {
   box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
   border-radius: 1rem;
   aspect-ratio: 1;
-  height: 150px;
+  height: 170px;
+  background: linear-gradient(135deg, #f2f2f2, #e3e3e3);
+  z-index: 999;
 }
 </style>

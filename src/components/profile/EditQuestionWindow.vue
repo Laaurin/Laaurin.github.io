@@ -147,9 +147,6 @@ export default {
   justify-content: center;
 }
 .pop-up-inner {
-  background-color: white;
-  border-radius: 1rem;
-  padding: 32px;
 }
 
 .answer-label {

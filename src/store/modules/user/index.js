@@ -5,6 +5,7 @@ import userGetters from "./getters";
 export default {
   state() {
     return {
+      uniName: null,
       userProfiles: [],
       userProfileId: null,
       userProfileName: null,

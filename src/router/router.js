@@ -8,13 +8,13 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-    meta: { requiresAuth: false, title: "Vis Quiz | Start" },
+    meta: { requiresAuth: false, title: "mootcoach | Start" },
   },
   {
     path: "/upload",
     name: "upload",
     component: () => import("../views/UploadView.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Upload" },
+    meta: { requiresAuth: true, title: "mootcoach | Upload" },
   },
   {
     path: "/practice",
@@ -55,6 +55,12 @@ const routes = [
     name: "review",
     component: () => import("../views/ReviewView.vue"),
     meta: { requiresAuth: true, title: "Vis Quiz | Review" },
+  },
+  {
+    path: "/datenschutz",
+    name: "datenschutz",
+    component: () => import("../views/DatenschutzView.vue"),
+    meta: { requiresAuth: true, title: "Vis Quiz | Datenschutz" },
   },
 ];
 

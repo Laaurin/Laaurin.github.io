@@ -10,6 +10,10 @@
         <label for="password">Passwort:</label>
         <input v-model="password" type="password" id="password" required />
       </div>
+      <div>
+        <label>Uni:</label>
+        <input v-model="uni" required />
+      </div>
       <button class="my-global-button" type="submit">Registrieren</button>
     </form>
   </div>
@@ -18,17 +22,43 @@
 <script>
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import db, { auth } from "@/firebase/init";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 export default {
   data() {
     return {
       email: "",
       password: "",
+      uni: "",
     };
   },
   methods: {
     registerUser() {
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then(async (credential) => {
+          console.log(credential.user);
+
+          // Erstellen Sie eine eigene Sammlung für das Team (Nutzer) in Firestore
+          const userDocRef = doc(db, `teams/${credential.user.uid}`);
+
+// Definieren Sie den Uni-Namen (als String)
+          const uniName = this.uni; // Hier wird der Uni-Name als String gespeichert
+
+// Aktualisieren Sie das Dokument des Benutzers, um das Uni-Feld hinzuzufügen oder zu aktualisieren
+          await setDoc(userDocRef, { uni: uniName }, { merge: true });
+
+          console.log("Uni-Name in Firestore gespeichert");
+
+          // Erstellen Sie auch die Sammlungen für Fragen und Labels, wenn benötigt
+
+          console.log("Team (Nutzer) registriert, Daten in Firestore gespeichert");
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+
+    registerUser2() {
       createUserWithEmailAndPassword(auth, this.email, this.password)
         .then(async (credential) => {
           console.log(credential.user);

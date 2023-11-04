@@ -67,8 +67,9 @@ export default {
 }
 
 .active {
-  background-color: lightgreen;
+  background: linear-gradient(45deg, #e08f43, #f8a765);
   color: #616e7f;
+  color: whitesmoke;
 }
 
 .clickable {

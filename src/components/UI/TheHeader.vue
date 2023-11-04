@@ -18,6 +18,9 @@
         id="navbarNavAltMarkup"
       >
         <div class="navbar-nav">
+          <router-link to="/signup" class="nav-item nav-link">
+            sign up
+          </router-link>
           <router-link to="/review" class="nav-item nav-link">
             Review
           </router-link>
@@ -75,17 +78,17 @@ export default {
 }
 
 nav a {
-  color: #2c3e50;
+  color: #030321;
   transition: color 0.3s; /* Füge einen Übergangseffekt hinzu */
 }
 
 nav a.router-link-exact-active {
-  text-decoration: underline;
+  color: #e08f43;
 }
 
 /* Ändere die Schriftfarbe beim Hover-Effekt */
 nav a:hover {
-  color: #42b983;
+  color: #e08f43;
 }
 
 .logo {

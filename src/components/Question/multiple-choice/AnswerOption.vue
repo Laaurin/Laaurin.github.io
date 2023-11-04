@@ -70,7 +70,7 @@ export default {
 }
 
 .radio-input:focus + .radio-tile {
-  border-color: #616e7f;
+  border-color: #e08f43;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
 }
 
@@ -102,7 +102,7 @@ export default {
 }
 
 .radio-tile:hover {
-  border-color: #616e7f;
+  border-color: #e08f43;
 }
 
 .radio-tile:hover:before {
@@ -127,7 +127,7 @@ export default {
 }
 
 .selected {
-  border-color: #616e7f;
+  border-color: #e08f43;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   color: #616e7f;
 }

@@ -27,7 +27,7 @@ export default {
   width: 100%;
   min-height: 100px;
   max-height: min-content;
-  background: #616e7f;
+  background: #4D4C7D;
   border-radius: 8px;
   box-shadow: 0px 0px 5px -3px #111;
   container-type: inline-size;

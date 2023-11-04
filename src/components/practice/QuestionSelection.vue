@@ -55,8 +55,12 @@ export default {
         });
       });
 
-      return Array.from(labelsInUse);
+      // Sortieren Sie die Labels alphabetisch
+      return Array.from(labelsInUse).sort((a, b) =>
+        a.localeCompare(b, "en", { sensitivity: "base" })
+      );
     });
+
     const publicQuestions = computed(() => {
       return store.getters.getPublicQuestions;
     });
@@ -139,11 +143,11 @@ export default {
 }
 
 .button-text {
-  color: whitesmoke;
+  color: #eaeaea;
 }
 
 .button-icon {
-  color: whitesmoke;
+  color: #eaeaea;
 }
 
 .button-outer {

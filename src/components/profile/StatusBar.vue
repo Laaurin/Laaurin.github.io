@@ -6,7 +6,6 @@
 
 <script>
 import { computed } from "vue";
-import { useStore } from "vuex";
 
 export default {
   props: {
@@ -15,11 +14,11 @@ export default {
     totalCount: Number,
   },
   setup(props) {
-    const store = useStore();
     const stats = computed(() => {
-      const questionStats = store.getters.userStats.find(
-        (stat) => stat.id === props.questionId
-      );
+      const questionStats = {
+        totalSubmissions: props.totalCount,
+        totalScore: props.correctCount,
+      };
       return questionStats ?? { totalSubmissions: 0, totalScore: 0 };
     });
     const barColor = computed(() => {
@@ -29,11 +28,11 @@ export default {
        * gelb hell grün
        * dunkel grün */
       const colors = [
-        "#8b0000", // Dunkelrot
-        "#ff0000", // Rot
+        "#7c3232", // Dunkelrot
+        "#ff6363", // Rot
         "#e08f43", // Orange
-        "#ffff00", // Gelb
-        "#008000", // Grün
+        "#e7e76c", // Gelb
+        "#3b7c3b", // Grün
       ];
 
       if (stats.value.totalSubmissions === 0) {
@@ -67,9 +66,15 @@ export default {
   height: 100%;
 }
 
-.status-bar-inner {
+._status-bar-inner {
   width: 100%;
   height: 100%;
   border-radius: 10px;
+}
+
+.status-bar-inner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; /* Ändere border-radius auf 50% für einen Kreis */
 }
 </style>

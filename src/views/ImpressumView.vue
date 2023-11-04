@@ -5,15 +5,12 @@
     <span style="text-decoration: underline">Angaben gem. § 5 TMG:</span>
   </p>
   <p>&nbsp;</p>
-  <p>Vorname, Name</p>
-  <p>Adresse</p>
-  <p>PLZ</p>
+  <p>Janis Winkler, Laurin Müller</p>
+  <p>Ferdinand-Weiss-Straße 92</p>
+  <p>79106</p>
   <p>&nbsp;</p>
   <p><span style="text-decoration: underline">Kontaktaufnahme:</span></p>
-  <p>&nbsp;</p>
-  <p>Telefon:</p>
-  <p>Fax:</p>
-  <p>E-Mail:</p>
+  <p>E-Mail: info.mootcoach@gmail.com</p>
   <p>
     <strong><span style="text-decoration: underline">&nbsp;</span></strong>
   </p>

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/Home/LoginForm.vue";
 //import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
 //import SponsorBar from "@/components/UI/SponsorBar.vue";
 

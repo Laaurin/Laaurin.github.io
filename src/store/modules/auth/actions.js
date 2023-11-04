@@ -17,7 +17,7 @@ export default {
         localStorage.setItem("tokenExpiration", expirationDate);
 
         timer = setTimeout(() => {
-          console.log("yes now is the time");
+          console.log("auto log out after 1h");
           context.dispatch("logout");
         }, expiresIn);
 
@@ -25,6 +25,8 @@ export default {
           token: userCredential._tokenResponse.idToken,
           userId: userCredential._tokenResponse.localId,
         });
+
+        context.dispatch("fetchUniName");
       }
     );
   },
@@ -54,6 +56,10 @@ export default {
         id: profileId,
         name: userName,
       });
+    }
+    const uniName = localStorage.getItem("uniName")
+    if (uniName) {
+      context.commit("setUniName", uniName)
     }
   },
   async logout(context) {

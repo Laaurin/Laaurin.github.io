@@ -7,6 +7,10 @@ export default {
     state.userProfiles.push(user);
   },
 
+  setUniName(state, uniName) {
+    state.uniName = uniName;
+  },
+
   setUserProfiles(state, profiles) {
     state.userProfiles = profiles;
   },

@@ -25,11 +25,11 @@ export default {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           store.commit("setLoggedIn", true);
-          await router.push("/upload");
           await store.dispatch("fetchUserData", user);
           if (store.getters.userProfileId !== null) {
             await store.dispatch("fetchUserStats");
           }
+          await router.push("/upload");
         } else {
           store.commit("setLoggedIn", false);
           await router.push("/");

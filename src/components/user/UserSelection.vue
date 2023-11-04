@@ -1,7 +1,7 @@
 <template>
   <div class="pop-up-window">
     <div class="pop-up-inner">
-      <div class="d-flex justify-content-start">
+      <div class="d-flex flex-wrap justify-content-center">
         <div
           :class="{ active: user.id === selectedProfileId }"
           class="selection-option"
@@ -20,6 +20,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import SelectableUser from "@/components/user/SelectableUser.vue";
@@ -65,21 +66,23 @@ export default {
   right: 0;
   left: 0;
   bottom: 0;
-  z-index: 999;
+  z-index: 9;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .pop-up-inner {
-  background-color: white;
+  background-color: transparent;
   padding: 32px;
   width: 100%;
 }
 
 .selection-option {
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin: 1rem;
+  max-width: calc(16.6667% - 2rem); /* Maximale Breite für 6 Elemente pro Zeile */
+  text-align: center; /* Text zentrieren */
+  box-sizing: border-box;
 }
 
 .active {

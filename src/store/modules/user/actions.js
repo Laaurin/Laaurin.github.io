@@ -1,4 +1,4 @@
-import { addDoc, setDoc, collection, getDocs, doc } from "firebase/firestore";
+import { addDoc, setDoc, collection, getDocs, getDoc, doc } from "firebase/firestore";
 import db from "@/firebase/init";
 
 export default {
@@ -28,6 +28,34 @@ export default {
       };
     });
     context.commit("setUserProfiles", userProfiles);
+  },
+
+  async fetchUniName(context) {
+    try {
+      const userId = context.getters.userId;
+
+      // Erstellen Sie eine Referenz auf das Dokument des Benutzers (Team)
+      const userDocRef = doc(db, `teams/${userId}`);
+
+      // Das Dokument abrufen
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        // Überprüfen, ob das Dokument existiert
+        // Der Uni-Name wird aus dem Dokument gelesen
+        const uniName = userDoc.data().uni;
+
+        localStorage.setItem("uniName", uniName);
+
+        // Setzen Sie den Uni-Namen im Store
+        context.commit('setUniName', uniName);
+      } else {
+        // Das Dokument wurde nicht gefunden
+        console.log("Dokument nicht gefunden");
+      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen des Uni-Namens:", error);
+    }
   },
 
   async fetchUserStats(context) {

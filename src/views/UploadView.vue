@@ -93,9 +93,8 @@ export default {
     },
 
     async submitForm() {
-      // Validieren, ob eine richtige Antwort ausgewählt wurde
       if (this.correctAnswerIndex === null) {
-        alert("Bitte wählen Sie eine richtige Antwort aus.");
+        alert("Please select the correct answer!");
         return;
       }
 

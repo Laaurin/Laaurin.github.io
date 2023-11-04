@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container shadow-lg">
     <h2>{{ uploading ? "Upload Question" : "Edit Question" }}</h2>
     <form>
       <div class="mb-3">
@@ -271,6 +271,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center; /* Hinzugefügte Regel für die Zentrierung */
+  background: linear-gradient(135deg, #f2f2f2, #e3e3e3);
 }
 
 .private-question-wrapper {
@@ -282,6 +283,7 @@ export default {
 h2 {
   text-align: center;
 }
+
 
 .answer-label {
   font-size: 18px;

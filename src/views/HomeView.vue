@@ -48,7 +48,11 @@
           </div>
         </div>
       </div>
-      <div v-else class="d-flex align-items-center justify-content-center">
+      <div
+        v-else
+        class="d-flex align-items-center justify-content-center"
+        style="height: calc(100vh - 100px)"
+      >
         <login-form></login-form>
       </div>
     </div>
@@ -56,7 +60,7 @@
 </template>
 
 <script>
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/Home/LoginForm.vue";
 //import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
 //import SponsorBar from "@/components/UI/SponsorBar.vue";
 

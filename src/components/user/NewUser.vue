@@ -1,21 +1,26 @@
 <template>
   <div v-if="!addingUser" class="profile">
     <i
-      style="font-size: 30px; cursor: pointer"
+      style="font-size: 30px; cursor: pointer; color: whitesmoke"
       class="bi bi-plus-circle"
       @click="toggleAddingUser"
     ></i>
   </div>
   <div v-else>
-    <input
-      v-model="name"
-      placeholder="Enter user's name"
-      @keydown.enter="saveUser"
-    />
-    <button @click="saveUser">Save</button>
-    <button @click="cancelUser">Cancel</button>
+    <div class="input-group mb-3" style="display: flex; align-items: center; justify-content: center;">
+      <input
+        v-model="name"
+        class="form-control"
+        placeholder="Enter user's name"
+        @keydown.enter="saveUser"
+      />
+      <button class="btn btn-primary" @click="saveUser">Save</button>
+      <button class="btn btn-secondary" @click="cancelUser">Cancel</button>
+    </div>
   </div>
 </template>
+
+
 
 <script>
 export default {
@@ -34,9 +39,6 @@ export default {
       this.$store.dispatch("createNewUserProfile", { name: this.name });
       this.name = "";
       this.toggleAddingUser();
-      // Der neue Benutzername ist in this.newUserName verfügbar.
-      // Führen Sie hier den Speichervorgang aus.
-      // Wenn der Vorgang abgeschlossen ist, können Sie den Zustand zurücksetzen.
     },
     cancelUser() {
       this.name = "";
@@ -50,7 +52,7 @@ export default {
 .profile {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Horizontal zentrieren */
+  align-items: center;
   justify-content: center;
   text-align: center;
   aspect-ratio: 1;

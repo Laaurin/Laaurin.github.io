@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row no-gutters">
       <div class="col-3">
-        <side-bar>
+        <side-bar :show="true">
           <question-selection
             @questions-selected="passQuestions"
           ></question-selection>
@@ -15,10 +15,6 @@
       </div>
     </div>
   </div>
-  <user-selection
-    v-if="isProfileSelected === false"
-    @user-selected="isProfileSelected = true"
-  ></user-selection>
 </template>
 
 <script>
@@ -26,11 +22,10 @@ import QuestionSelection from "@/components/practice/QuestionSelection.vue";
 import QuestionTraining from "@/components/practice/QuestionTraining.vue";
 import { ref } from "vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
-import UserSelection from "@/components/user/UserSelection.vue";
 import { useStore } from "vuex";
 export default {
   name: "PracticeView",
-  components: { UserSelection, SideBar, QuestionSelection, QuestionTraining },
+  components: { SideBar, QuestionSelection, QuestionTraining },
   setup() {
     const store = useStore();
     const questions = ref([]);

@@ -21,6 +21,9 @@ export default {
           label: labelData.label || "",
         };
       });
+
+      teamLabels.sort((a, b) => a.label.localeCompare(b.label, "en", { sensitivity: "base" }));
+
       commit("setTeamLabels", teamLabels);
 
       // Fragen abrufen

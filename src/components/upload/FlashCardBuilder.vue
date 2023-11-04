@@ -1,6 +1,8 @@
 <template>
-  <div class="container">
-    <h2>{{ uploading ? "Upload Flashcard" : "Edit Flashcard" }}</h2>
+  <div class="container shadow-lg">
+    <div class="text-center">
+      <h2>{{ uploading ? "Upload Flashcard" : "Edit Flashcard" }}</h2>
+    </div>
     <form>
       <div class="flashcard">
         <div class="flashcard-content">
@@ -145,6 +147,7 @@ form {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+  background: linear-gradient(135deg, #f2f2f2, #e3e3e3);
 }
 
 .flashcard {

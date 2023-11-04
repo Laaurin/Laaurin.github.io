@@ -14,4 +14,7 @@ export default {
   userStats(state) {
     return state.userStats;
   },
+  userUni(state) {
+    return state.uniName;
+  }
 };
