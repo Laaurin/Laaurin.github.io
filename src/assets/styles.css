@@ -1,4 +1,13 @@
-/* buttons.css */
+:root {
+    --primary-dark: #c67428;
+    --primary: #e08f43;
+    --primary-light: #f9ac64;
+
+    --secundary: #363062;
+
+    --thrid: #4D4C7D;
+}
+
 
 /* Globale Button-Klasse */
 .my-global-button {
@@ -14,7 +23,7 @@
 
 /* Button Hover-Effekt */
 .my-global-button:hover {
-    background: linear-gradient(45deg, #475160, #616e7f);
+    background: linear-gradient(135deg, var(--thrid), var(--secundary));
 }
 .my-global-button:active {
     transform: translate(0em, 0.2em);

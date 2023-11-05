@@ -22,45 +22,32 @@ const routes = [
     component: () => import("../views/PracticeView.vue"),
     meta: {
       requiresAuth: true,
-      requiresUser: true,
-      title: "Vis Quiz | Practice",
+      title: "mootcoach | Practice",
     },
   },
   {
     path: "/signup",
     name: "signup",
     component: () => import("../views/SignupView.vue"),
-    meta: { requiresAuth: false, title: "Vis Quiz | Sign Up" },
+    meta: { requiresAuth: false, title: "mootcoach | Practice" },
   },
   {
     path: "/profile",
     name: "profile",
     component: () => import("../views/ProfileView.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Profile" },
+    meta: { requiresAuth: true, requiresUser: true, title: "mootcoach | Profile" },
   },
   {
     path: "/impressum",
     name: "impressum",
     component: () => import("../views/ImpressumView.vue"),
-    meta: { requiresAuth: false, title: "Vis Quiz | Impressum" },
-  },
-  {
-    path: "/sponsors",
-    name: "sponsors",
-    component: () => import("../views/SponsorView.vue"),
-    meta: { requiresAuth: false, title: "Vis Quiz | Sponsors" },
-  },
-  {
-    path: "/review",
-    name: "review",
-    component: () => import("../views/ReviewView.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Review" },
+    meta: { requiresAuth: false, title: "mootcoach | Impressum" },
   },
   {
     path: "/datenschutz",
     name: "datenschutz",
     component: () => import("../views/DatenschutzView.vue"),
-    meta: { requiresAuth: true, title: "Vis Quiz | Datenschutz" },
+    meta: { requiresAuth: true, title: "mootcoach | Datenschutz" },
   },
 ];
 
@@ -77,7 +64,13 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta?.title ?? "Vis Quiz";
   //const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   //const isAuth = await getUserState();
-  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+  if (to.meta.requiresAuth && to.meta.requiresUser && store.getters.isAuthenticated && store.getters.userProfileName === null) {
+    console.log(store.getters.userProfileName);
+    console.log("doch cdohcd");
+    next("/")
+  }
+  else if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+    console.log("das passt schon")
     next("/");
   } else {
     next();

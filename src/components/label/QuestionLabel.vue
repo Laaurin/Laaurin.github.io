@@ -67,8 +67,7 @@ export default {
 }
 
 .active {
-  background: linear-gradient(45deg, #e08f43, #f8a765);
-  color: #616e7f;
+  background: linear-gradient(45deg, var(--primary), var(--primary-dark));
   color: whitesmoke;
 }
 

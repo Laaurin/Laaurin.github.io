@@ -1,68 +1,30 @@
 <template>
-  <div class="container">
-    <!--<h1>Welcome To mootcoach.com</h1>-->
-    <div class="row">
-      <!--<div
-        class="col-md-6 d-none d-md-inline"
-        style="aspect-ratio: 1; max-width: 450px; margin: 0 auto"
-      >
-        <introduction-carousel></introduction-carousel>
-      </div>-->
-      <div v-if="isLoggedIn" class="landing-button-group">
-        <div class="row" style="height: 70%">
-          <div
-            class="d-flex justify-content-center align-items-center"
-            style="max-height: 100%"
-          >
-            <div class="hochkant">
-              <button
-                class="full-size landing-button"
-                @click="this.$router.push('/upload')"
-              >
-                Upload Question
-              </button>
-            </div>
-            <div class="hochkant">
-              <button
-                class="full-size landing-button"
-                @click="this.$router.push('/practice')"
-              >
-                Practice
-              </button>
+  <div class="d-none d-lg-block">
+    <div class="landing-page">
+      <div class="hintergrund">
+        <div class="container align-items-center">
+          <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+              <div v-if="!isLoggedIn" style="margin-top: 34%">
+                <login-form></login-form>
+              </div>
+              <div v-else style="margin-top: 34%">
+                <SupportCard></SupportCard>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row" style="height: 30%">
-          <div
-            class="d-flex justify-content-center align-items-center"
-            style="max-height: 100%"
-          >
-            <div class="vertical">
-              <button
-                class="full-size landing-button"
-                @click="this.$router.push('/profile')"
-              >
-                Profile
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        v-else
-        class="d-flex align-items-center justify-content-center"
-        style="height: calc(100vh - 100px)"
-      >
-        <login-form></login-form>
       </div>
     </div>
+  </div>
+  <div class="d-lg-none d-flex justify-content-center">
+    <login-form></login-form>
   </div>
 </template>
 
 <script>
 import LoginForm from "@/components/Home/LoginForm.vue";
-//import IntroductionCarousel from "@/components/UI/IntroductionCarousel.vue";
-//import SponsorBar from "@/components/UI/SponsorBar.vue";
+import SupportCard from "@/components/SupportCard.vue";
 
 export default {
   data() {
@@ -83,7 +45,7 @@ export default {
     },
   },
   name: "LandingPage",
-  components: { LoginForm },
+  components: { SupportCard, LoginForm },
 };
 </script>
 
@@ -91,6 +53,29 @@ export default {
 .landing-title {
   font-size: 36px;
   margin-bottom: 30px;
+}
+
+.hintergrund {
+  background-image: url("@/assets/images/homePage.svg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center; /* Das Bild wird zentriert positioniert */
+  background-repeat: no-repeat; /* Das Bild wird nicht wiederholt */
+  width: 100%; /* Die Breite entspricht der Container-Breite */
+  height: 100%; /* Die Höhe entspricht der Container-Höhe */
+  padding: 0;
+  margin: 0;
+  z-index: -1;
+}
+
+.landing-page {
+  height: calc(100dvh - 100px);
+}
+
+.container {
+  height: 100%;
 }
 
 .hochkant {

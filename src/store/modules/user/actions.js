@@ -1,5 +1,5 @@
-import { addDoc, setDoc, collection, getDocs, getDoc, doc } from "firebase/firestore";
-import db from "@/firebase/init";
+import { addDoc, setDoc, collection, getDocs, getDoc, doc, deleteDoc } from "firebase/firestore";
+import db, { auth } from "@/firebase/init";
 
 export default {
   async createNewUserProfile(context, dataObj) {
@@ -110,5 +110,17 @@ export default {
     context.commit("setActiveUser", user);
     localStorage.setItem("profileId", user.id);
     localStorage.setItem("userName", user.name);
+  },
+
+  async deleteProfile(context, profileId) {
+    const user = auth.currentUser;
+    if (user) {
+      const profileRef = doc(db, "teams", user.uid, "profiles", profileId);
+      await deleteDoc(profileRef);
+      const updatedProfiles = context.getters.userProfiles.filter(
+        (user) => user.id !== profileId
+      );
+      context.commit("setUserProfiles", updatedProfiles);
+    }
   },
 };

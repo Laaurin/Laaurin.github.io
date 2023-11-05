@@ -23,7 +23,7 @@
       </div>
     </div>
     <button
-      class="my-global-button"
+      class="my-global-button submitbutton"
       @click="submit"
       :disabled="enableSubmitButton"
     >
@@ -95,3 +95,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .submitbutton {
+    background-color: #e08f43;
+  }
+</style>

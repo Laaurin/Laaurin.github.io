@@ -1,6 +1,5 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center" style="height: 100%">
-    <form @submit.prevent="login">
+    <form @submit.prevent="login" class="box">
       <div class="row">
         <input
           type="email"
@@ -33,48 +32,6 @@
         </button>
       </div>
     </form>
-
-  </div>
-
-  <!--<div class="">
-    <div class="card-body">
-      <h2 class="mb-4 text-center">Get started!</h2>
-      <form
-        @submit.prevent="login"
-        class="d-flex flex-column align-items-center"
-      >
-        <div class="form-group">
-          <input
-            type="email"
-            class="input"
-            id="email"
-            v-model="email"
-            placeholder="Enter email"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="password"
-            class="input"
-            id="password"
-            v-model="password"
-            placeholder="Enter password"
-            required
-          />
-        </div>
-        <button type="submit" class="login-button">Login</button>
-      </form>
-      <div class="d-flex justify-content-center">
-        <button
-          class="mt-3 login-button">
-          <a
-            href="https://p3pv41relm0.typeform.com/to/xFVQAa4j?typeform-source=lvp8ghhtd8b.typeform.com"
-          >Register</a>
-        </button>
-      </div>
-    </div>
-  </div>-->
 </template>
 
 <script>
@@ -100,23 +57,27 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 300px;
-  height: 100%;
-  padding: 10px;
+
+form {
+  width: max-content;
 }
 
-.form-group {
-  margin: 0.5rem;
+.box {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Hinzugefügter Unschärfeeffekt */
+  background: transparent;
+  backdrop-filter: blur(10px); /* Unschärfeeffekt für den Hintergrund */
+  filter: blur(0); /* Kein Unschärfeeffekt für den Inhalt */
+  padding: 20px; /* Einen Innenabstand hinzufügen, um den Unschärfeeffekt sichtbar zu machen */
 }
+
 
 .input {
   background-color: #a9a9a9; /* Hier können Sie die gewünschte Hintergrundfarbe festlegen */
   color: whitesmoke;
   border-radius: 30px; /* Um die Standardrahmen zu entfernen */
   border-color: transparent;
+  width: 250px;
 }
 
 .input::placeholder {
@@ -143,20 +104,13 @@ export default {
  }
 
 
-
-.label-sm {
-  font-size: 12px;
-  text-align: left;
-}
-
 a {
   color: whitesmoke;
   text-decoration: none;
 }
 
 .row {
-  margin-bottom: 0.5rem;
-  height: 36px;
-  max-width: 250px;
+  margin-bottom: 0.75rem;
+  height: 40px;
 }
 </style>

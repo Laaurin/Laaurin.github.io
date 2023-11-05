@@ -148,7 +148,9 @@ export default {
 
 .my-global-button {
   max-height: 40px;
-  padding: 5px 28px;
+  padding: 5px 25px;
+  background-color: #a9a9a9;
+
 }
 
 i {

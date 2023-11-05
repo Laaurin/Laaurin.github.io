@@ -18,12 +18,6 @@
         id="navbarNavAltMarkup"
       >
         <div class="navbar-nav">
-          <router-link to="/signup" class="nav-item nav-link">
-            sign up
-          </router-link>
-          <router-link to="/review" class="nav-item nav-link">
-            Review
-          </router-link>
           <router-link to="/" class="nav-item nav-link">Home</router-link>
           <router-link to="/upload" class="nav-item nav-link"
             >Upload Question</router-link

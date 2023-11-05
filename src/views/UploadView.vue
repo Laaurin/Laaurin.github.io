@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-3">
-        <side-bar>
+        <side-bar :show="true">
           <div class="button-outer">
             <button
               class="btn my-button button-text"
@@ -100,11 +100,11 @@ export default {
 
       if (this.isPrivateQuestion) {
         await this.saveNewLabelsToTeam();
-        const dataObj = this.createQuestion();
+        const dataObj = await this.createQuestion();
         console.log(dataObj);
         await this.$store.dispatch("uploadPrivateQuestion", dataObj);
       } else {
-        const dataObj = this.createQuestion();
+        const dataObj = await this.createQuestion();
         console.log(dataObj);
         await this.$store.dispatch("uploadPublicQuestion", dataObj);
       }
@@ -118,7 +118,7 @@ export default {
       this.addedLabels = [];
     },
 
-    createQuestion() {
+    async createQuestion() {
       const dataObj = {
         questionText: this.questionText,
         answerOptions: this.answerOptions.map((answer, index) => {

@@ -3,23 +3,26 @@
   <base-top></base-top>
   <router-view></router-view>
   <the-footer></the-footer>
+  <smartphone-disclaimer class="d-md-none" v-if="show" @close="show=false"></smartphone-disclaimer>
 </template>
 
 <script>
 import { onAuthStateChanged } from "firebase/auth";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import BaseTop from "@/components/UI/BaseTop.vue";
 import TheHeader from "@/components/UI/TheHeader.vue";
 import { auth } from "@/firebase/init";
 import { useRouter } from "vue-router";
 import TheFooter from "@/components/UI/TheFooter.vue";
+import SmartphoneDisclaimer from "@/components/SmartphoneDisclaimer.vue";
 
 export default {
-  components: { TheFooter, TheHeader, BaseTop },
+  components: { TheFooter, TheHeader, BaseTop, SmartphoneDisclaimer },
   setup() {
     const store = useStore();
     const router = useRouter();
+    const show = ref(true);
     store.dispatch("tryLogin");
     onMounted(() => {
       onAuthStateChanged(auth, async (user) => {
@@ -29,7 +32,6 @@ export default {
           if (store.getters.userProfileId !== null) {
             await store.dispatch("fetchUserStats");
           }
-          await router.push("/upload");
         } else {
           store.commit("setLoggedIn", false);
           await router.push("/");
@@ -37,6 +39,9 @@ export default {
         }
       });
     });
+    return {
+      show,
+    }
   },
 };
 </script>
