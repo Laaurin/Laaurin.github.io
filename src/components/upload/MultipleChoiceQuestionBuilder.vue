@@ -87,6 +87,7 @@
       >
         <input
           type="checkbox"
+          disabled
           v-model="isPrivateQuestion"
           style="margin-right: 10px"
         />
@@ -145,7 +146,7 @@ export default {
     const store = useStore();
     const teamLabels = computed(() => store.getters.getTeamLabels);
     const addedLabels = ref([]);
-    const isPrivateQuestion = ref(false);
+    const isPrivateQuestion = ref(true);
 
     // Hier prüfen, ob eine Frage über props übergeben wurde
     const question = ref(

@@ -5,10 +5,10 @@
         <div class="container align-items-center">
           <div class="row">
             <div class="col-6 d-flex justify-content-center">
-              <div v-if="!isLoggedIn" style="margin-top: 34%">
+              <div v-if="!isLoggedIn" style="margin-top: 40%">
                 <login-form></login-form>
               </div>
-              <div v-else style="margin-top: 34%">
+              <div v-else style="margin-top: 40%">
                 <SupportCard></SupportCard>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default {
 }
 
 .hintergrund {
-  background-image: url("@/assets/images/homePage.svg");
+  background-image: url("@/assets/images/silvano-home.svg");
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

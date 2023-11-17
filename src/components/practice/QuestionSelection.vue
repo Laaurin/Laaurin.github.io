@@ -1,16 +1,18 @@
 <template>
   <div class="button-outer">
-    <button class="btn set-selection-button" @click="selectPublicQuestions">
+    <button class="btn set-selection-button" disabled>
+      <hr/>
       <div class="button-content">
         <div class="button-icon">
           <i class="bi bi-people-fill"></i>
         </div>
-        <div class="button-text">Public Questions</div>
+        <div class="button-text-disabled">Public Questions (coming soon)</div>
       </div>
     </button>
   </div>
   <div class="button-outer">
     <button class="btn set-selection-button" @click="selectPrivateQuestions">
+      <hr/>
       <div class="button-content">
         <div class="button-icon">
           <i class="bi bi-person-fill"></i>
@@ -24,6 +26,7 @@
       class="btn set-selection-button"
       @click="selectQuestionsByLabel(label)"
     >
+      <hr/>
       <div class="button-content">
         <div class="button-icon">
           <i class="bi bi-tag-fill"></i>
@@ -124,17 +127,8 @@ export default {
   width: 100%;
   text-align: left;
   padding: 0;
-  position: relative; /* Position für das Pseudo-Element */
-}
-
-.set-selection-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #ccc; /* Farbe der Trennlinie */
+  position: relative;
+  border: none;
 }
 
 .button-content {
@@ -146,6 +140,10 @@ export default {
   color: #eaeaea;
 }
 
+.button-text-disabled {
+  color: #9b9b9b;
+}
+
 .button-icon {
   color: #eaeaea;
 }
@@ -154,5 +152,11 @@ export default {
   margin-left: 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+hr {
+  margin-bottom: 0;
+  margin-top: 8px;
+  border-top: 2px solid #969696;
 }
 </style>

@@ -14,7 +14,7 @@
         placeholder="Enter user's name"
         @keydown.enter="saveUser"
       />
-      <button class="btn btn-primary" @click="saveUser">Save</button>
+      <button class="btn btn-primary" style="background-color: var(--primary); border-color: var(--primary)" @click="saveUser">Save</button>
       <button class="btn btn-secondary" @click="cancelUser">Cancel</button>
     </div>
   </div>

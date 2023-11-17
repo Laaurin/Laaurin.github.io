@@ -23,7 +23,7 @@ export default {
 }
 
 .highlight {
-  background-color: orange;
+  background-color: var(--primary);
   border-radius: 5px;
   padding: 2px 5px;
   color: white;

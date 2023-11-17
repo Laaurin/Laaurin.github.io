@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="login" class="box">
-      <div class="row">
+      <div class="row" :class="{ 'error-input': hasError }">
         <input
           type="email"
           class="input"
@@ -10,7 +10,7 @@
           required
         />
       </div>
-      <div class="row">
+      <div class="row" :class="{ 'error-input': hasError }">
         <input
           type="password"
           class="input"
@@ -42,15 +42,24 @@ export default {
       password: "",
       isLoading: false,
       error: null,
+      hasError: false, // Datenvariable für Fehlerstatus der Eingabefelder
     };
   },
   methods: {
     async login() {
-      console.log("logging in")
-      await this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password,
-      });
+      this.error = null;
+      this.hasError = false; // Zurücksetzen des Fehlerstatus
+      console.log("logging in");
+      try {
+        await this.$store.dispatch("login", {
+          email: this.email,
+          password: this.password,
+        });
+        // Anmeldung erfolgreich
+      } catch (error) {
+        this.hasError = true; // Fehlerstatus auf true setzen
+        this.error = "Anmeldung fehlgeschlagen. Überprüfen Sie Ihre Eingaben.";
+      }
     },
   },
 };
@@ -89,6 +98,7 @@ form {
   border-color: transparent;
   color: whitesmoke;
   background: linear-gradient(45deg, #1f2a1f, #2c362d);
+  background: linear-gradient(45deg, #2a2a2a, #363636);
   width: 90%;
   margin-left: 5%;
   padding: 0;
@@ -112,5 +122,9 @@ a {
 .row {
   margin-bottom: 0.75rem;
   height: 40px;
+}
+
+.error-input {
+  border: 1px solid red; /* Rote Umrandung für Eingabefelder mit Fehlerstatus */
 }
 </style>

@@ -10,10 +10,10 @@
         </side-bar>
       </div>
       <div class="col-9">
-        <div class="hintergrund">
-          <div v-if="startTraining">
-            <question-training :question-set="questions"></question-training>
-          </div>
+        <div v-if="startTraining">
+          <question-training :question-set="questions"></question-training>
+        </div>
+        <div v-else class="hintergrund">
         </div>
       </div>
     </div>
@@ -54,14 +54,6 @@ export default {
 </script>
 
 <style scoped>
-.container-fluid {
-  margin-left: 0;
-  margin-right: 0;
-  padding-right: 0;
-  padding-left: 0;
-  max-width: 100%;
-}
-
 .col-3 {
   padding: 0;
 }
@@ -71,7 +63,7 @@ export default {
 }
 
 .hintergrund {
-  background-image: url("@/assets/images/homePage.svg");
+  background-image: url("@/assets/images/silvano-home.svg");
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -80,7 +72,7 @@ export default {
   background-repeat: no-repeat; /* Das Bild wird nicht wiederholt */
   max-width: 100%; /* Die Breite entspricht der Container-Breite */
   width: auto;
-  height: auto; /* Die Höhe entspricht der Container-Höhe */
+  height: calc(100dvh - 100px); /* Die Höhe entspricht der Container-Höhe */
   padding: 0;
   margin: 0;
   z-index: -1;

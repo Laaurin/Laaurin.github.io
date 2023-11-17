@@ -23,7 +23,7 @@
       </div>
     </div>
     <button
-      class="my-global-button submitbutton"
+      class="submitbutton"
       @click="submit"
       :disabled="enableSubmitButton"
     >
@@ -97,7 +97,18 @@ export default {
 </script>
 
 <style scoped>
-  .submitbutton {
-    background-color: #e08f43;
+.submitbutton {
+  font-size: 17px;
+  padding: 0.5em 2em;
+  border: transparent;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  background-color: var(--primary);
+  color: white;
+  border-radius: 30px;
+  margin: 5px;
+}
+
+  .submitbutton :hover {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   }
 </style>
