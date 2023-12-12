@@ -1,75 +1,105 @@
 <template>
-  <question-selection @questions-selected="passQuestions"></question-selection>
-  <question-training
-    v-if="startTraining"
-    :question-set="questions"
-  ></question-training>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <side-bar :show="true">
+          <question-selection
+            style="margin-left: 1rem"
+            @questions-selected="passQuestions"
+          ></question-selection>
+        </side-bar>
+      </div>
+      <div class="col-9">
+        <div v-if="startTraining">
+          <question-training :question-set="questions"></question-training>
+        </div>
+        <div v-else class="hintergrund d-flex justify-content-center align-items-center">
+          <blur-box>
+            <h2 style="color: var(--primary)">public questions</h2>
+            <p>train questions submitted by participants from all around the globe</p>
+            <h2>team questions</h2>
+            <p>repeat all of your internal facts</p>
+            <h2 style="color: var(--primary)">specified units</h2>
+            <p>individualize your repetition to improve your question handling in particular fields</p>
+            <h2>evaluate your performance</h2>
+            <p>monitor your progress per question in your profile<br>
+              <span style="color: var(--need-improvement)">needs improvement</span> -
+              <span style="color: var(--okay)">okay</span> -
+              <span style="color: var(--good)">good</span> -
+              <span style="color: var(--very-good)">very good</span> -
+              <span style="color: var(--excellent)">excellent</span>
+            </p>
+          </blur-box>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import QuestionSelection from "@/components/QuestionSelection.vue";
-import QuestionTraining from "@/components/QuestionTraining.vue";
+import QuestionSelection from "@/components/practice/QuestionSelection.vue";
+import QuestionTraining from "@/components/practice/QuestionTraining.vue";
+import { ref } from "vue";
+import SideBar from "@/components/UI/SideBar/SideBar.vue";
+import { useStore } from "vuex";
+import BlurBox from "@/components/UI/BlurBox.vue";
 export default {
   name: "PracticeView",
-  components: { QuestionSelection, QuestionTraining },
-  data() {
+  components: { BlurBox, SideBar, QuestionSelection, QuestionTraining },
+  setup() {
+    const store = useStore();
+    const questions = ref([]);
+    const startTraining = ref(false);
+    const isProfileSelected = ref(store.getters.userProfileId !== null);
     return {
-      questions: [
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Drone Eye plc",
-            },
-            {
-              isCorrect: false,
-              text: "Drone Eye ltd",
-            },
-            {
-              isCorrect: false,
-              text: "Equatoriana Geoscience plc",
-            },
-            {
-              isCorrect: true,
-              text: "Equatoriana Geoscience ltd",
-            },
-          ],
-          questionText:
-            "What is the Name of the Respondent of the Proceedings?",
-        },
-        {
-          answerOptions: [
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C5, p. 16",
-            },
-            {
-              isCorrect: false,
-              text: "Claimant Exhibit C7, p. 18, para. 11",
-            },
-            {
-              isCorrect: true,
-              text: "Respondent Exhibit R2, p. 33",
-            },
-            {
-              isCorrect: false,
-              text: "Respondent Exhibit R4, p. 35?",
-            },
-          ],
-          questionText:
-            "Where in the Case-File can we find information, that the public prosecutor in Equatoriana can proof that Mr. Field accepted two undue payments?",
-        },
-      ],
-      startTraining: false,
+      questions,
+      startTraining,
+      isProfileSelected,
     };
   },
   methods: {
     passQuestions(newQuestions) {
       this.questions = newQuestions;
       this.startTraining = true;
+      this.showOptions = false;
     },
+  },
+  created() {
+    console.log(this.$store.getters.isProfileSelected);
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+h2 {
+  font-weight: bold;
+}
+
+p {
+  font-weight: bold;
+}
+
+.col-3 {
+  padding: 0;
+}
+
+.col-9 {
+  padding: 0;
+}
+
+.hintergrund {
+  background-image: url("@/assets/images/architecture.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center; /* Das Bild wird zentriert positioniert */
+  background-repeat: no-repeat; /* Das Bild wird nicht wiederholt */
+  max-width: 100%; /* Die Breite entspricht der Container-Breite */
+  width: auto;
+  height: calc(100dvh - 100px); /* Die Höhe entspricht der Container-Höhe */
+  padding: 0;
+  margin: 0;
+  z-index: -1;
+}
+</style>

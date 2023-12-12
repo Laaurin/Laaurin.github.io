@@ -1,39 +1,62 @@
 <template>
-  <profile-questions></profile-questions>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3 sidebar">
+        <!--side-bar :show="true">
+          <question-filter
+            @questions-filtered="updateQuestions"
+          ></question-filter>
+        </side-bar-->
+        <the-side-bar>
+          <question-filter
+            @questions-filtered="updateQuestions"
+          ></question-filter>
+        </the-side-bar>
+      </div>
+      <div class="col">
+        <profile-questions :questions="filteredQuestions"></profile-questions>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import ProfileQuestions from "@/components/ProfileQuestions.vue";
+import { onBeforeMount, ref } from "vue";
+//import { useStore } from "vuex";
+
+import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
+import SideBar from "@/components/UI/SideBar/SideBar.vue";
+import QuestionFilter from "@/components/profile/QuestionFilter.vue";
+import TheSideBar from "@/components/UI/SideBar/TheSideBar.vue";
 
 export default {
-  components: { ProfileQuestions },
-  data() {
-    return {};
-  },
-  methods: {
-    editQuestion() {
-      // Hier implementieren: Frage bearbeiten
-    },
-    deleteQuestion() {
-      // Hier implementieren: Frage löschen
-    },
-    manageLabels() {
-      // Hier implementieren: Labels verwalten
-    },
-    toggleQuestion(index) {
-      if (this.isQuestionExpanded(index)) {
-        this.expandedQuestions = this.expandedQuestions.filter(
-          (i) => i !== index
-        );
-      } else {
-        this.expandedQuestions.push(index);
-      }
-    },
-    isQuestionExpanded(index) {
-      return this.expandedQuestions.includes(index);
-    },
+  components: { TheSideBar, QuestionFilter, SideBar, ProfileQuestions },
+  setup() {
+    //const store = useStore();
+
+    const filteredQuestions = ref([]);
+
+    const updateQuestions = (newQuestions) => {
+      console.log("Called");
+      filteredQuestions.value = newQuestions;
+    };
+
+    return {
+      filteredQuestions,
+      updateQuestions,
+    };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.sidebar {
+  position: sticky;
+  top: 88px;
+  height: calc(100dvh - 100px);
+}
+
+.col-3 {
+  padding-left: 0;
+}
+</style>

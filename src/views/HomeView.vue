@@ -1,40 +1,90 @@
 <template>
-  <h1 style="margin-top: 5rem" class="landing-title">Welcome to Vis Quiz</h1>
-  <div class="landing-page">
-    <div v-if="!this.$root.loggedIn">
-      <main>
-        <login-form></login-form>
-      </main>
-    </div>
-    <div v-else>
-      <div class="landing-buttons">
-        <router-link to="/editor" class="landing-button">
-          Upload Question
-        </router-link>
-        <router-link to="/practice" class="landing-button">
-          Practice
-        </router-link>
+  <div class="d-none d-lg-block">
+    <div class="landing-page">
+      <div class="hintergrund d-flex justify-content-center">
+        <div class="container">
+          <div class="row d-flex align-items-center" style="height: 100%">
+            <div class="col-6 d-flex justify-content-center">
+              <blur-box>
+                <div class="text-center">
+                  <h1 style="color: var(--primary); font-weight: bold">mootcoach.com</h1>
+                  <p>gamify your repetition of facts and arguments</p>
+                  <div class="d-flex justify-content-center">
+                    <login-form v-if="!isLoggedIn"></login-form>
+                    <SupportCard v-else></SupportCard>
+                  </div>
+                </div>
+              </blur-box>
+            </div>
+            <blur-box>
+              <div class="col-6">
+                <div style="width: max-content">
+                  <h2>Practice</h2>
+                  <p>memorize important information in different question formats<br>
+                  train your general knowledge or specific categories</p>
+                </div>
+                <div style="width: max-content">
+                  <h2 style="color: var(--primary)">Create</h2>
+                  <p>upload your own questions within seconds<br>
+                    use labels to organize your questions</p>
+                </div>
+                <div style="width: max-content;">
+                  <h2>Edit</h2>
+                  <p>manage your questions in your profile<br>
+                    review your individual performance</p>
+                </div>
+                <div style="width: max-content">
+                  <h2 style="color: var(--primary)">Network</h2>
+                  <p>benefit from the questions of a global community of Mooties<br>
+                    contribute by uploading your own questions</p>
+                </div>
+              </div>
+            </blur-box>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+  <div class="d-lg-none d-flex justify-content-center">
+    <login-form></login-form>
   </div>
 </template>
 
 <script>
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/Home/LoginForm.vue";
+import SupportCard from "@/components/SupportCard.vue";
+import BlurBox from "@/components/UI/BlurBox.vue";
 
 export default {
+  data() {
+    return {
+      carouselSlides: [
+        {
+          image: "../../assets/logos/cms.png",
+          caption: "Welcome to our App!",
+          description: "Explore our amazing features.",
+        },
+      ],
+      sponsors: [{ logo: "./logos/cms.png", name: "heheh" }],
+    };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    },
+  },
   name: "LandingPage",
-  components: { LoginForm },
+  components: { BlurBox, SupportCard, LoginForm },
 };
 </script>
 
 <style scoped>
-.landing-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
+p {
+  font-weight: bold;
+}
+
+h2 {
+  font-weight: bold;
 }
 
 .landing-title {
@@ -42,29 +92,54 @@ export default {
   margin-bottom: 30px;
 }
 
-.landing-buttons {
-  display: flex;
+.hintergrund {
+  background-image: url("@/assets/images/architecture3.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center; /* Das Bild wird zentriert positioniert */
+  background-repeat: no-repeat; /* Das Bild wird nicht wiederholt */
+  width: 100%; /* Die Breite entspricht der Container-Breite */
+  height: 100%; /* Die Höhe entspricht der Container-Höhe */
+  padding: 0;
+  margin: 0;
+  z-index: -1;
+}
+
+.landing-page {
+  height: calc(100dvh - 100px);
+}
+
+.container {
+  height: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.hochkant {
+  padding: 5px;
+  height: 100%;
+  aspect-ratio: 2/3;
+}
+
+.vertical {
+  padding: 5px;
+  height: 100%;
+  aspect-ratio: 28/9;
+}
+
+.full-size {
   width: 100%;
-  justify-content: center;
-  margin-top: 20px; /* Füge einen oberen Abstand hinzu */
+  height: 100%;
 }
 
 .landing-button {
-  flex: 1; /* Ändere die Flex-Grow-Eigenschaft, um die Buttons gleich groß zu machen */
-  max-width: 500px; /* Setze eine maximale Breite für die Buttons */
-  height: 300px;
-  font-size: 24px;
-  padding: 15px 30px;
-  margin: 0 10px;
+  font-size: 17px;
   border: none;
   border-radius: 4px;
   background-color: #616e7f;
   color: white;
-  cursor: pointer;
-  text-decoration: none;
-  display: flex; /* Zentriere den Text horizontal */
-  align-items: center; /* Zentriere den Text vertikal */
-  justify-content: center; /* Zentriere den Text horizontal */
 }
 
 .landing-button:hover {
@@ -73,5 +148,10 @@ export default {
 
 .landing-button:focus {
   outline: none;
+}
+
+.landing-button-group {
+  max-width: 100%;
+  height: 400px;
 }
 </style>

@@ -1,102 +1,55 @@
 <template>
-  <the-header @sign-out="signOutUser"></the-header>
+  <the-header class="sticky-top"></the-header>
+  <base-top></base-top>
   <router-view></router-view>
+  <the-footer></the-footer>
+  <!--smartphone-disclaimer class="d-md-none" v-if="show" @close="show=false"></smartphone-disclaimer-->
 </template>
 
 <script>
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { provide, ref, onMounted } from "vue";
-import db, { auth } from "@/firebase/init.js";
-import { collection, getDocs } from "firebase/firestore";
-import TheHeader from "@/components/TheHeader.vue";
-import router from "@/router/router";
+import { onAuthStateChanged } from "firebase/auth";
+import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
+import BaseTop from "@/components/UI/BaseTop.vue";
+import TheHeader from "@/components/UI/TheHeader.vue";
+import { auth } from "@/firebase/init";
+import { useRouter } from "vue-router";
+import TheFooter from "@/components/UI/TheFooter.vue";
+import SmartphoneDisclaimer from "@/components/SmartphoneDisclaimer.vue";
 
 export default {
-  components: { TheHeader },
+  components: { TheFooter, TheHeader, BaseTop, SmartphoneDisclaimer },
   setup() {
-    const loggedIn = ref(false);
-    const userQuestions = ref([]);
-    const userLabels = ref([]);
-    const publicQuestions = ref([]);
-
-    provide("userQuestions", userQuestions);
-    provide("userLabels", userLabels);
-    provide("publicQuestions", publicQuestions);
-
-    const signOutUser = () => {
-      signOut(auth);
-      router.push("/");
-    };
-
-    const fetchUserData = async (user) => {
-      try {
-        // Labels abrufen
-        const labelsCollectionRef = collection(db, `users/${user.uid}/labels`);
-        const labelsQuerySnapshot = await getDocs(labelsCollectionRef);
-        userLabels.value = labelsQuerySnapshot.docs.map((doc) => doc.data());
-
-        // Fragen abrufen
-        const questionsCollectionRef = collection(
-          db,
-          `users/${user.uid}/questions`
-        );
-        const questionsQuerySnapshot = await getDocs(questionsCollectionRef);
-        userQuestions.value = questionsQuerySnapshot.docs.map((doc) => {
-          const questionData = doc.data();
-          return {
-            id: doc.id,
-            questionText: questionData.questionText,
-            answerOptions: questionData.answerOptions,
-            questionLabels: questionData.questionLabels || [],
-          };
-        });
-      } catch (error) {
-        console.error("Fehler beim Abrufen der Benutzerdaten:", error.message);
-      }
-      console.log("labels in app.vue ", userLabels.value);
-    };
-
+    const store = useStore();
+    const router = useRouter();
+    const show = ref(true);
+    store.dispatch("tryLogin");
     onMounted(() => {
       onAuthStateChanged(auth, async (user) => {
-        console.log("called called called");
         if (user) {
-          loggedIn.value = true;
-          await fetchUserData(user);
+          store.commit("setLoggedIn", true);
+          await store.dispatch("fetchUserData", user);
+          if (store.getters.userProfileId !== null) {
+            await store.dispatch("fetchUserStats");
+          }
         } else {
-          loggedIn.value = false;
+          store.commit("setLoggedIn", false);
+          await router.push("/");
           // Navigieren Sie den Benutzer zur Startseite, wenn nicht angemeldet
         }
       });
     });
-
     return {
-      loggedIn,
-      signOutUser,
-    };
+      show,
+    }
   },
 };
 </script>
 
 <style>
 @import "@/assets/styles.css";
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+body {
+  font-family: "Roboto", sans-serif;
 }
 </style>
