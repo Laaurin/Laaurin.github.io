@@ -1,5 +1,8 @@
 <template>
   <p class="filter-title text-center">Filter By Label</p>
+  <!--input class="form-check-input m-1" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+  <p class="filter-title">Manage Labels</p-->
+
   <div class="label-container mb-3">
     <div v-for="labelObject in teamLabels" :key="labelObject.id">
       <question-label

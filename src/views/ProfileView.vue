@@ -2,11 +2,16 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-3 sidebar">
-        <side-bar :show="false">
+        <!--side-bar :show="true">
           <question-filter
             @questions-filtered="updateQuestions"
           ></question-filter>
-        </side-bar>
+        </side-bar-->
+        <the-side-bar>
+          <question-filter
+            @questions-filtered="updateQuestions"
+          ></question-filter>
+        </the-side-bar>
       </div>
       <div class="col">
         <profile-questions :questions="filteredQuestions"></profile-questions>
@@ -22,9 +27,10 @@ import { onBeforeMount, ref } from "vue";
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
 import QuestionFilter from "@/components/profile/QuestionFilter.vue";
+import TheSideBar from "@/components/UI/SideBar/TheSideBar.vue";
 
 export default {
-  components: { QuestionFilter, SideBar, ProfileQuestions },
+  components: { TheSideBar, QuestionFilter, SideBar, ProfileQuestions },
   setup() {
     //const store = useStore();
 

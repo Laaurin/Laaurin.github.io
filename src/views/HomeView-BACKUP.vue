@@ -4,42 +4,55 @@
       <div class="hintergrund d-flex justify-content-center">
         <div class="container">
           <div class="row d-flex align-items-center" style="height: 100%">
-            <div class="col-6 d-flex justify-content-center">
-              <blur-box>
-                <div class="text-center">
-                  <h1 style="color: var(--primary); font-weight: bold">mootcoach.com</h1>
-                  <p>gamify your repetition of facts and arguments</p>
-                  <div class="d-flex justify-content-center">
-                    <login-form v-if="!isLoggedIn"></login-form>
-                    <SupportCard v-else></SupportCard>
-                  </div>
-                </div>
-              </blur-box>
-            </div>
-            <blur-box>
-              <div class="col-6">
-                <div style="width: max-content">
-                  <h2>Practice</h2>
-                  <p>memorize important information in different question formats<br>
-                  train your general knowledge or specific categories</p>
-                </div>
-                <div style="width: max-content">
-                  <h2 style="color: var(--primary)">Create</h2>
-                  <p>upload your own questions within seconds<br>
-                    use labels to organize your questions</p>
-                </div>
-                <div style="width: max-content;">
-                  <h2>Edit</h2>
-                  <p>manage your questions in your profile<br>
-                    review your individual performance</p>
-                </div>
-                <div style="width: max-content">
-                  <h2 style="color: var(--primary)">Network</h2>
-                  <p>benefit from the questions of a global community of Mooties<br>
-                    contribute by uploading your own questions</p>
+            <div class="col d-flex justify-content-center">
+              <div class="text-center">
+                <h1 style="color: var(--primary); font-weight: bold">mootcoach.com</h1>
+                <p>gamify your repetition of facts and arguments</p>
+                <div class="d-flex justify-content-center">
+                  <login-form v-if="!isLoggedIn"></login-form>
+                  <SupportCard v-else></SupportCard>
                 </div>
               </div>
-            </blur-box>
+            </div>
+            <div class="col">
+              <div class="row">
+                <div class="col-2"></div>
+                <div class="col">
+                  <blur-box>
+                    <h2>Practice</h2>
+                    <p>memorize important information in different question formats<br>
+                      train your general knowledge or specific categories</p>
+                  </blur-box>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <blur-box>
+                    <h2 style="color: var(--primary)">Create</h2>
+                    <p>upload your own questions within seconds<br>
+                      use labels to organize your questions</p>
+                  </blur-box>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1"></div>
+                <div class="col">
+                  <blur-box>
+                    <h2>Edit</h2>
+                    <p>manage your questions in your profile<br>
+                      review your individual performance</p>
+                  </blur-box>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-2"></div>
+                <div class="col">
+                    <h2 style="color: var(--primary)">Network</h2>
+                    <p>benefit from the questions of a global community of Mooties<br>
+                      contribute by uploading your own questions</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

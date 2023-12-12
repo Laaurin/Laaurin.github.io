@@ -13,7 +13,23 @@
         <div v-if="startTraining">
           <question-training :question-set="questions"></question-training>
         </div>
-        <div v-else class="hintergrund">
+        <div v-else class="hintergrund d-flex justify-content-center align-items-center">
+          <blur-box>
+            <h2 style="color: var(--primary)">public questions</h2>
+            <p>train questions submitted by participants from all around the globe</p>
+            <h2>team questions</h2>
+            <p>repeat all of your internal facts</p>
+            <h2 style="color: var(--primary)">specified units</h2>
+            <p>individualize your repetition to improve your question handling in particular fields</p>
+            <h2>evaluate your performance</h2>
+            <p>monitor your progress per question in your profile<br>
+              <span style="color: var(--need-improvement)">needs improvement</span> -
+              <span style="color: var(--okay)">okay</span> -
+              <span style="color: var(--good)">good</span> -
+              <span style="color: var(--very-good)">very good</span> -
+              <span style="color: var(--excellent)">excellent</span>
+            </p>
+          </blur-box>
         </div>
       </div>
     </div>
@@ -26,9 +42,10 @@ import QuestionTraining from "@/components/practice/QuestionTraining.vue";
 import { ref } from "vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
 import { useStore } from "vuex";
+import BlurBox from "@/components/UI/BlurBox.vue";
 export default {
   name: "PracticeView",
-  components: { SideBar, QuestionSelection, QuestionTraining },
+  components: { BlurBox, SideBar, QuestionSelection, QuestionTraining },
   setup() {
     const store = useStore();
     const questions = ref([]);
@@ -54,6 +71,14 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+  font-weight: bold;
+}
+
+p {
+  font-weight: bold;
+}
+
 .col-3 {
   padding: 0;
 }
@@ -63,7 +88,7 @@ export default {
 }
 
 .hintergrund {
-  background-image: url("@/assets/images/silvano-home.svg");
+  background-image: url("@/assets/images/architecture.jpg");
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

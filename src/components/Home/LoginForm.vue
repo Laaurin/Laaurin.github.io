@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="login" class="box">
+    <form @submit.prevent="login" class="">
       <div class="row" :class="{ 'error-input': hasError }">
         <input
           type="email"

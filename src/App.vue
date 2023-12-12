@@ -3,7 +3,7 @@
   <base-top></base-top>
   <router-view></router-view>
   <the-footer></the-footer>
-  <smartphone-disclaimer class="d-md-none" v-if="show" @close="show=false"></smartphone-disclaimer>
+  <!--smartphone-disclaimer class="d-md-none" v-if="show" @close="show=false"></smartphone-disclaimer-->
 </template>
 
 <script>

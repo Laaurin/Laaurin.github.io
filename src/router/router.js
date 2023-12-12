@@ -35,13 +35,19 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: () => import("../views/ProfileView.vue"),
-    meta: { requiresAuth: true, requiresUser: true, title: "mootcoach | Profile" },
+    meta: { requiresAuth: true, requiresUser: false, title: "mootcoach | Profile" },
   },
   {
     path: "/impressum",
     name: "impressum",
     component: () => import("../views/ImpressumView.vue"),
     meta: { requiresAuth: false, title: "mootcoach | Impressum" },
+  },
+  {
+    path: "/educate",
+    name: "educate",
+    component: () => import("../views/EducationView.vue"),
+    meta: {requiresAuth: true, title: "mootcoach | Educate"}
   },
   {
     path: "/datenschutz",

@@ -55,7 +55,6 @@ export default {
 .labelCard {
   user-select: none;
   cursor: default;
-  position: relative; /* Needed for positioning the remove icon */
   border-radius: 1rem;
   background-color: lightgray;
   width: auto;

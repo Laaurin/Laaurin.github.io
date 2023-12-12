@@ -212,7 +212,7 @@ export default {
       };
       addedLabels.value = [];
       correctAnswerIndex.value = null;
-      isPrivateQuestion.value = false;
+      isPrivateQuestion.value = true;
     };
 
     const isActive = (otherLabelObject) => {

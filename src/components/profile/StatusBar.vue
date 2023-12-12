@@ -22,36 +22,37 @@ export default {
       return questionStats ?? { totalSubmissions: 0, totalScore: 0 };
     });
     const barColor = computed(() => {
+      const totalSubmissions = stats.value.totalSubmissions;
+      const totalScore = stats.value.totalScore;
+
+      if (totalSubmissions === 0) {
+        // Verhindere die Division durch 0 und gib eine Standardfarbe zurück
+        return "#808080";
+      }
+
+      const score = totalScore / totalSubmissions;
+
       /*
        * 0 - 60 dunkel rot
        * 60 -70 rot
        * gelb hell grün
        * dunkel grün */
-      const colors = [
-        "#7c3232", // Dunkelrot
-        "#ff6363", // Rot
-        "#e08f43", // Orange
-        "#e7e76c", // Gelb
-        "#3b7c3b", // Grün
-      ];
-
-      if (stats.value.totalSubmissions === 0) {
-        // Verhindere die Division durch 0 und gib eine Standardfarbe zurück
-        return "#808080";
+      switch (true) {
+        case score >= 0 && score < 0.6:
+          return "#7c3232"; // Dunkelrot
+        case score >= 0.6 && score < 0.7:
+          return "#ff6363"; // Rot
+        case score >= 0.7 && score < 0.8:
+          return "#e08f43"; // Orange
+        case score >= 0.8 && score < 0.9:
+          return "#60a660"; // Grün
+        case score >= 0.9 && score <= 1:
+          return "#3b7c3b";
+        default:
+          return "#808080"; // Standardfarbe
       }
-
-      const index = Math.min(
-        Math.floor(
-          (stats.value.totalScore / stats.value.totalSubmissions) *
-            colors.length
-        ),
-        colors.length - 1
-      );
-
-      console.log(index);
-
-      return colors[index];
     });
+
     return {
       barColor,
     };

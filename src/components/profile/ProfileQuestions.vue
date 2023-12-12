@@ -1,16 +1,14 @@
 <template>
   <div class="profile-questions">
-    <div style="position: relative">
-      <div class="questions-list">
-        <hr v-if="filteredQuestions.length > 0" />
-        <div v-for="question in filteredQuestions" :key="question.id">
-          <editable-question
-            :question="question"
-            @edit="editQuestionHandler(question)"
-            @delete="deleteQuestionHandler(question.id)"
-          ></editable-question>
-          <hr />
-        </div>
+    <div class="questions-list">
+      <hr v-if="filteredQuestions.length > 0" />
+      <div v-for="question in filteredQuestions" :key="question.id">
+        <editable-question
+          :question="question"
+          @edit="editQuestionHandler(question)"
+          @delete="deleteQuestionHandler(question.id)"
+        ></editable-question>
+        <hr />
       </div>
     </div>
   </div>
@@ -82,6 +80,8 @@ export default {
 <style scoped>
 hr {
   margin: 0;
+  opacity: 1;
+  color: #c2c2c2;
 }
 .profile-questions {
   margin-top: 0;

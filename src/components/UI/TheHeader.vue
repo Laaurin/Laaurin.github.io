@@ -25,6 +25,8 @@
           <router-link to="/practice" class="nav-item nav-link"
             >Practice</router-link
           >
+          <router-link to="/educate" class="nav-item nav-link"
+            >Education</router-link>
           <router-link to="/profile" class="nav-item nav-link"
             >Profile</router-link
           >

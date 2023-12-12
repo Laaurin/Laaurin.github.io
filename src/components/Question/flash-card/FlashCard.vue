@@ -1,19 +1,22 @@
 <template>
-  <div class="shadow flashcard-outer">
-    <div class="text-center">
-      <p>{{ question.questionText }}</p>
-    </div>
-    <div class="d-flex justify-content-center align-items-center">
-      <div v-if="isFlipped" @click="toggleAnswer" class="text-center">
-        <hr />
-        <p>
-          {{ question.solutionText }}
-        </p>
+  <div class="shadow flashcard-outer d-flex align-items-center justify-content-center">
+    <div class="">
+      <div class="text-center" style="width: 100%">
+        <p>{{ question.questionText }}</p>
       </div>
-      <button v-else class="my-global-button" @click="toggleAnswer">
-        show answer
-      </button>
+      <div class="d-flex justify-content-center align-items-center">
+        <div v-if="isFlipped" @click="toggleAnswer" class="text-center">
+          <hr />
+          <p>
+            {{ question.solutionText }}
+          </p>
+        </div>
+        <button v-else class="my-global-button" @click="toggleAnswer">
+          show answer
+        </button>
+      </div>
     </div>
+
   </div>
   <div class="mt-3">
     <self-evaluation

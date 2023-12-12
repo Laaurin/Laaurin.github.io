@@ -1,5 +1,5 @@
 <template>
-  <div class="container box">
+  <div class="" style="max-width: 300px">
     <p>If you have any questions or need assistance, please feel free to contact our support team. We're currently in beta, and we're here to assist you.</p>
     <p>Contact us via <span class="highlight">info.mootcoach@gmail.com</span></p>
   </div>
