@@ -1,9 +1,9 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-3">
-        <side-bar :show="true">
-          <div class="button-outer">
+  <div>
+    <div>
+      <div>
+        <the-side-bar>
+          <div class="">
             <button
               class="btn my-button button-text"
               @click="selectedComponent = 'multiple-choice'"
@@ -19,9 +19,9 @@
               Flashcard
             </button>
           </div>
-        </side-bar>
+        </the-side-bar>
       </div>
-      <div class="col-9">
+      <div class="d-flex justify-content-center align-items-center" :style="{'margin-left': sidebarWidth}" style="height: calc(100dvh - 100px)">
         <multiple-choice-question-builder
           v-if="selectedComponent === 'multiple-choice'"
           :uploading="true"
@@ -40,18 +40,22 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import MultipleChoiceQuestionBuilder from "@/components/upload/MultipleChoiceQuestionBuilder.vue";
 import FlashCardBuilder from "@/components/upload/FlashCardBuilder.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
+import TheSideBar from "@/components/UI/SideBar/TheSideBar.vue";
+import { useStore } from "vuex";
 
 export default {
   components: {
+    TheSideBar,
     SideBar,
     FlashCardBuilder,
     MultipleChoiceQuestionBuilder,
   },
   setup() {
+    const store = useStore();
     const selectedComponent = ref("multiple-choice");
     const questionText = ref("");
     const answerOptions = ref([
@@ -64,6 +68,7 @@ export default {
     const isPrivateQuestion = ref(false);
     const questionLabels = ref([]);
     const addedLabels = ref([]);
+    const sidebarWidth = computed(() => store.getters.getSidebarWidth)
     return {
       selectedComponent,
       questionText,
@@ -72,6 +77,7 @@ export default {
       correctAnswerIndex,
       isPrivateQuestion,
       addedLabels,
+      sidebarWidth
     };
   },
   methods: {

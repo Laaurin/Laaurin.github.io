@@ -1,28 +1,21 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-3 sidebar">
-        <!--side-bar :show="true">
-          <question-filter
-            @questions-filtered="updateQuestions"
-          ></question-filter>
-        </side-bar-->
-        <the-side-bar>
-          <question-filter
-            @questions-filtered="updateQuestions"
-          ></question-filter>
-        </the-side-bar>
-      </div>
-      <div class="col">
-        <profile-questions :questions="filteredQuestions"></profile-questions>
-      </div>
+  <div>
+    <div>
+      <the-side-bar>
+        <question-filter
+          @questions-filtered="updateQuestions"
+        ></question-filter>
+      </the-side-bar>
+    </div>
+    <div :style="{'margin-left': sidebarWidth}">
+      <profile-questions :questions="filteredQuestions"></profile-questions>
     </div>
   </div>
 </template>
 
 <script>
-import { onBeforeMount, ref } from "vue";
-//import { useStore } from "vuex";
+import { computed, onBeforeMount, ref } from "vue";
+import { useStore } from "vuex";
 
 import ProfileQuestions from "@/components/profile/ProfileQuestions.vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
@@ -32,7 +25,10 @@ import TheSideBar from "@/components/UI/SideBar/TheSideBar.vue";
 export default {
   components: { TheSideBar, QuestionFilter, SideBar, ProfileQuestions },
   setup() {
-    //const store = useStore();
+    const store = useStore();
+    const sidebarWidth = computed(() => {const a = store.getters.getSidebarWidth
+    console.log(a);
+    return a;});
 
     const filteredQuestions = ref([]);
 
@@ -42,6 +38,7 @@ export default {
     };
 
     return {
+      sidebarWidth,
       filteredQuestions,
       updateQuestions,
     };

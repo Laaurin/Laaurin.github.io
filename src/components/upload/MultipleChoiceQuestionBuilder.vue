@@ -1,5 +1,5 @@
 <template>
-  <div class="container shadow-lg">
+  <div class="card-outer shadow-lg">
     <h2>{{ uploading ? "Upload Question" : "Edit Question" }}</h2>
     <form>
       <div class="mb-3">
@@ -262,9 +262,9 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.card-outer {
   max-width: 500px;
-  margin: 0 auto auto;
+  margin: 0;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
