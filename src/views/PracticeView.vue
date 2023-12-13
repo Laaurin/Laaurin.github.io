@@ -1,16 +1,16 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-3">
-        <side-bar :show="true">
+  <div>
+    <div>
+      <div>
+        <the-side-bar>
           <question-selection
             style="margin-left: 1rem"
             @questions-selected="passQuestions"
           ></question-selection>
-        </side-bar>
+        </the-side-bar>
       </div>
-      <div class="col-9">
-        <div v-if="startTraining">
+      <div>
+        <div v-if="startTraining" :style="{'margin-left': sidebarWidth}">
           <question-training :question-set="questions"></question-training>
         </div>
         <div v-else class="hintergrund d-flex justify-content-center align-items-center">
@@ -39,22 +39,25 @@
 <script>
 import QuestionSelection from "@/components/practice/QuestionSelection.vue";
 import QuestionTraining from "@/components/practice/QuestionTraining.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import SideBar from "@/components/UI/SideBar/SideBar.vue";
 import { useStore } from "vuex";
 import BlurBox from "@/components/UI/BlurBox.vue";
+import TheSideBar from "@/components/UI/SideBar/TheSideBar.vue";
 export default {
   name: "PracticeView",
-  components: { BlurBox, SideBar, QuestionSelection, QuestionTraining },
+  components: { TheSideBar, BlurBox, SideBar, QuestionSelection, QuestionTraining },
   setup() {
     const store = useStore();
     const questions = ref([]);
     const startTraining = ref(false);
     const isProfileSelected = ref(store.getters.userProfileId !== null);
+    const sidebarWidth = computed(() => store.getters.getSidebarWidth);
     return {
       questions,
       startTraining,
       isProfileSelected,
+      sidebarWidth
     };
   },
   methods: {
