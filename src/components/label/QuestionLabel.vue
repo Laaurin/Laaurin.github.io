@@ -4,7 +4,7 @@
     :class="{ active: selected, clickable: clickable }"
     @click="clickable ? toggleLabel() : null"
   >
-    <div class="labelText">{{ labelObject.label }}</div>
+    <div class="labelText" :style="{ 'font-size': size === 'small' ? '12px' : '15px' }">{{ labelObject.label }}</div>
     <div
       v-if="deletable && selected && clickable"
       class="removeIcon"
@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    size: {
+      type: String,
+      default: "medium"
+    }
   },
   setup(props, { emit }) {
     const selected = ref(props.active);

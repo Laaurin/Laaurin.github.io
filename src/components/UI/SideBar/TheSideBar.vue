@@ -1,10 +1,10 @@
 <template>
-  <div class="d-md-none">
+  <div class="d-sm-none">
     <mobile-side-bar>
       <slot></slot>
     </mobile-side-bar>
   </div>
-  <div class="d-none d-md-block">
+  <div class="d-none d-sm-block">
     <desktop-side-bar>
       <slot></slot>
     </desktop-side-bar>

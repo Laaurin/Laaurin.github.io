@@ -1,14 +1,16 @@
 <template>
   <div class="profile-questions">
     <div class="questions-list">
-      <hr v-if="filteredQuestions.length > 0" />
-      <div v-for="question in filteredQuestions" :key="question.id">
-        <editable-question
+      <!--hr v-if="filteredQuestions.length > 0" /-->
+      <div v-for="(question, index) in filteredQuestions" :key="question.id">
+        <!--editable-question
           :question="question"
           @edit="editQuestionHandler(question)"
           @delete="deleteQuestionHandler(question.id)"
-        ></editable-question>
-        <hr />
+        ></editable-question-->
+        <!--editable-mobile-question :question="question" :class="{ 'even-row': index % 2 === 0, 'odd-row': index % 2 !== 0 }"></editable-mobile-question-->
+        <editable-desktop-question :question="question" :class="{ 'even-row': index % 2 === 0, 'odd-row': index % 2 !== 0 }"></editable-desktop-question>
+        <!--hr /-->
       </div>
     </div>
   </div>
@@ -20,14 +22,18 @@
 </template>
 
 <script>
-import EditableQuestion from "@/components/profile/EditableQuestion.vue";
+import EditableQuestion from "@/components/profile/editableQuestion/EditableQuestion.vue";
 import EditQuestionWindow from "@/components/profile/EditQuestionWindow.vue";
 import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
+import EditableMobileQuestion from "@/components/profile/editableQuestion/EditableMobileQuestion.vue";
+import EditableDesktopQuestion from "@/components/profile/editableQuestion/EditableDesktopQuestion.vue";
 
 export default {
   name: "ProfileQuestions",
   components: {
+    EditableDesktopQuestion,
+    EditableMobileQuestion,
     EditQuestionWindow,
     EditableQuestion,
   },
@@ -88,15 +94,12 @@ hr {
   padding: 10px;
 }
 
-.filter-bar {
-  margin-bottom: 10px;
+.even-row {
+  background-color: #f0f0f0; /* Light gray */
 }
 
-.profile-page {
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* Weitere Stile für die Hintergrundpositionierung */
+.odd-row {
+  background-color: #fafafa; /* White */
 }
 
 .questions-list {

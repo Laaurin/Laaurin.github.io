@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar" :style="{width: sidebarWidth}">
+  <div class="sidebar" style="max-width: 100%" :style="{width: sidebarWidth}">
     <div @click="toggle">
       <i class="bi bi-arrow-bar-right" v-if="collapsed"></i>
       <i class="bi bi-arrow-bar-left" v-else></i>
@@ -19,11 +19,12 @@ export default {
   components: { ProfilIcon },
   setup() {
     const store = useStore();
-    const collapsed = ref(false);
-    const sidebar_width = 250;
+    const collapsed = ref(store.getters.isSidebarExtended);
+    const sidebar_width = 300;
     const sidebar_width_collapsed = 38;
     const sidebarWidth = computed(() => `${collapsed.value ? sidebar_width_collapsed : sidebar_width}px`);
     const toggle = () => {
+      store.dispatch("toggleSidebar")
       collapsed.value = !collapsed.value;
       const a = sidebarWidth.value
       console.log(a)

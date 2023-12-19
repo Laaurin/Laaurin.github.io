@@ -3,4 +3,8 @@ export default {
     console.log(payload.sidebarWidth)
     commit("setSidebarWidth", payload.sidebarWidth)
   },
+
+  toggleSidebar({commit}) {
+    commit("toggleSidebar");
+  },
 };

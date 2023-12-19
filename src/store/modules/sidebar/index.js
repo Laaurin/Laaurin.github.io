@@ -5,7 +5,8 @@ import sidebarGetters from "./getters";
 export default {
   state() {
     return {
-      sidebarWidth: `300px`
+      sidebarWidth: `300px`,
+      extended: false,
     };
   },
   mutations: sidebarMutations,
